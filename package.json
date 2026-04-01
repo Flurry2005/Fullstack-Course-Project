@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "backend": "node ./src/backend/index.js",
+    "backend": "node ./src/Backend/server.js",
     "production": "node ./src/Backend/server.js",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
