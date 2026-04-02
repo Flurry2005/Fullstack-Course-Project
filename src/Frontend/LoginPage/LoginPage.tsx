@@ -1,6 +1,6 @@
-import InputField from "../Components/InputField";
+import InputField from "../Components/General/InputField";
 import "../App.css";
-import GlowingButton from "../Components/GlowingButton";
+import GlowingButton from "../Components/General/GlowingButton";
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { Login } from "./Login";
