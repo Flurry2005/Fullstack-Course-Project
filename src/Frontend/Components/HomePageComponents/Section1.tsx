@@ -27,7 +27,7 @@ function Section1() {
             <i className="fa-solid fa-magnifying-glass"></i>
           </span>
         </div>
-        <div>
+        <div className="mb-10">
           <h2 className="pb-5 text-2xl">POPULAR:</h2>
           <div className="flex gap-5">
             <MiniButton to={"/"} text={"Graphic Design"} />
