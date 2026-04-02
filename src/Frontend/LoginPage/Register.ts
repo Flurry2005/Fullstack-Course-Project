@@ -1,5 +1,6 @@
 export async function Register(
   fullname: string,
+  username: string,
   email: string,
   password: string,
 ) {
@@ -9,6 +10,7 @@ export async function Register(
   if (
     fullname.trim() === "" ||
     email.trim() === "" ||
+    username.trim() === "" ||
     password.trim() === "" ||
     password.trim().length <= 8 ||
     !emailRegex.test(email)
@@ -17,7 +19,7 @@ export async function Register(
     console.error("Invalid fullname/email/password");
     return {
       success: false,
-      data: { error: "Invalid fullname/email/password" },
+      data: "Invalid fullname/email/password",
     };
   }
 
@@ -26,15 +28,25 @@ export async function Register(
       `${import.meta.env.VITE_BACKEND_API}${"/register"}`,
       {
         method: "POST",
-        body: JSON.stringify({ fullname: fullname, username: email, password }),
+        body: JSON.stringify({
+          fullname: fullname,
+          username: username,
+          email: email,
+          password,
+        }),
       },
     );
 
     const res = await response.json();
 
-    return { success: response.ok, data: res };
+    if (res.success) {
+      console.log(res.data);
+      return { success: res.success, message: res.message };
+    }
+
+    return { success: res.success, error: res.error };
   } catch (error) {
     console.error(error);
-    return { success: false, data: { error: "Failed to contact server" } };
+    return { success: false, error: "Failed to contact server" };
   }
 }
