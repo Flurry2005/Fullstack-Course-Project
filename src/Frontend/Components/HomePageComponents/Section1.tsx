@@ -42,7 +42,7 @@ function Section1() {
           <img
             src="/HomePage/goon.jpg"
             alt="Designer working"
-            className="shadow-[0_24px_40px_rgba(0,0,0,0.18)] rounded-3xl w-full h-97.5 object-cover"
+            className="shadow-[0_10px_20px_rgba(0,0,0,0.08)] hover:shadow-[0_30px_60px_rgba(0,0,0,0.25)] rounded-3xl w-full h-97.5 object-cover hover:scale-[1.03] transition-all hover:-translate-y-3 duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]"
           />
         </div>
 
@@ -50,7 +50,7 @@ function Section1() {
           <img
             src="/HomePage/goon.jpg"
             alt="Desk workspace"
-            className="rounded-3xl w-full h-52.5 object-cover"
+            className="shadow-[0_10px_20px_rgba(0,0,0,0.08)] hover:shadow-[0_30px_60px_rgba(0,0,0,0.25)] rounded-3xl w-full h-97.5 object-cover hover:scale-[1.03] transition-all hover:-translate-y-3 duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]"
           />
 
           <div className="flex flex-col justify-end bg-[#82e3d7] p-8 rounded-3xl w-full h-55">
