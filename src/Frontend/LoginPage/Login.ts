@@ -18,6 +18,9 @@ export async function Login(email: string, password: string) {
       `https://fullstack-course-project.onrender.com/api${"/login"}`,
       {
         method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
         body: JSON.stringify({ email: email, password }),
       },
     );
