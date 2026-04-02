@@ -1,7 +1,7 @@
 function Section2() {
   return (
-    <section className="z-0 bg-[#f2ecfc] w-full h-140">
-      <div></div>
+    <section className="z-0 bg-[#f9f5ff] w-full h-140">
+      <div>balls</div>
     </section>
   );
 }

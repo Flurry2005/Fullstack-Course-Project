@@ -12,12 +12,6 @@ function Home() {
       <Section2 />
       <Section3 />
       <Section4 />
-
-      <section className="z-0 bg-[#f2ecfc] w-full h-140">COCKs</section>
-      <section className="z-0 bg-[#f9f5ff] w-full h-140">COCKs</section>
-      <section className="z-0 bg-[#f2ecfc] w-full h-140">COCKs</section>
-      <section className="z-0 bg-[#f9f5ff] w-full h-140">COCKs</section>
-      <section className="z-0 bg-[#f2ecfc] w-full h-140">COCKs</section>
     </main>
   );
 }
