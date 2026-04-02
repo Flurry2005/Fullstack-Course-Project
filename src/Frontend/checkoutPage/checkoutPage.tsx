@@ -15,7 +15,7 @@ function CheckoutPage() {
           {/* Payment Method */}
           <section className="flex gap-15 w-full">
             <button className="bg-[#ffff] rounded-2xl w-1/3 h-30">
-              <i className="fa-regular fa-credit-card"></i>
+              <i className="text-left fa-regular fa-credit-card"></i>
               <h4 className="text-left">Credit/Debit Card</h4>
               <h6 className="text-left">Visa, Mastercard, Amex</h6>
             </button>
