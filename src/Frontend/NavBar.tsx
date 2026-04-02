@@ -1,12 +1,12 @@
 import React from "react";
 import Navlink from "./Components/NavbarComponents/NavLink";
-import Logo from "./Logo";
+import Logo from "./Components/NavbarComponents/Logo";
 import InputField from "./Components/General/InputField";
 import AuthButtons from "./Components/NavbarComponents/AuthButtons";
 
 function NavBar() {
   return (
-    <header className="flex justify-between items-center bg-white shadow-[0px_1px_3px_0px_rgba(0,_0,_0,_0.1)] px-6 w-full h-18">
+    <header className="z-50 relative flex justify-between items-center bg-white shadow-[0px_1px_3px_0px_rgba(0,_0,_0,_0.1)] px-6 w-full h-18">
       <nav className="flex items-center gap-6">
         <Logo />
         <Navlink
