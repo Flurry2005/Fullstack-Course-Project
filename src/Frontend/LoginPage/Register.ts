@@ -28,6 +28,9 @@ export async function Register(
       `https://fullstack-course-project.onrender.com/api${"/register"}`,
       {
         method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
         body: JSON.stringify({
           fullname: fullname,
           username: username,
