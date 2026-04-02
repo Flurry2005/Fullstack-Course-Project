@@ -1,15 +1,32 @@
 import InputField from "../Components/InputField";
 import "../App.css";
 import GlowingButton from "../Components/GlowingButton";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { Login } from "./Login";
 
 function LoginPage() {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const [errorMessage, setErrorMessage] = useState<string>("‎ ");
+
+  const navigate = useNavigate();
 
   const login = async () => {
     // Code for contacting db, use email and password variables. Redirect on success
+    console.log("Trying to log in....");
+    const response = await Login(email, password);
+
+    if (response?.success) {
+      //Success Login
+      setErrorMessage("‎ ");
+      setTimeout(() => {
+        navigate("/");
+      }, 1000);
+    } else {
+      //Failed login
+      setErrorMessage(response?.data.error);
+    }
   };
 
   return (
@@ -71,9 +88,14 @@ function LoginPage() {
                 additionalClasses="w-full h-12 border-0 bg-[#DDD9FF]"
               ></InputField>
             </div>
-
+            <p className="text-red-500">{errorMessage}</p>
             {/* Login Button */}
-            <GlowingButton outline={false} onClick={() => login}>
+            <GlowingButton
+              outline={false}
+              onClick={() => {
+                login();
+              }}
+            >
               Sign In
             </GlowingButton>
           </div>
