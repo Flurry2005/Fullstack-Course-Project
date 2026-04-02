@@ -1,5 +1,3 @@
-import React from "react";
-import { Link } from "react-router-dom";
 import InputField from "../General/InputField";
 import MiniButton from "./MiniButtonLink";
 
@@ -25,7 +23,7 @@ const Section1 = () => {
             placeholder="What are you looking for today?"
             additionalClasses=" bg-[#e3dfff] px-4 w-[50%] h-full !rounded-r-none !rounded-md outline-none border-none focus:border-indigo-500 text-sm"
           />
-          <span className="flex justify-center items-center bg-[#e3dfff] px-3 rounded-md rounded-l-none h-full h-full text-gray-600">
+          <span className="flex justify-center items-center bg-[#e3dfff] px-3 rounded-md rounded-l-none h-full text-gray-600">
             <i className="fa-solid fa-magnifying-glass"></i>
           </span>
         </div>
