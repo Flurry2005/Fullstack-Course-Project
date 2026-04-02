@@ -15,7 +15,7 @@ export async function Login(email: string, password: string) {
 
   try {
     const response = await fetch(
-      `${import.meta.env.VITE_BACKEND_API}${"/login"}`,
+      `https://fullstack-course-project.onrender.com/api${"/login"}`,
       {
         method: "POST",
         body: JSON.stringify({ username: email, password }),

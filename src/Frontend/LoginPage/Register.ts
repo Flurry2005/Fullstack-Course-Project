@@ -25,7 +25,7 @@ export async function Register(
 
   try {
     const response = await fetch(
-      `${import.meta.env.VITE_BACKEND_API}${"/register"}`,
+      `https://fullstack-course-project.onrender.com/api${"/register"}`,
       {
         method: "POST",
         body: JSON.stringify({
