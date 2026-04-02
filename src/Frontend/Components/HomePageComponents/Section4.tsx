@@ -2,13 +2,13 @@ import Section4Card from "./Section4Card";
 
 function Section2() {
   return (
-    <section className="z-0 flex flex-col justify-center items-center bg-[#f2ecfc] w-full h-140">
-      <h1 className="my-5 font-semibold text-[#23235b] text-[44px] leading-tight">
+    <section className="z-0 flex flex-col items-center bg-[#f2ecfc] pt-10 w-full h-140 text-center">
+      <h1 className="my-10 font-semibold text-[#23235b] text-[44px] leading-tight">
         A whole world of freelance talent
         <br /> at your fingertips
       </h1>
 
-      <div className="flex justify-center gap-6">
+      <div className="flex justify-center gap-6 h-">
         <Section4Card
           title={"Over 700 Categories"}
           icon={<i className="fa-layer-group fa-solid"></i>}

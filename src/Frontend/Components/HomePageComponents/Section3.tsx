@@ -2,7 +2,7 @@ import ServiceCard from "./ServiceCard";
 
 function Section2() {
   return (
-    <section className="flex justify-between items-start gap-6 mb-10 px-10">
+    <section className="flex justify-between items-start gap-6 bg-[#f9f5ff] px-10 pb-10">
       <div>
         <h2 className="my-5 font-semibold text-[#23235b] text-[44px] leading-tight">
           Popular Services
