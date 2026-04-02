@@ -1,4 +1,3 @@
-import React from "react";
 import Navbar from "./NavBar";
 import Section1 from "./Components/HomePageComponents/Section1";
 import Section2 from "./Components/HomePageComponents/Section2";
