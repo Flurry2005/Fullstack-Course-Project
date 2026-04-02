@@ -1,7 +1,7 @@
 import InputField from "../General/InputField";
 import MiniButton from "./MiniButtonLink";
 
-const Section1 = () => {
+function Section1() {
   return (
     <section className="z-0 flex bg-[#f9f5ff] px-10 pt-20 w-full min-h-140">
       <div className="flex flex-col justify-center w-[50%] h-full">
@@ -27,7 +27,7 @@ const Section1 = () => {
             <i className="fa-solid fa-magnifying-glass"></i>
           </span>
         </div>
-        <div>
+        <div className="mb-10">
           <h2 className="pb-5 text-2xl">POPULAR:</h2>
           <div className="flex gap-5">
             <MiniButton to={"/"} text={"Graphic Design"} />
@@ -68,6 +68,6 @@ const Section1 = () => {
       </div>
     </section>
   );
-};
+}
 
 export default Section1;
