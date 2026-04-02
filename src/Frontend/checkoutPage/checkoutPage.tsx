@@ -1,12 +1,12 @@
 import InputField from "../Components/General/InputField";
 import MiniButton from "../Components/HomePageComponents/MiniButtonLink";
-import "../app.css";
+import "../App.css";
 import NavBar from "../NavBar";
 
 function CheckoutPage() {
-    return (
-        <>
-            <NavBar />
+  return (
+    <>
+      <NavBar />
 
             {/* Main container */}
             <main className="flex bg-[#f9f5ff] justify-between gap-5 px-5 h-screen">
