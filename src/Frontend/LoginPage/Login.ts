@@ -10,7 +10,7 @@ export async function Login(email: string, password: string) {
   ) {
     //invalid formats
     console.error("Invalid email/password");
-    return { success: false, data: { error: "Invalid email/password" } };
+    return { success: false, error: "Invalid email/password" };
   }
 
   try {
@@ -24,9 +24,13 @@ export async function Login(email: string, password: string) {
 
     const res = await response.json();
 
-    return { success: response.ok, data: res };
+    if (res.success) {
+      return { success: res.success, data: res.data };
+    } else {
+      return { success: res.success, error: res.error };
+    }
   } catch (error) {
     console.error(error);
-    return { success: false, data: { error: "Failed to contact server" } };
+    return { success: false, error: "Failed to contact server" };
   }
 }

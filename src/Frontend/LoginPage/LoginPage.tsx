@@ -12,6 +12,7 @@ interface Props {
 
 function LoginPage({ registerMode }: Props) {
   const [fullname, setFullname] = useState<string>("");
+  const [username, setUsername] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [errorMessage, setErrorMessage] = useState<string>("‎ ");
@@ -35,23 +36,23 @@ function LoginPage({ registerMode }: Props) {
       }, 1000);
     } else {
       //Failed login
-      setErrorMessage(response?.data.error);
+      setErrorMessage(response?.error);
     }
   };
 
   const register = async () => {
     console.log("Trying to log in....");
-    const response = await Register(fullname, email, password);
+    const response = await Register(fullname, username, email, password);
 
     if (response?.success) {
       //Success Register
-      setErrorMessage("‎ ");
+      setErrorMessage(response.message);
       setTimeout(() => {
         navigate("/");
       }, 1000);
     } else {
       //Failed login
-      setErrorMessage(response?.data.error);
+      setErrorMessage(response?.error);
     }
   };
 
@@ -87,6 +88,23 @@ function LoginPage({ registerMode }: Props) {
                   placeholder="John Doe"
                   onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                     setFullname(e.target.value);
+                  }}
+                  additionalClasses="w-full h-12 border-0 bg-[#DDD9FF]"
+                ></InputField>
+              </div>
+            )}
+            {/* Container for Username related */}
+            {!loginMode && (
+              <div className="flex flex-col w-full">
+                <label htmlFor="fullname" className="ml-1">
+                  Username
+                </label>
+                <InputField
+                  id="username"
+                  value={username}
+                  placeholder="SigmaLover"
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                    setUsername(e.target.value);
                   }}
                   additionalClasses="w-full h-12 border-0 bg-[#DDD9FF]"
                 ></InputField>
