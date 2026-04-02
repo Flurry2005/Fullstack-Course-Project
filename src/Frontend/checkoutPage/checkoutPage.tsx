@@ -1,8 +1,6 @@
 import InputField from "../Components/General/InputField";
-import GlowingButton from "../Components/General/GlowingButton";
+import MiniButton from "../Components/HomePageComponents/MiniButtonLink";
 import "../app.css";
-import { Link } from "react-router-dom";
-import { useState } from "react";
 import NavBar from "../NavBar";
 
 function CheckoutPage() {
@@ -16,23 +14,25 @@ function CheckoutPage() {
                 <div className="flex flex-col w-7/10 gap-5">
                     <h1>Finalize your order</h1>
                     {/* Payment Method */}
-                    <div className="flex w-full gap-15">
+                    <section className="flex w-full gap-15">
                         <button className="bg-[#ffff] w-1/3 h-30 rounded-2xl">
                             <i className="fa-regular fa-credit-card"></i>
                             <h4 className="text-left">Credit/Debit Card</h4>
                             <h6 className="text-left">Visa, Mastercard, Amex</h6>
                         </button>
+
                         <button className="bg-[#ffff] w-1/3 h-30 rounded-2xl">
                             <i className="fa-brands fa-paypal"></i>
                             <h4 className="text-left">PayPal</h4>
                             <h6 className="text-left">Direct wallet transfer</h6>
                         </button>
+
                         <button className="bg-[#ffff] w-1/3 h-30 rounded-2xl">
                             <i className="fa-brands fa-apple-pay"></i>
                             <h4 className="text-left">Apple Pay</h4>
                             <h6 className="text-left">One-touch checkout</h6>
                         </button>
-                    </div>
+                    </section>
 
                     {/* Card Details */}
                     <div className="flex flex-col justify-center bg-[#F3EEFF] w-full rounded-2xl py-10">
@@ -75,14 +75,14 @@ function CheckoutPage() {
                     </div>
 
                     {/* Discount Details */}
-                    <h2 className="">Discount Code</h2>
-                    <div className="flex w-full">
+                    <label htmlFor="discount-code">Discount Code</label>
+                    <div className="flex w-full gap-5">
                         <InputField
-                            id="expiry-date"
+                            id="discount-code"
                             placeholder="Enter code"
                             additionalClasses="w-full h-12 border-0 bg-[#ffff]"
                         ></InputField>
-                        <button className="w-20">Hello</button>
+                        <MiniButton text="Apply" additionalClassName="!bg-[#E3DFFF] !text-[#0050D4] rounded-xl"/>
                     </div>
                 </div>
 
