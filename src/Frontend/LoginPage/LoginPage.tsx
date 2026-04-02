@@ -6,13 +6,19 @@ import { useState } from "react";
 import { Login } from "./Login";
 import { Register } from "./Register";
 
-function LoginPage() {
+interface Props {
+  registerMode?: boolean;
+}
+
+function LoginPage({ registerMode }: Props) {
   const [fullname, setFullname] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [errorMessage, setErrorMessage] = useState<string>("‎ ");
 
-  const [loginMode, setLoginMode] = useState<boolean>(true);
+  const [loginMode, setLoginMode] = useState<boolean>(
+    registerMode ? false : true,
+  );
 
   const navigate = useNavigate();
 
