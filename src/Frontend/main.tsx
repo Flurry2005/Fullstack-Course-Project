@@ -3,7 +3,6 @@ import { createRoot } from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import "./index.css";
 import LoginPage from "./LoginPage/LoginPage.tsx";
-import LoginPage from "./LoginPage.tsx";
 import Home from "./Home.tsx";
 
 const router = createBrowserRouter([
@@ -11,11 +10,15 @@ const router = createBrowserRouter([
     children: [
       {
         path: "/",
+        element: <Home />,
+      },
+      {
+        path: "/login",
         element: <LoginPage />,
       },
       {
-        path: "/home",
-        element: <Home />,
+        path: "/register",
+        element: <LoginPage />,
       },
     ],
   },
