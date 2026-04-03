@@ -14,4 +14,12 @@ app.use(
   }),
 );
 
+app.options(
+  "*",
+  cors({
+    origin: "https://frontend-w1uy.onrender.com",
+    credentials: true,
+  }),
+);
+
 app.use(mainRouter);
