@@ -1,7 +1,7 @@
 import InputField from "../General/InputField";
 import MiniButton from "./MiniButtonLink";
 
-const Section1 = () => {
+function Section1() {
   return (
     <section className="z-0 flex bg-[#f9f5ff] px-10 pt-20 w-full min-h-140">
       <div className="flex flex-col justify-center w-[50%] h-full">
@@ -27,7 +27,7 @@ const Section1 = () => {
             <i className="fa-solid fa-magnifying-glass"></i>
           </span>
         </div>
-        <div>
+        <div className="mb-10">
           <h2 className="pb-5 text-2xl">POPULAR:</h2>
           <div className="flex gap-5">
             <MiniButton to={"/"} text={"Graphic Design"} />
@@ -42,7 +42,7 @@ const Section1 = () => {
           <img
             src="/HomePage/goon.jpg"
             alt="Designer working"
-            className="shadow-[0_24px_40px_rgba(0,0,0,0.18)] rounded-3xl w-full h-97.5 object-cover"
+            className="shadow-[0_10px_20px_rgba(0,0,0,0.08)] hover:shadow-[0_30px_60px_rgba(0,0,0,0.25)] rounded-3xl w-full h-97.5 object-cover hover:scale-[1.03] transition-all hover:-translate-y-3 duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]"
           />
         </div>
 
@@ -50,7 +50,7 @@ const Section1 = () => {
           <img
             src="/HomePage/goon.jpg"
             alt="Desk workspace"
-            className="rounded-3xl w-full h-52.5 object-cover"
+            className="shadow-[0_10px_20px_rgba(0,0,0,0.08)] hover:shadow-[0_30px_60px_rgba(0,0,0,0.25)] rounded-3xl w-full h-97.5 object-cover hover:scale-[1.03] transition-all hover:-translate-y-3 duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]"
           />
 
           <div className="flex flex-col justify-end bg-[#82e3d7] p-8 rounded-3xl w-full h-55">
@@ -68,6 +68,6 @@ const Section1 = () => {
       </div>
     </section>
   );
-};
+}
 
 export default Section1;

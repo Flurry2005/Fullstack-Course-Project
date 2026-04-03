@@ -10,23 +10,31 @@ export async function Login(email: string, password: string) {
   ) {
     //invalid formats
     console.error("Invalid email/password");
-    return { success: false, data: { error: "Invalid email/password" } };
+    return { success: false, error: "Invalid email/password" };
   }
 
   try {
     const response = await fetch(
-      `${import.meta.env.VITE_BACKEND_API}${"/login"}`,
+      `https://fullstack-course-project.onrender.com/api${"/login"}`,
       {
         method: "POST",
-        body: JSON.stringify({ username: email, password }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email: email, password }),
+        credentials: "include",
       },
     );
 
     const res = await response.json();
 
-    return { success: response.ok, data: res };
+    if (res.success) {
+      return { success: res.success, data: res.data };
+    } else {
+      return { success: res.success, error: res.error };
+    }
   } catch (error) {
     console.error(error);
-    return { success: false, data: { error: "Failed to contact server" } };
+    return { success: false, error: "Failed to contact server" };
   }
 }
