@@ -22,6 +22,7 @@ export async function Login(email: string, password: string) {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ email: email, password }),
+        credentials: "include",
       },
     );
 
