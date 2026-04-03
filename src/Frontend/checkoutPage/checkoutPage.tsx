@@ -2,14 +2,15 @@ import InputField from "../Components/General/InputField";
 import MiniButton from "../Components/HomePageComponents/MiniButtonLink";
 import "../App.css";
 import NavBar from "../NavBar";
+import GlowingButton from "../Components/General/GlowingButton";
 
 function CheckoutPage() {
-  return (
-    <>
-      <NavBar />
+    return (
+        <>
+            <NavBar />
 
             {/* Main container */}
-            <main className="flex bg-[#f9f5ff] justify-between gap-5 px-5 h-screen">
+            <main className="flex bg-[#f9f5ff] justify-between gap-5 px-5 h-screen items-start">
 
                 {/* Left main container */}
                 <div className="flex flex-col w-7/10 gap-5">
@@ -17,7 +18,7 @@ function CheckoutPage() {
                         <h1 className="text-3xl">Finalize your order</h1>
                         <h3>Review your details and complete your purchase.</h3>
                     </section>
-                    
+
                     {/* Payment Method */}
                     <h2 className="text-2xl">Payment Method</h2>
                     <section className="flex w-full gap-5">
@@ -100,10 +101,70 @@ function CheckoutPage() {
                 </div>
 
                 {/* Right main container */}
-                <div className="">
-                    <h1>Hello</h1>
-                </div>
+                <div className="flex flex-col w-3/10 gap-5 pt-10">
+                    <div className="h-auto w-full bg-[#F3EEFF] rounded-2xl py overflow-hidden">
+                        <div className="p-5">
+                            <img src="/HomePage/goon.jpg" className="h-5/20 w-full rounded-2xl"></img>
+                        </div>
 
+                        {/* Checkout prices */}
+                        <div>
+                            <section className="flex justify-between px-5 py-2">
+                                <h4>Service Tier</h4>
+                                <h4>Cooking</h4>
+                            </section>
+                            <section className="flex justify-between px-5 py-2">
+                                <h4>Standard Price</h4>
+                                <h4>$150.00</h4>
+                            </section>
+                            <section className="flex justify-between px-5 py-2">
+                                <h4>Service Fee</h4>
+                                <h4>$12.50</h4>
+                            </section>
+
+                            <section>
+                                <h3 className="pt-5 px-5">TOTAL AMOUNT</h3>
+                                <h2 className="px-5 text-3xl">$162.50</h2>
+                            </section>
+                        </div>
+
+                        {/* Pay button */}
+                        <section className="p-5">
+                            <GlowingButton outline={false} onClick={() => { }} additionalClasses="w-full! h-15! mx-auto">Confirm and Pay</GlowingButton>
+                        </section>
+
+                        {/* Purchase details under pay button */}
+                        <div>
+                            <section className="flex justify-between p-5">
+                                <div className="flex">
+                                    <div className="bg-[#91FEEF] w-12 h-12 rounded-4xl flex items-center justify-center">
+                                        <i className="fa-solid fa-shield-halved text-2xl"></i>
+                                    </div>
+                                    <div className="flex flex-col justify-center">
+                                        <p className="text-xs">SECURE</p>
+                                        <p className="text-xs">CHECKOUT</p>
+                                    </div>
+                                </div>
+
+                                <div className="flex">
+                                    <div className="bg-[#DCC9FF] w-12 h-12 flex rounded-4xl items-center justify-center">
+                                        <i className="fa-solid fa-money-check-dollar text-2xl align-middle"></i>
+                                    </div>
+                                    <div className="flex flex-col justify-center items-center">
+                                        <p className="text-xs">MONEY BACK </p>
+                                        <p className="text-xs">GUARANTEE</p>
+                                    </div>
+                                </div>
+                            </section>
+
+                            <section className="bg-[#E9E5FF] p-5">
+                                <p className="text-xs text-center">By confirming your payment, you agree to the Atelier Market Terms of
+                                    Service and Privacy Policy. Digital deliverables will be transferred upon completion</p>
+                            </section>
+                        </div>
+
+                    </div>
+                </div>
             </main>
 
             <footer>
