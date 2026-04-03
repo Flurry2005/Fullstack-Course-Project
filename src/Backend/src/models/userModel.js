@@ -20,8 +20,8 @@ class UserModel {
       const token = JWTModel.createJwtToken(user.username, email);
       res.cookie("token", token, {
         httpOnly: true,
-        secure: false,
-        sameSite: "lax",
+        secure: true,
+        sameSite: "none",
         path: "/",
       });
       return res.status(200).json({ success: true, data: user });
