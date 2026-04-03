@@ -5,6 +5,9 @@ import { routerr as mainRouter } from "./routes/index.js";
 export const app = express();
 app.use(express.json());
 app.use(morgan("dev"));
+
+app.set("trust proxy", 1);
+
 app.use(
   cors({
     origin: "https://frontend-w1uy.onrender.com",
