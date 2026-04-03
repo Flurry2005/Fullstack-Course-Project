@@ -7,17 +7,9 @@ app.use(express.json());
 app.use(morgan("dev"));
 app.use(
   cors({
-    origin: "https://frontend-w1uy.onrender.com", // your frontend
+    origin: "https://frontend-w1uy.onrender.com",
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type"],
-    credentials: true,
-  }),
-);
-
-app.options(
-  "/*",
-  cors({
-    origin: "https://frontend-w1uy.onrender.com",
     credentials: true,
   }),
 );
