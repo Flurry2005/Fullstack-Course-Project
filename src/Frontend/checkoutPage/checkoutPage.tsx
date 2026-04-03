@@ -3,8 +3,12 @@ import MiniButton from "../Components/HomePageComponents/MiniButtonLink";
 import "../App.css";
 import NavBar from "../NavBar";
 import GlowingButton from "../Components/General/GlowingButton";
+import { useState } from "react";
 
 function CheckoutPage() {
+
+    const [selected, setSelected] = useState<"card" | "paypal" | "applePay" | null>(null);
+
     return (
         <>
             <NavBar />
@@ -22,19 +26,37 @@ function CheckoutPage() {
                     {/* Payment Method */}
                     <h2 className="text-2xl">Payment Method</h2>
                     <section className="flex w-full gap-5">
-                        <button className="bg-[#ffff] w-1/3 h-30 rounded-2xl p-5 flex flex-col">
+                        <button
+                            onClick={() => setSelected("card")}
+                            className={`bg-[#ffff] w-1/3 h-30 rounded-2xl p-5 flex flex-col ${selected !== "card"
+                                ? "border border-transparent"
+                                : "border-2 border-blue-500"
+                                }`}
+                        >
                             <i className="fa-regular fa-credit-card text-2xl"></i>
                             <h3 className="text-left">Credit/Debit Card, Amex</h3>
                             <h4 className="text-left">Visa, Mastercard</h4>
                         </button>
 
-                        <button className="bg-[#ffff] w-1/3 h-30 rounded-2xl p-5 flex flex-col">
+                        <button
+                            onClick={() => setSelected("paypal")}
+                            className={`bg-[#ffff] w-1/3 h-30 rounded-2xl p-5 flex flex-col ${selected !== "paypal"
+                                ? "border border-transparent"
+                                : "border-2 border-blue-500"
+                                }`}
+                        >
                             <i className="fa-brands fa-paypal text-2xl"></i>
                             <h3 className="text-left">PayPal</h3>
                             <h4 className="text-left">Direct wallet transfer</h4>
                         </button>
 
-                        <button className="bg-[#ffff] w-1/3 h-30 rounded-2xl p-5 flex flex-col">
+                        <button
+                            onClick={() => setSelected("applePay")}
+                            className={`bg-[#ffff] w-1/3 h-30 rounded-2xl p-5 flex flex-col ${selected !== "applePay"
+                                ? "border border-transparent"
+                                : "border-2 border-blue-500"
+                                }`}
+                        >
                             <i className="fa-brands fa-apple-pay text-4xl"></i>
                             <h3 className="text-left">Apple Pay</h3>
                             <h4 className="text-left">One-touch checkout</h4>
