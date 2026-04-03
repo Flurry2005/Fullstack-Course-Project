@@ -1,4 +1,5 @@
 import express from "express";
+import cors from "cors";
 import morgan from "morgan";
 import { routerr as mainRouter } from "./routes/index.js";
 export const app = express();
