@@ -5,7 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { Login } from "./Login";
 import { Register } from "./Register";
-import { useAuth } from "../Context/useAuth";
+import { useAuth } from "../Context/useAuth.tsx";
 
 interface Props {
   registerMode?: boolean;
