@@ -11,7 +11,7 @@ app.set("trust proxy", 1);
 const allowedOrigins = [
   "https://frontend-w1uy.onrender.com",
   "http://localhost:5173",
-  "https://fullstack.liamjorgensen.dev/",
+  "https://fullstack.liamjorgensen.dev",
 ];
 
 app.use(
