@@ -24,6 +24,7 @@ class UserModel {
         secure: true,
         sameSite: "none",
         path: "/",
+        domain: ".liamjorgensen.dev",
         expires: expiry,
       });
       return res.status(200).json({ success: true, data: user });

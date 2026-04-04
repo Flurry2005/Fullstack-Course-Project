@@ -15,7 +15,7 @@ export async function Login(email: string, password: string) {
 
   try {
     const response = await fetch(
-      `https://fullstack-course-project.onrender.com/api${"/login"}`,
+      `https://fullstackapi.liamjorgensen.dev/api${"/login"}`,
       {
         method: "POST",
         headers: {
