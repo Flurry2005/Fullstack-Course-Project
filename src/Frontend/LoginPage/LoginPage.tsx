@@ -26,6 +26,10 @@ function LoginPage({ registerMode }: Props) {
 
   const navigate = useNavigate();
 
+  const MessgaeColors = ["text-red-500", "text-green-500"];
+
+  const [messageColor, setMessageColor] = useState("text-red-500");
+
   const loginUser = async () => {
     // Code for contacting db, use email and password variables. Redirect on success
     console.log("Trying to log in....");
@@ -33,15 +37,17 @@ function LoginPage({ registerMode }: Props) {
 
     if (response?.success) {
       //Success Login
+      setMessageColor(MessgaeColors[1]);
       setErrorMessage("‎ ");
       const userData = response.data;
       login(userData);
-      setErrorMessage(`You have been logged in ${user?.username}!`);
+      setErrorMessage(`You have been logged in ${userData?.username}!`);
       setTimeout(() => {
         navigate("/");
       }, 1000);
     } else {
       //Failed login
+      setMessageColor(MessgaeColors[0]);
       setErrorMessage(response?.error);
     }
   };
@@ -159,7 +165,7 @@ function LoginPage({ registerMode }: Props) {
                 additionalClasses="w-full h-12 border-0 bg-[#DDD9FF]"
               ></InputField>
             </div>
-            <p className="text-red-500">{errorMessage}</p>
+            <p className={messageColor}>{errorMessage}</p>
             {/* Login Button */}
             <GlowingButton
               outline={false}
