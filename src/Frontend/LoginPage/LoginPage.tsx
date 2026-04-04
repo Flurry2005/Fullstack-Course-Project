@@ -5,6 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { Login } from "./Login";
 import { Register } from "./Register";
+import { useAuth } from "../Context/useAuth";
 
 interface Props {
   registerMode?: boolean;
@@ -21,9 +22,11 @@ function LoginPage({ registerMode }: Props) {
     registerMode ? false : true,
   );
 
+  const { user, login, logout } = useAuth();
+
   const navigate = useNavigate();
 
-  const login = async () => {
+  const loginUser = async () => {
     // Code for contacting db, use email and password variables. Redirect on success
     console.log("Trying to log in....");
     const response = await Login(email, password);
@@ -31,6 +34,9 @@ function LoginPage({ registerMode }: Props) {
     if (response?.success) {
       //Success Login
       setErrorMessage("‎ ");
+      const userData = response.data;
+      login(userData);
+      setErrorMessage(`You have been logged in ${user?.username}!`);
       setTimeout(() => {
         navigate("/");
       }, 1000);
@@ -40,7 +46,7 @@ function LoginPage({ registerMode }: Props) {
     }
   };
 
-  const register = async () => {
+  const registerUser = async () => {
     console.log("Trying to log in....");
     const response = await Register(fullname, username, email, password);
 
@@ -158,8 +164,8 @@ function LoginPage({ registerMode }: Props) {
             <GlowingButton
               outline={false}
               onClick={() => {
-                if (loginMode) login();
-                else register();
+                if (loginMode) loginUser();
+                else registerUser();
               }}
             >
               {loginMode ? "Sign In" : "Create Free Account"}
