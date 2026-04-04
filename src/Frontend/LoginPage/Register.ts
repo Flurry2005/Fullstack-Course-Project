@@ -25,7 +25,7 @@ export async function Register(
 
   try {
     const response = await fetch(
-      `https://fullstack-course-project.onrender.com/api${"/register"}`,
+      `https://fullstackapi.liamjorgensen.dev/api${"/register"}`,
       {
         method: "POST",
         headers: {
