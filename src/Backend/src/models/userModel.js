@@ -23,6 +23,7 @@ class UserModel {
         secure: true,
         sameSite: "none",
         path: "/",
+        maxAge: 1000 * 60 * 60, // En timme
       });
       return res.status(200).json({ success: true, data: user });
     } else
