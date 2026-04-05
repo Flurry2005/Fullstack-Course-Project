@@ -63,7 +63,7 @@ function LoginPage({ registerMode }: Props) {
         navigate("/");
       }, 1000);
     } else {
-      //Failed login
+      //Failed Register
       setErrorMessage(response?.error);
     }
   };
@@ -173,6 +173,7 @@ function LoginPage({ registerMode }: Props) {
                 if (loginMode) loginUser();
                 else registerUser();
               }}
+              additionalClasses="cursor-pointer"
             >
               {loginMode ? "Sign In" : "Create Free Account"}
             </GlowingButton>
@@ -183,7 +184,7 @@ function LoginPage({ registerMode }: Props) {
               : "Already have an account?"}{" "}
             <span className="font-semibold text-blue-500">
               <a
-                className="text-nowrap"
+                className="text-nowrap cursor-pointer"
                 onClick={() => setLoginMode((p) => !p)}
               >
                 {loginMode ? "Create free account" : "Log in"}
