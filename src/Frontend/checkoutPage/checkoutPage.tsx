@@ -4,17 +4,19 @@ import "../App.css";
 import NavBar from "../NavBar";
 import GlowingButton from "../Components/General/GlowingButton";
 import { useState } from "react";
+import Footer from "../Footer";
 
 function CheckoutPage() {
 
-    const [selected, setSelected] = useState<"card" | "paypal" | "applePay" | null>(null);
+    const [selected, setSelected] = useState<"card" | "paypal" | "applePay" | null>("card");
 
     return (
-        <>
+        <div className="min-h-screen flex flex-col bg-[#f9f5ff]">
+
             <NavBar />
 
             {/* Main container */}
-            <main className="flex bg-[#f9f5ff] justify-between gap-5 px-5 h-screen items-start">
+            <main className="flex flex-1 justify-between gap-5 px-5 items-start pb-5">
 
                 {/* Left main container */}
                 <div className="flex flex-col w-7/10 gap-5">
@@ -189,10 +191,9 @@ function CheckoutPage() {
                 </div>
             </main>
 
-            <footer>
-                <h1>Hello</h1>
-            </footer>
-        </>
+            <Footer />
+
+        </div>
     );
 }
 
