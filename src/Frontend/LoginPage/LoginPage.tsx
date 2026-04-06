@@ -70,9 +70,9 @@ function LoginPage({ registerMode }: Props) {
 
   return (
     <>
-      <main className="flex w-full h-screen">
+      <main className="flex w-full min-h-screen">
         {/* Login Section */}
-        <section className="flex flex-col items-center bg-[#f9f5ff] w-6/14 h-full">
+        <section className="flex flex-col items-center bg-[#f9f5ff] pb-10 w-250 min-h-full">
           <h1 className="self-start mx-8! my-4! text-2xl!">Project Name</h1>
           <div className="mt-40 w-6/10">
             <h2 className="text-[#2C2A51] text-3xl!">
@@ -97,6 +97,7 @@ function LoginPage({ registerMode }: Props) {
                 <InputField
                   id="fullname"
                   value={fullname}
+                  required={true}
                   placeholder="John Doe"
                   onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                     setFullname(e.target.value);
@@ -114,6 +115,7 @@ function LoginPage({ registerMode }: Props) {
                 <InputField
                   id="username"
                   value={username}
+                  required={true}
                   placeholder="SigmaLover"
                   onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                     setUsername(e.target.value);
@@ -132,6 +134,7 @@ function LoginPage({ registerMode }: Props) {
               <InputField
                 id="email"
                 value={email}
+                required={true}
                 placeholder="name@example.com"
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                   setEmail(e.target.value);
@@ -158,6 +161,7 @@ function LoginPage({ registerMode }: Props) {
                 id="password"
                 value={password}
                 type="password"
+                required={true}
                 placeholder="•••••••••"
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                   setPassword(e.target.value);
@@ -193,11 +197,11 @@ function LoginPage({ registerMode }: Props) {
           </p>
         </section>
         {/* Static Image Section */}
-        <section className="w-8/14 h-full">
+        <section className="hidden md:block w-full min-h-full">
           <img
             src="Island.jpg"
             alt="Island in Ocean"
-            className="w-auto h-full object-cover"
+            className="w-full min-h-full object-cover"
           />
         </section>
       </main>
