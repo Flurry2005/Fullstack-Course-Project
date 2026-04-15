@@ -8,9 +8,21 @@ app.use(morgan("dev"));
 
 app.set("trust proxy", 1);
 
+const allowedOrigins = [
+  "https://frontend-w1uy.onrender.com",
+  "http://localhost:5173",
+  "https://fullstack.liamjorgensen.dev",
+];
+
 app.use(
   cors({
-    origin: "https://frontend-w1uy.onrender.com",
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type"],
     credentials: true,

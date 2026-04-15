@@ -2,6 +2,7 @@ interface InputFieldProps {
   value?: string;
   id?: string;
   type?: string;
+  required?: boolean;
   onChange?: (e: any) => void;
   onKeyDown?: string;
   onKeyDownFunc?: () => void;
@@ -13,6 +14,7 @@ function InputField({
   value,
   id,
   type,
+  required,
   onChange,
   onKeyDown,
   onKeyDownFunc,
@@ -30,6 +32,7 @@ function InputField({
           onKeyDownFunc();
         }
       }}
+      required={required}
       placeholder={placeholder}
       className={
         "px-3 border border-(--accent-color) rounded-xl outline-none " +

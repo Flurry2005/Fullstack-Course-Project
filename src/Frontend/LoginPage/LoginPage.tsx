@@ -5,6 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { Login } from "./Login";
 import { Register } from "./Register";
+import { useAuth } from "../Context/useAuth.tsx";
 
 interface Props {
   registerMode?: boolean;
@@ -21,26 +22,37 @@ function LoginPage({ registerMode }: Props) {
     registerMode ? false : true,
   );
 
+  const { user, login, logout } = useAuth();
+
   const navigate = useNavigate();
 
-  const login = async () => {
+  const MessgaeColors = ["text-red-500", "text-green-500"];
+
+  const [messageColor, setMessageColor] = useState("text-red-500");
+
+  const loginUser = async () => {
     // Code for contacting db, use email and password variables. Redirect on success
     console.log("Trying to log in....");
     const response = await Login(email, password);
 
     if (response?.success) {
       //Success Login
+      setMessageColor(MessgaeColors[1]);
       setErrorMessage("‎ ");
+      const userData = response.data;
+      login(userData);
+      setErrorMessage(`You have been logged in ${userData?.username}!`);
       setTimeout(() => {
         navigate("/");
       }, 1000);
     } else {
       //Failed login
+      setMessageColor(MessgaeColors[0]);
       setErrorMessage(response?.error);
     }
   };
 
-  const register = async () => {
+  const registerUser = async () => {
     console.log("Trying to log in....");
     const response = await Register(fullname, username, email, password);
 
@@ -51,16 +63,16 @@ function LoginPage({ registerMode }: Props) {
         navigate("/");
       }, 1000);
     } else {
-      //Failed login
+      //Failed Register
       setErrorMessage(response?.error);
     }
   };
 
   return (
     <>
-      <main className="flex w-full h-screen">
+      <main className="flex w-full min-h-screen">
         {/* Login Section */}
-        <section className="flex flex-col items-center bg-[#f9f5ff] w-6/14 h-full">
+        <section className="flex flex-col items-center bg-[#f9f5ff] pb-10 w-250 min-h-full">
           <h1 className="self-start mx-8! my-4! text-2xl!">Project Name</h1>
           <div className="mt-40 w-6/10">
             <h2 className="text-[#2C2A51] text-3xl!">
@@ -85,6 +97,7 @@ function LoginPage({ registerMode }: Props) {
                 <InputField
                   id="fullname"
                   value={fullname}
+                  required={true}
                   placeholder="John Doe"
                   onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                     setFullname(e.target.value);
@@ -102,6 +115,7 @@ function LoginPage({ registerMode }: Props) {
                 <InputField
                   id="username"
                   value={username}
+                  required={true}
                   placeholder="SigmaLover"
                   onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                     setUsername(e.target.value);
@@ -120,6 +134,7 @@ function LoginPage({ registerMode }: Props) {
               <InputField
                 id="email"
                 value={email}
+                required={true}
                 placeholder="name@example.com"
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                   setEmail(e.target.value);
@@ -146,6 +161,7 @@ function LoginPage({ registerMode }: Props) {
                 id="password"
                 value={password}
                 type="password"
+                required={true}
                 placeholder="•••••••••"
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                   setPassword(e.target.value);
@@ -153,14 +169,15 @@ function LoginPage({ registerMode }: Props) {
                 additionalClasses="w-full h-12 border-0 bg-[#DDD9FF]"
               ></InputField>
             </div>
-            <p className="text-red-500">{errorMessage}</p>
+            <p className={messageColor}>{errorMessage}</p>
             {/* Login Button */}
             <GlowingButton
               outline={false}
               onClick={() => {
-                if (loginMode) login();
-                else register();
+                if (loginMode) loginUser();
+                else registerUser();
               }}
+              additionalClasses="cursor-pointer"
             >
               {loginMode ? "Sign In" : "Create Free Account"}
             </GlowingButton>
@@ -171,7 +188,7 @@ function LoginPage({ registerMode }: Props) {
               : "Already have an account?"}{" "}
             <span className="font-semibold text-blue-500">
               <a
-                className="text-nowrap"
+                className="text-nowrap cursor-pointer"
                 onClick={() => setLoginMode((p) => !p)}
               >
                 {loginMode ? "Create free account" : "Log in"}
@@ -180,11 +197,11 @@ function LoginPage({ registerMode }: Props) {
           </p>
         </section>
         {/* Static Image Section */}
-        <section className="w-8/14 h-full">
+        <section className="hidden md:block w-full min-h-full">
           <img
             src="Island.jpg"
             alt="Island in Ocean"
-            className="w-auto h-full object-cover"
+            className="w-full min-h-full object-cover"
           />
         </section>
       </main>

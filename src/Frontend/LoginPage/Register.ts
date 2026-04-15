@@ -1,3 +1,41 @@
+/**
+ * Registers a new user with the provided details.
+ *
+ * Performs basic validation on input fields before sending a request
+ * to the backend API. If validation fails, no request is made.
+ *
+ * @async
+ * @function Register
+ *
+ * @param {string} fullname - The user's full name.
+ * @param {string} username - The user's chosen username.
+ * @param {string} email - The user's email address.
+ * @param {string} password - The user's password (must be longer than 8 characters).
+ *
+ * @returns {Promise<
+ *   | { success: true; message: string }
+ *   | { success: false; error?: string; data?: string }
+ * >} A promise resolving to:
+ * - `{ success: true, message }` when registration is successful
+ * - `{ success: false, error }` when the API returns an error
+ *
+ * @throws {Error} Does not throw directly, but logs errors to the console
+ * when network or unexpected failures occur.
+ *
+ * @example
+ * const result = await Register(
+ *   "John Doe",
+ *   "johndoe",
+ *   "john@example.com",
+ *   "securePassword123"
+ * );
+ *
+ * if (result.success) {
+ *   console.log("Registered:", result.message);
+ * } else {
+ *   console.error("Registration failed:", result.error || result.data);
+ * }
+ */
 export async function Register(
   fullname: string,
   username: string,
@@ -15,17 +53,16 @@ export async function Register(
     password.trim().length <= 8 ||
     !emailRegex.test(email)
   ) {
-    //invalid formats
     console.error("Invalid fullname/email/password");
     return {
       success: false,
-      data: "Invalid fullname/email/password",
+      error: "Invalid fullname/email/password",
     };
   }
 
   try {
     const response = await fetch(
-      `https://fullstack-course-project.onrender.com/api${"/register"}`,
+      `https://fullstackapi.liamjorgensen.dev/api${"/register"}`,
       {
         method: "POST",
         headers: {

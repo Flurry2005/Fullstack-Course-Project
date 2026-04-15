@@ -18,11 +18,14 @@ class UserModel {
     if (await bcrypt.compare(password, passHash)) {
       delete user.passwordHash;
       const token = JWTModel.createJwtToken(user.username, email);
+      const expiry = new Date(Date.now() + 1000 * 60 * 60);
       res.cookie("token", token, {
         httpOnly: true,
         secure: true,
         sameSite: "none",
         path: "/",
+        domain: ".liamjorgensen.dev",
+        expires: expiry,
       });
       return res.status(200).json({ success: true, data: user });
     } else

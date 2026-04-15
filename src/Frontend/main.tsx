@@ -6,6 +6,7 @@ import LoginPage from "./LoginPage/LoginPage.tsx";
 import CheckoutPage from "./checkoutPage/checkoutPage.tsx";
 import Home from "./Home.tsx";
 import RecoverPassword from "./LoginPage/RecoverPassword.tsx";
+import { AuthProvider } from "./Context/useAuth.tsx";
 
 const router = createBrowserRouter([
   {
@@ -36,6 +37,8 @@ const router = createBrowserRouter([
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <RouterProvider router={router} />
+    <AuthProvider>
+      <RouterProvider router={router} />
+    </AuthProvider>
   </StrictMode>,
 );
