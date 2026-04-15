@@ -59,9 +59,9 @@ function CheckoutPage() {
                                 : "border-2 border-blue-500"
                                 }`}
                         >
-                            <i className="fa-brands fa-apple-pay text-4xl"></i>
-                            <h3 className="text-left">Apple Pay</h3>
-                            <h4 className="text-left">One-touch checkout</h4>
+                            <img src="/swish.png" alt="Swish" className="w-25 h-20" />
+                            <h3 className="text-left">Swish</h3>
+                            <h4 className="text-left">Pay with Swish</h4>
                         </button>
                     </section>
 
