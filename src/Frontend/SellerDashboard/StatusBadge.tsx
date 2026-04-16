@@ -1,8 +1,8 @@
-type ProgressBarBarProps = {
+type StatusBadgeProps = {
   status: boolean;
 };
 
-function ProgressBar({ status }: ProgressBarBarProps) {
+function StatusBadge({ status }: StatusBadgeProps) {
   return (
     <span
       className={`${status ? "bg-[#91FEEF]" : "bg-[#7B9CFF]"} font-bold h-fit w-fit flex justify-center text-sm rounded-sm p-1 md:ml-auto `}
@@ -12,4 +12,4 @@ function ProgressBar({ status }: ProgressBarBarProps) {
   );
 }
 
-export default ProgressBar;
+export default StatusBadge;

@@ -1,5 +1,5 @@
 import me from "../assets/me.jpeg";
-import ProgressBar from "./ProgressBar";
+import StatusBadge from "./StatusBadge";
 
 function OrderCard() {
   return (
@@ -14,12 +14,12 @@ function OrderCard() {
             ></img>
             <div className="flex flex-col">
               <span className="font-bold text-[#2C2A51]">Johan Kronholm</span>
-              <span className="text-[#5A5781]">Slave Owner</span>
+              <span className="text-[#5A5781]">Developer</span>
             </div>
           </div>
-          <ProgressBar status={true} />
+          <StatusBadge status={true} />
         </div>
-        <div className="flex flex-col gap-3">
+        <div className="flex flex-col gap-1">
           <span className="text-[#5A5781]">Due in</span>
           <div className="flex">
             <span className="text-2xl font-bold">2 Days, 4h</span>
