@@ -298,7 +298,7 @@ function CheckoutPage() {
                                     <div className="flex justify-center items-center bg-[#91FEEF] rounded-4xl w-12 h-12">
                                         <i className="text-2xl fa-solid fa-shield-halved"></i>
                                     </div>
-                                    <div className="flex flex-col justify-center">
+                                    <div className="flex flex-col justify-center p-2">
                                         <p className="text-xs">SECURE</p>
                                         <p className="text-xs">CHECKOUT</p>
                                     </div>
@@ -308,7 +308,7 @@ function CheckoutPage() {
                                     <div className="flex justify-center items-center bg-[#DCC9FF] rounded-4xl w-12 h-12">
                                         <i className="text-2xl align-middle fa-solid fa-money-check-dollar"></i>
                                     </div>
-                                    <div className="flex flex-col justify-center items-center">
+                                    <div className="flex flex-col justify-center items-center p-2">
                                         <p className="text-xs">MONEY BACK </p>
                                         <p className="text-xs">GUARANTEE</p>
                                     </div>
