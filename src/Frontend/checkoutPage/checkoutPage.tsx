@@ -273,10 +273,14 @@ function CheckoutPage() {
                                 <h4>Service Fee</h4>
                                 <h4>$12.50</h4>
                             </section>
+                            <section className="flex justify-between px-5 py-2">
+                                <h4>Discount</h4>
+                                <h4>$0.00</h4>
+                            </section>
 
                             <section>
-                                <h3 className="px-5 pt-5">TOTAL AMOUNT</h3>
-                                <h2 className="px-5 text-3xl">$162.50</h2>
+                                <h2 className="px-5 pt-5">TOTAL AMOUNT</h2>
+                                <h3 className="px-5 text-3xl">$162.50</h3>
                             </section>
                         </div>
 
