@@ -8,7 +8,7 @@ import Footer from "../Footer";
 
 function CheckoutPage() {
 
-    const [selected, setSelected] = useState<"card" | "paypal" | "applePay" | null>("card");
+    const [selected, setSelected] = useState<"card" | "paypal" | "swish" | null>("card");
 
     return (
         <div className="min-h-screen flex flex-col bg-[#f9f5ff]">
@@ -24,6 +24,123 @@ function CheckoutPage() {
                         <h1 className="text-3xl">Finalize your order</h1>
                         <h3>Review your details and complete your purchase.</h3>
                     </section>
+
+                    {/* Address Method */}
+                    <h2 className="text-2xl">Billing information</h2>
+
+                    {/* Email address layout*/}
+                    <div className="flex flex-col justify-center gap-5 bg-[#F3EEFF] py-10 w-full rounded-2xl">
+                        <section className="mx-auto w-9/10">
+                            <label htmlFor="user_email">Email Address</label>
+                            <InputField
+                                id="user_email"
+                                placeholder="e.g. Username@gmail.com"
+                                additionalClasses="mx-auto w-full h-12 border-0 bg-[#DDD9FF]"
+                            />
+                        </section>
+
+                        {/* firstname and lastname layout */}
+                        <section className="mx-auto w-9/10">
+                            <div className="flex justify-between gap-5 mx-auto">
+                                <section className="flex flex-col w-full">
+                                    <label htmlFor="user_firstname">First name</label>
+                                    <InputField
+                                        id="user_firstname"
+                                        placeholder="e.g. John"
+                                        additionalClasses="mx-auto w-full h-12 border-0 bg-[#DDD9FF]"
+                                    />
+                                </section>
+
+                                <section className="flex flex-col w-full">
+                                    <label htmlFor="user_lastname">Last name</label>
+                                    <InputField
+                                        id="user_secondname"
+                                        placeholder="e.g. Doe"
+                                        additionalClasses="mx-auto w-full h-12 border-0 bg-[#DDD9FF]"
+                                    />
+                                </section>
+                            </div>
+                        </section>
+
+                        {/* first and second addresses layout */}
+                        <section className="mx-auto w-9/10">
+                            <div className="flex justify-between gap-5 mx-auto">
+                                <section className="flex flex-col w-full">
+                                    <label htmlFor="user_adress_nr1">Address Line 1</label>
+                                    <InputField
+                                        id="user_address_nr1"
+                                        placeholder="e.g Stockrosvägen 8"
+                                        additionalClasses="mx-auto w-full h-12 border-0 bg-[#DDD9FF]"
+                                    />
+                                </section>
+
+                                <section className="flex flex-col w-full">
+                                    <label htmlFor="user_adress_nr2">Address Line 2</label>
+                                    <InputField
+                                        id="user_address_nr2"
+                                        placeholder="e.g. Solhällegatan 11"
+                                        additionalClasses="mx-auto w-full h-12 border-0 bg-[#DDD9FF]"
+                                    />
+                                </section>
+                            </div>
+                        </section>
+
+                        {/* country and zip code layout */}
+                        <section className="mx-auto w-9/10">
+                            <div className="flex justify-between gap-5 mx-auto">
+                                <section className="flex flex-col w-full">
+                                    <label htmlFor="user_country">Country</label>
+                                    <InputField
+                                        id="user_country"
+                                        placeholder="e.g. Sweden"
+                                        additionalClasses="mx-auto w-full h-12 border-0 bg-[#DDD9FF]"
+                                    />
+                                </section>
+
+                                <section className="flex flex-col w-full">
+                                    <label htmlFor="user_zip_code">Zip Code</label>
+                                    <InputField
+                                        id="user_zip_code"
+                                        placeholder="e.g. 24747"
+                                        additionalClasses="mx-auto w-full h-12 border-0 bg-[#DDD9FF]"
+                                    />
+                                </section>
+                            </div>
+                        </section>
+
+                        {/* city and state layout */}
+                        <section className="mx-auto w-9/10">
+                            <div className="flex justify-between gap-5 mx-auto">
+                                <section className="flex flex-col w-full">
+                                    <label htmlFor="user_city">City</label>
+                                    <InputField
+                                        id="user_city"
+                                        placeholder="e.g. Flyinge"
+                                        additionalClasses="mx-auto w-full h-12 border-0 bg-[#DDD9FF]"
+                                    />
+                                </section>
+
+                                <section className="flex flex-col w-full">
+                                    <label htmlFor="user_state">State</label>
+                                    <InputField
+                                        id="user_state"
+                                        placeholder="e.g. Lund"
+                                        additionalClasses="mx-auto w-full h-12 border-0 bg-[#DDD9FF]"
+                                    />
+                                </section>
+                            </div>
+                        </section>
+
+                        {/* phone number layout */}
+                        <section className="mx-auto w-9/10">
+                        <label htmlFor="user_phone_number">Mobile Phone</label>
+                            <InputField
+                                id="user_phone_number"
+                                placeholder="e.g. +46 073-622-06-48"
+                                additionalClasses="mx-auto w-full h-12 border-0 bg-[#DDD9FF]"
+                            />
+                        </section>
+                    </div>
 
                     {/* Payment Method */}
                     <h2 className="text-2xl">Payment Method</h2>
@@ -53,8 +170,8 @@ function CheckoutPage() {
                         </button>
 
                         <button
-                            onClick={() => setSelected("applePay")}
-                            className={`bg-[#ffff] w-1/3 h-30 rounded-2xl p-5 flex flex-col ${selected !== "applePay"
+                            onClick={() => setSelected("swish")}
+                            className={`bg-[#ffff] w-1/3 h-30 rounded-2xl p-5 flex flex-col ${selected !== "swish"
                                 ? "border border-transparent"
                                 : "border-2 border-blue-500"
                                 }`}
@@ -65,136 +182,138 @@ function CheckoutPage() {
                         </button>
                     </section>
 
-          {/* Card Details */}
-          <div className="flex flex-col justify-center gap-5 bg-[#F3EEFF] py-10 rounded-2xl w-full">
-            <section className="mx-auto w-9/10">
-              <label htmlFor="cardholder-name">CARDHOLDER NAME</label>
-              <InputField
-                id="cardholder-name"
-                placeholder="e.g. John Doe"
-                additionalClasses="mx-auto w-full h-12 border-0 bg-[#DDD9FF]"
-              ></InputField>
-            </section>
+                    {/* CardPayment box layout */}
+                    {selected === "card" && (
+                        <div className="flex flex-col justify-center gap-5 bg-[#F3EEFF] py-10 w-full rounded-2xl">
+                            <section className="mx-auto w-9/10">
+                                <label htmlFor="cardholder-name">CARDHOLDER NAME</label>
+                                <InputField
+                                    id="cardholder-name"
+                                    placeholder="e.g. John Doe"
+                                    additionalClasses="mx-auto w-full h-12 border-0 bg-[#DDD9FF]"
+                                />
+                            </section>
 
-            <section className="mx-auto w-9/10">
-              <label htmlFor="card-number" className="mx-auto w-9/10">
-                CARD NUMBER
-              </label>
-              <InputField
-                id="card-number"
-                placeholder="0000 0000 0000 0000"
-                additionalClasses="mx-auto w-full h-12 border-0 bg-[#DDD9FF]"
-              ></InputField>
-            </section>
+                            <section className="mx-auto w-9/10">
+                                <label htmlFor="card-number" className="mx-auto w-9/10">
+                                    CARD NUMBER
+                                </label>
+                                <InputField
+                                    id="card-number"
+                                    placeholder="0000 0000 0000 0000"
+                                    additionalClasses="mx-auto w-full h-12 border-0 bg-[#DDD9FF]"
+                                />
+                            </section>
 
-            <section className="mx-auto w-9/10">
-              {/* Expiry date and cvv container */}
-              <div className="flex justify-between gap-5 mx-auto">
-                <div className="flex flex-col w-full">
-                  <label htmlFor="expiry-date">EXPIRY DATE</label>
-                  <InputField
-                    id="expiry-date"
-                    placeholder="MM/YY"
-                    additionalClasses="w-full h-12 border-0 bg-[#DDD9FF]"
-                  ></InputField>
+                            <section className="mx-auto w-9/10">
+                                <div className="flex justify-between gap-5 mx-auto">
+                                    <div className="flex flex-col w-full">
+                                        <label htmlFor="expiry-date">EXPIRY DATE</label>
+                                        <InputField
+                                            id="expiry-date"
+                                            placeholder="MM/YY"
+                                            additionalClasses="w-full h-12 border-0 bg-[#DDD9FF]"
+                                        />
+                                    </div>
+
+                                    <div className="flex flex-col w-full">
+                                        <label htmlFor="cvv">CVV</label>
+                                        <InputField
+                                            id="cvv"
+                                            placeholder="•••"
+                                            additionalClasses="w-full h-12 border-0 bg-[#DDD9FF]"
+                                        />
+                                    </div>
+                                </div>
+                            </section>
+                        </div>
+                    )}
+
+
+                    {/* Discount Details */}
+                    <section className="flex flex-col gap-2">
+                        <label htmlFor="discount-code" className="text-2xl">
+                            Discount Code
+                        </label>
+                        <div className="flex gap-5 w-full">
+                            <InputField
+                                id="discount-code"
+                                placeholder="Enter code"
+                                additionalClasses="w-full h-12 border-0 bg-[#ffff]"
+                            ></InputField>
+                            <MiniButton
+                                text="Apply"
+                                additionalClassName="!bg-[#E3DFFF] !text-[#0050D4] rounded-xl"
+                            />
+                        </div>
+                    </section>
                 </div>
 
-                <div className="flex flex-col w-full">
-                  <label htmlFor="cvv">CVV</label>
-                  <InputField
-                    id="cvv"
-                    placeholder="•••"
-                    additionalClasses="w-full h-12 border-0 bg-[#DDD9FF]"
-                  ></InputField>
-                </div>
-              </div>
-            </section>
-          </div>
+                {/* Right main container */}
+                <div className="flex flex-col gap-5 pt-10 w-3/10">
+                    <div className="bg-[#F3EEFF] rounded-2xl w-full h-auto overflow-hidden py">
+                        <div className="p-5">
+                            <img
+                                src="/HomePage/goon.jpg"
+                                className="rounded-2xl w-full h-5/20"
+                            ></img>
+                        </div>
 
-          {/* Discount Details */}
-          <section className="flex flex-col gap-2">
-            <label htmlFor="discount-code" className="text-2xl">
-              Discount Code
-            </label>
-            <div className="flex gap-5 w-full">
-              <InputField
-                id="discount-code"
-                placeholder="Enter code"
-                additionalClasses="w-full h-12 border-0 bg-[#ffff]"
-              ></InputField>
-              <MiniButton
-                text="Apply"
-                additionalClassName="!bg-[#E3DFFF] !text-[#0050D4] rounded-xl"
-              />
-            </div>
-          </section>
-        </div>
+                        {/* Checkout prices */}
+                        <div>
+                            <section className="flex justify-between px-5 py-2">
+                                <h4>Service Tier</h4>
+                                <h4>Cooking</h4>
+                            </section>
+                            <section className="flex justify-between px-5 py-2">
+                                <h4>Standard Price</h4>
+                                <h4>$150.00</h4>
+                            </section>
+                            <section className="flex justify-between px-5 py-2">
+                                <h4>Service Fee</h4>
+                                <h4>$12.50</h4>
+                            </section>
 
-        {/* Right main container */}
-        <div className="flex flex-col gap-5 pt-10 w-3/10">
-          <div className="bg-[#F3EEFF] rounded-2xl w-full h-auto overflow-hidden py">
-            <div className="p-5">
-              <img
-                src="/HomePage/goon.jpg"
-                className="rounded-2xl w-full h-5/20"
-              ></img>
-            </div>
+                            <section>
+                                <h3 className="px-5 pt-5">TOTAL AMOUNT</h3>
+                                <h2 className="px-5 text-3xl">$162.50</h2>
+                            </section>
+                        </div>
 
-            {/* Checkout prices */}
-            <div>
-              <section className="flex justify-between px-5 py-2">
-                <h4>Service Tier</h4>
-                <h4>Cooking</h4>
-              </section>
-              <section className="flex justify-between px-5 py-2">
-                <h4>Standard Price</h4>
-                <h4>$150.00</h4>
-              </section>
-              <section className="flex justify-between px-5 py-2">
-                <h4>Service Fee</h4>
-                <h4>$12.50</h4>
-              </section>
+                        {/* Pay button */}
+                        <section className="p-5">
+                            <GlowingButton
+                                outline={false}
+                                onClick={() => { }}
+                                additionalClasses="w-full! h-15! mx-auto"
+                            >
+                                Confirm and Pay
+                            </GlowingButton>
+                        </section>
 
-              <section>
-                <h3 className="px-5 pt-5">TOTAL AMOUNT</h3>
-                <h2 className="px-5 text-3xl">$162.50</h2>
-              </section>
-            </div>
+                        {/* Purchase details under pay button */}
+                        <div>
+                            <section className="flex justify-between p-5">
+                                <div className="flex">
+                                    <div className="flex justify-center items-center bg-[#91FEEF] rounded-4xl w-12 h-12">
+                                        <i className="text-2xl fa-solid fa-shield-halved"></i>
+                                    </div>
+                                    <div className="flex flex-col justify-center">
+                                        <p className="text-xs">SECURE</p>
+                                        <p className="text-xs">CHECKOUT</p>
+                                    </div>
+                                </div>
 
-            {/* Pay button */}
-            <section className="p-5">
-              <GlowingButton
-                outline={false}
-                onClick={() => {}}
-                additionalClasses="w-full! h-15! mx-auto"
-              >
-                Confirm and Pay
-              </GlowingButton>
-            </section>
-
-            {/* Purchase details under pay button */}
-            <div>
-              <section className="flex justify-between p-5">
-                <div className="flex">
-                  <div className="flex justify-center items-center bg-[#91FEEF] rounded-4xl w-12 h-12">
-                    <i className="text-2xl fa-solid fa-shield-halved"></i>
-                  </div>
-                  <div className="flex flex-col justify-center">
-                    <p className="text-xs">SECURE</p>
-                    <p className="text-xs">CHECKOUT</p>
-                  </div>
-                </div>
-
-                <div className="flex">
-                  <div className="flex justify-center items-center bg-[#DCC9FF] rounded-4xl w-12 h-12">
-                    <i className="text-2xl align-middle fa-solid fa-money-check-dollar"></i>
-                  </div>
-                  <div className="flex flex-col justify-center items-center">
-                    <p className="text-xs">MONEY BACK </p>
-                    <p className="text-xs">GUARANTEE</p>
-                  </div>
-                </div>
-              </section>
+                                <div className="flex">
+                                    <div className="flex justify-center items-center bg-[#DCC9FF] rounded-4xl w-12 h-12">
+                                        <i className="text-2xl align-middle fa-solid fa-money-check-dollar"></i>
+                                    </div>
+                                    <div className="flex flex-col justify-center items-center">
+                                        <p className="text-xs">MONEY BACK </p>
+                                        <p className="text-xs">GUARANTEE</p>
+                                    </div>
+                                </div>
+                            </section>
 
                             <section className="bg-[#E9E5FF] p-5">
                                 <p className="text-xs text-center">By confirming your payment, you agree to the Atelier Market Terms of
