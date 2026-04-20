@@ -8,12 +8,13 @@ import Home from "./Home.tsx";
 import RecoverPassword from "./LoginPage/RecoverPassword.tsx";
 import { AuthProvider } from "./Context/useAuth.tsx";
 
+
 const router = createBrowserRouter([
   {
     children: [
       {
         path: "/",
-        element: <Home />,
+      element: <Home />,
       },
       {
         path: "/login",
