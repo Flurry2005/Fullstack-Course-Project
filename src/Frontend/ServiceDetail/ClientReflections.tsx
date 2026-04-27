@@ -1,4 +1,4 @@
-import me from "../assets/me.jpeg";
+import me from "../assets/react.svg";
 import profileRatingsIcon from "../assets/profile-ratings-icon.svg";
 
 const reflectionsDemo = [
