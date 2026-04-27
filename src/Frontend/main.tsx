@@ -7,13 +7,15 @@ import CheckoutPage from "./checkoutPage/checkoutPage.tsx";
 import Home from "./Home.tsx";
 import RecoverPassword from "./LoginPage/RecoverPassword.tsx";
 import { AuthProvider } from "./Context/useAuth.tsx";
+import SellerDashBoard from "./SellerDashboard/SellerDashboard.tsx";
+import CreateNewGig from "./SellerDashboard/CreateNewGig/CreateNewGig.tsx";
 
 const router = createBrowserRouter([
   {
     children: [
       {
         path: "/",
-        element: <Home />,
+        element: <SellerDashBoard />,
       },
       {
         path: "/login",
@@ -30,6 +32,14 @@ const router = createBrowserRouter([
       {
         path: "/checkout",
         element: <CheckoutPage />,
+      },
+      {
+        path: "/dashboard",
+        element: <SellerDashBoard />,
+      },
+      {
+        path: "/dashboard/createnewgig",
+        element: <CreateNewGig />,
       },
     ],
   },

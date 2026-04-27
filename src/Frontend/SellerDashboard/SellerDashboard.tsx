@@ -4,8 +4,10 @@ import OrderCard from "./OrderCard";
 import MessageCard from "./MessageCard";
 import GigCard from "./GigCard";
 import profileRatingsIcon from "../assets/profile-ratings-icon.svg";
+import createNewIcon from "../assets/create-plus-icon.svg";
+import { Link } from "react-router-dom";
 
-function Main() {
+function SellerDashBoard() {
   return (
     <>
       <Navbar />
@@ -85,9 +87,16 @@ function Main() {
                 Manage and promote your top-rated services{" "}
               </h3>
             </div>
-            <button className="flex font-medium items-center md:text-xl border-none  text-white bg-linear-to-r from-[#702AE1] to-[#D0B8FF] rounded-xl w-fit sm:ml-auto md:px-9 px-3 place-self-end py-3 border">
+            <Link
+              to="/dashboard/createnewgig"
+              className="flex w-fit sm:ml-auto place-self-end font-semibold items-center gap-1 md:text-xl text-white bg-linear-to-r from-[#702AE1] to-[#554771] rounded-xl md:px-9 px-3 py-3 border"
+            >
+              <img
+                src={createNewIcon}
+                className="h-6 w-6 brightness-0 invert"
+              />
               Create New Gig
-            </button>
+            </Link>
           </div>
           <div className="grid md:grid-cols-3 grid-cols-1 gap-6">
             <GigCard
@@ -123,4 +132,4 @@ function Main() {
   );
 }
 
-export default Main;
+export default SellerDashBoard;

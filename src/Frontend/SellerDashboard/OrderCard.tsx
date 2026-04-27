@@ -13,7 +13,7 @@ function OrderCard() {
               alt="Picture of customer"
             ></img>
             <div className="flex flex-col">
-              <span className="font-bold text-[#2C2A51]">Johan Kronholm</span>
+              <span className="font-semibold text-[#2C2A51]">Johan Kronholm</span>
               <span className="text-[#5A5781]">Developer</span>
             </div>
           </div>
@@ -22,7 +22,7 @@ function OrderCard() {
         <div className="flex flex-col gap-1">
           <span className="text-[#5A5781]">Due in</span>
           <div className="flex">
-            <span className="text-2xl font-bold">2 Days, 4h</span>
+            <span className="text-2xl font-semibold">2 Days, 4h</span>
             <span className="ml-auto text-2xl text-[#0050D4]">$450.00</span>
           </div>
         </div>

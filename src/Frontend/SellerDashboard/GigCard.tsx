@@ -29,7 +29,7 @@ function GigCard({
             alt={title}
             className="w-full h-40 object-cover rounded-t-2xl border-x-2 border-t-2 border-[#ACA8D7]/15"
           />
-          <span className="bg-white w-fit px-3 z-10 absolute items-center top-3 right-3 rounded-2xl text-sm flex gap-1 text-[#0050D4]">
+          <span className="bg-white w-fit px-3 py-1 z-10 absolute items-center top-3 right-3 font-semibold rounded-2xl text-sm flex gap-1 text-[#0050D4]">
             <img src={ratingsIcon} className="w-4 h-4" />
             {rating} ({reviewerAmount})
           </span>
@@ -45,7 +45,7 @@ function GigCard({
               <img src={checkoutsIcon} className="w-4" />
               {checkouts}
             </span>
-            <span className="ml-auto text-[#0050D4] font-bold">
+            <span className="ml-auto text-[#0050D4] font-semibold">
               From ${price}
             </span>
           </div>
