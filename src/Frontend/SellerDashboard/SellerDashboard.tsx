@@ -64,7 +64,7 @@ function SellerDashBoard() {
           <section className="bg-[#ACA8D7]/10 p-6 rounded-2xl gap-6 flex flex-col border-2 border-[#ACA8D7]/15">
             <div className="flex">
               <h2 className="text-2xl text-[#2C2A51] align-middle">Messages</h2>
-              <span className="w-fit ml-auto px-3 place-content-center rounded-2xl text-sm text-white bg-[#702AE1]">
+              <span className="w-fit ml-auto px-3 place-content-center rounded-2xl text-sm text-white font-semibold bg-linear-to-br from-[#4F46E5] to-[#6f16ae4f]">
                 3 New
               </span>
             </div>
@@ -89,7 +89,7 @@ function SellerDashBoard() {
             </div>
             <Link
               to="/dashboard/createnewgig"
-              className="flex w-fit sm:ml-auto place-self-end font-semibold items-center gap-1 md:text-xl text-white bg-linear-to-r from-[#702AE1] to-[#554771] rounded-xl md:px-9 px-3 py-3 border"
+              className="flex w-fit sm:ml-auto place-self-end font-semibold items-center gap-1 md:text-xl text-white bg-linear-to-r from-[#4F46E5] to-[#4e46e5c2] rounded-xl md:px-9 px-3 py-3"
             >
               <img
                 src={createNewIcon}

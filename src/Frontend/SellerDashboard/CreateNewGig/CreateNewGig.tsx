@@ -6,6 +6,7 @@ import ProgressBar from "./ProgressBar";
 import { useState } from "react";
 import Overview from "./Overview";
 import Description from "./Description";
+import Pricing from "./Pricing";
 
 function CreateNewGig() {
   const [currentStep, setCurrentStep] = useState<number>(0);
@@ -25,21 +26,23 @@ function CreateNewGig() {
         <section>
           {currentStep === 0 && <Overview />}
           {currentStep === 1 && <Description />}
+          {currentStep === 2 && <Pricing />}
         </section>
         <div className="flex gap-1 justify-between">
           {currentStep > 0 && (
             <button
-              className="mr-auto cursor-pointer py-3 rounded-lg font-semibold text-white bg-[#4F46E5] px-6"
+              className="mr-auto cursor-pointer py-3 rounded-lg font-semibold text-white bg-linear-to-r from-[#4F46E5] to-[#4e46e5c2] px-6"
               onClick={() => setCurrentStep(currentStep - 1)}
             >
               Previous
             </button>
           )}
+
           <button
-            className="ml-auto cursor-pointer py-3 rounded-lg font-semibold text-white bg-[#4F46E5] px-6"
+            className="ml-auto cursor-pointer py-3 rounded-lg font-semibold text-white bg-linear-to-r from-[#4F46E5] to-[#4e46e5c2] px-6"
             onClick={() => setCurrentStep(currentStep + 1)}
           >
-            Next
+            {currentStep !== 2 ? "Next" : "Finalize"}
           </button>
         </div>
       </main>
