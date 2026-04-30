@@ -1,11 +1,31 @@
-import { useRef, useState } from "react";
+import { useRef, useEffect, useState } from "react";
 import checkIcon from "../../assets/circle-check-req-icon.svg";
 
 function Pricing() {
   const basicFeatureRef = useRef<HTMLInputElement>(null);
   const standardFeatureRef = useRef<HTMLInputElement>(null);
   const premiumFeatureRef = useRef<HTMLInputElement>(null);
+  const [standardInputPrice, setStandardInputPrice] = useState("");
+  const [premiumInputPrice, setPremiumInputPrice] = useState("");
+  const [standardInputFeature, setStandardInputFeature] = useState("");
+  const [premiumInputFeature, setPremiumInputFeature] = useState("");
   const [features, setFeatures] = useState<Record<string, string>>({});
+  const [standardActive, setStandardActive] = useState(false);
+  const [premiumActive, setPremiumActive] = useState(false);
+
+  useEffect(() => {
+    setStandardActive(
+      standardInputPrice.length > 0 || standardInputFeature.length > 0,
+    );
+    setPremiumActive(
+      premiumInputPrice.length > 0 || premiumInputFeature.length > 0,
+    );
+  }, [
+    standardInputPrice,
+    standardInputFeature,
+    premiumInputFeature,
+    premiumInputPrice,
+  ]);
 
   const addBasicFeature = () => {
     if (!basicFeatureRef.current?.value) return;
@@ -97,7 +117,9 @@ function Pricing() {
                         className="flex min-w-0 items-start gap-2"
                       >
                         <img src={checkIcon} className="w-5 h-5" />
-                        <span className="wrap-break-word leading-tight">{feature}</span>
+                        <span className="wrap-break-word leading-tight">
+                          {feature}
+                        </span>
                       </span>
                     ))}
                 </div>
@@ -111,7 +133,9 @@ function Pricing() {
                         className="flex min-w-0 items-start gap-2 opacity-50"
                       >
                         <img src={checkIcon} className="w-5 h-5" />
-                        <span className="wrap-break-word leading-tight">{feature}</span>
+                        <span className="wrap-break-word leading-tight">
+                          {feature}
+                        </span>
                       </span>
                     ))}
                 </div>
@@ -125,7 +149,9 @@ function Pricing() {
                         className="flex min-w-0 items-start gap-2 opacity-50"
                       >
                         <img src={checkIcon} className="w-5 h-5 opacity-50" />
-                        <span className="wrap-break-word leading-tight">{feature}</span>
+                        <span className="wrap-break-word leading-tight">
+                          {feature}
+                        </span>
                       </span>
                     ))}
                 </div>
@@ -134,8 +160,14 @@ function Pricing() {
           </div>
         </div>
 
-        <div className="flex flex-col shadow-md rounded-2xl h-fit border border-[#C7C4D8]">
-          <div className="flex gap-1  rounded-t-2xl flex-col p-6 bg-[#F2F3FF]">
+        <div
+          className={`${standardActive ? "opacity-100" : "opacity-25"} flex flex-col shadow-md rounded-2xl hover:border-[#4e46e58c] h-fit border border-[#C7C4D8]
+         `}
+        >
+          <div
+            onClick={() => setStandardActive((prev) => !prev)}
+            className="cursor-pointer hover:bg-[#4e46e58c] flex gap-1 rounded-t-2xl flex-col p-6 bg-[#F2F3FF]"
+          >
             <span className="text-[#3525CD]">TIER 02</span>
             <span className="text-xl text-[#131B2E] font-semibold">
               Standard
@@ -145,6 +177,7 @@ function Pricing() {
             <div className="flex flex-col gap-1">
               <span className="text-[#464555] text-sm">Package Price ($)</span>
               <input
+                onChange={(e) => setStandardInputPrice(e.target.value)}
                 type="text"
                 className="text-[#6B7280] bg-[#FFFFFF] text-xl p-3 rounded-lg border border-[#C7C4D8]"
               />
@@ -167,6 +200,7 @@ function Pricing() {
                   Included Features
                 </span>
                 <input
+                  onChange={(e) => setStandardInputFeature(e.target.value)}
                   type="text"
                   ref={standardFeatureRef}
                   className="text-[#6B7280] bg-[#FFFFFF] text-xl p-3 rounded-lg border border-[#C7C4D8]"
@@ -189,7 +223,9 @@ function Pricing() {
                         className="flex min-w-0 items-start gap-2"
                       >
                         <img src={checkIcon} className="w-5 h-5" />
-                        <span className="wrap-break-word leading-tight">{feature}</span>
+                        <span className="wrap-break-word leading-tight">
+                          {feature}
+                        </span>
                       </span>
                     ))}
                 </div>
@@ -203,7 +239,9 @@ function Pricing() {
                         className="flex min-w-0 items-start gap-2"
                       >
                         <img src={checkIcon} className="w-5 h-5" />
-                        <span className="wrap-break-word leading-tight">{feature}</span>
+                        <span className="wrap-break-word leading-tight">
+                          {feature}
+                        </span>
                       </span>
                     ))}
                 </div>
@@ -217,7 +255,9 @@ function Pricing() {
                         className="flex min-w-0 items-start gap-2 opacity-50"
                       >
                         <img src={checkIcon} className="w-5 h-5 opacity-50" />
-                        <span className="wrap-break-word leading-tight">{feature}</span>
+                        <span className="wrap-break-word leading-tight">
+                          {feature}
+                        </span>
                       </span>
                     ))}
                 </div>
@@ -226,8 +266,14 @@ function Pricing() {
           </div>
         </div>
 
-        <div className="flex flex-col shadow-md rounded-2xl h-fit border border-[#C7C4D8]">
-          <div className="flex gap-1  rounded-t-2xl flex-col p-6 bg-[#F2F3FF]">
+        <div
+          className={`${premiumActive ? "opacity-100" : "opacity-25"} flex flex-col shadow-md rounded-2xl hover:border-[#4e46e58c] h-fit border border-[#C7C4D8]
+         `}
+        >
+          <div
+            onClick={() => setPremiumActive((prev) => !prev)}
+            className="cursor-pointer hover:bg-[#4e46e58c] flex gap-1 rounded-t-2xl flex-col p-6 bg-[#F2F3FF]"
+          >
             <span className="text-[#3525CD]">TIER 03</span>
             <span className="text-xl text-[#131B2E] font-semibold">
               Premium
@@ -237,6 +283,7 @@ function Pricing() {
             <div className="flex flex-col gap-1">
               <span className="text-[#464555] text-sm">Package Price ($)</span>
               <input
+                onChange={(e) => setPremiumInputPrice(e.target.value)}
                 type="text"
                 className="text-[#6B7280] bg-[#FFFFFF] text-xl p-3 rounded-lg border border-[#C7C4D8]"
               />
@@ -259,6 +306,7 @@ function Pricing() {
                   Included Features
                 </span>
                 <input
+                  onChange={(e) => setPremiumInputFeature(e.target.value)}
                   type="text"
                   ref={premiumFeatureRef}
                   className="text-[#6B7280] bg-[#FFFFFF] text-xl p-3 rounded-lg border border-[#C7C4D8]"
@@ -281,7 +329,9 @@ function Pricing() {
                         className="flex min-w-0 items-start gap-2"
                       >
                         <img src={checkIcon} className="w-5 h-5" />
-                        <span className="wrap-break-word leading-tight">{feature}</span>
+                        <span className="wrap-break-word leading-tight">
+                          {feature}
+                        </span>
                       </span>
                     ))}
                 </div>
@@ -295,7 +345,9 @@ function Pricing() {
                         className="flex min-w-0 items-start gap-2"
                       >
                         <img src={checkIcon} className="w-5 h-5" />
-                        <span className="wrap-break-word leading-tight">{feature}</span>
+                        <span className="wrap-break-word leading-tight">
+                          {feature}
+                        </span>
                       </span>
                     ))}
                 </div>
@@ -309,7 +361,9 @@ function Pricing() {
                         className="flex min-w-0 items-start gap-2"
                       >
                         <img src={checkIcon} className="w-5 h-5" />
-                        <span className="wrap-break-word leading-tight">{feature}</span>
+                        <span className="wrap-break-word leading-tight">
+                          {feature}
+                        </span>
                       </span>
                     ))}
                 </div>
