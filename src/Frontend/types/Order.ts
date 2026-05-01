@@ -3,12 +3,9 @@ import type { Dispatch, SetStateAction } from "react";
 export type Order = {
   _id: any;
   gigname: string;
-  seller: Seller;
+  sellerUsername: string;
+  buyerUsername: string;
   chathistory: Message[];
-};
-
-type Seller = {
-  username: string;
 };
 
 export type Message = {
@@ -19,4 +16,5 @@ export type Message = {
 export type OrderContextType = {
   orders: Order[] | null;
   setOrders: Dispatch<SetStateAction<Order[] | null>>;
+  updateOrders: () => void;
 };

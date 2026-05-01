@@ -42,7 +42,7 @@ function Conversations({ setActiveOrder, activeOrder }: Props) {
               </section>
               <section className="flex flex-col gap-1 py-2 w-6/10">
                 <p className="font-semibold text-[#4338CA]">
-                  {order.seller.username}
+                  {order.sellerUsername}
                 </p>
                 <p className="text-[#818CF8] text-xs">{order.gigname}</p>
               </section>

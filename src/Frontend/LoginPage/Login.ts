@@ -29,6 +29,8 @@
  *   console.error("Login failed:", result.error);
  * }
  */
+import { io } from "socket.io-client";
+import { connectSocket, getSocket } from "../socket/Socket";
 export async function Login(email: string, password: string) {
   const emailRegex =
     /^(?:[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:(?:\\[\x00-\x7F]|[^\\"]))*")@(?:(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?\.)+[a-zA-Z]{2,}|(?:\[(?:\d{1,3}\.){3}\d{1,3}\]))$/;
@@ -46,7 +48,7 @@ export async function Login(email: string, password: string) {
 
   try {
     const response = await fetch(
-      `https://fullstackapi.liamjorgensen.dev/api${"/login"}`,
+      `${import.meta.env.VITE_DEV === "true" ? "http://localhost:3000" : "https://fullstackapi.liamjorgensen.dev"}/api${"/login"}`,
       {
         method: "POST",
         headers: {
@@ -60,6 +62,7 @@ export async function Login(email: string, password: string) {
     const res = await response.json();
 
     if (res.success) {
+      if (!getSocket().connected) connectSocket();
       return { success: res.success, data: res.data };
     } else {
       return { success: res.success, error: res.error };
