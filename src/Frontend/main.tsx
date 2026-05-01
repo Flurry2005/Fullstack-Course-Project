@@ -9,7 +9,8 @@ import RecoverPassword from "./LoginPage/RecoverPassword.tsx";
 import { AuthProvider } from "./Context/useAuth.tsx";
 import SellerDashBoard from "./SellerDashboard/SellerDashboard.tsx";
 import CreateNewGig from "./SellerDashboard/CreateNewGig/CreateNewGig.tsx";
-
+import ChatPage from "./ChatPage/ChatPage.tsx";
+import { OrderProvider } from "./Context/useOrders.tsx";
 
 const router = createBrowserRouter([
   {
@@ -41,6 +42,14 @@ const router = createBrowserRouter([
       {
         path: "/dashboard/createnewgig",
         element: <CreateNewGig />,
+      },
+      {
+        path: "/messages",
+        element: (
+          <OrderProvider>
+            <ChatPage />
+          </OrderProvider>
+        ),
       },
     ],
   },
