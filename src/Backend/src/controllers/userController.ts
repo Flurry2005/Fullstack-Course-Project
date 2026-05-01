@@ -1,12 +1,15 @@
-import bcrypt from "bcrypt";
-import DatabaseConnection from "../../services/DatabaseConnection.js";
+import Users from "../models/userModel.js";
+import { Request, Response, NextFunction } from "express";
 import JWTModel from "../middleware/JWT.js";
+import bcrypt from "bcrypt";
 
-class UserModel {
-  async login(email, password, res) {
-    const user = await DatabaseConnection.db
-      .collection("users")
-      .findOne({ email });
+class UserController {
+  async login(req: Request, res: Response, next: NextFunction) {
+    const { email, password } = req.body;
+
+    if (!email || !password) return res.status(400).json({ success: false });
+
+    const user = await Users.findOne({ email });
 
     if (!user)
       return res
@@ -16,7 +19,10 @@ class UserModel {
     const passHash = user.passwordHash;
 
     if (await bcrypt.compare(password, passHash)) {
-      delete user.passwordHash;
+      const userObj = user.toObject();
+      //@ts-ignore
+      delete userObj.passwordHash;
+
       const token = JWTModel.createJwtToken(user.username, email);
       const expiry = new Date(Date.now() + 1000 * 60 * 60);
       res.cookie("token", token, {
@@ -33,14 +39,18 @@ class UserModel {
         .status(401)
         .json({ success: false, error: "Incorrect password!" });
   }
+  async register(req: Request, res: Response, next: NextFunction) {
+    const { fullname, username, email, password } = req.body;
 
-  async register(fullname, username, email, password, res) {
-    if (await DatabaseConnection.db.collection("users").findOne({ email }))
+    if (!fullname || !email || !password || !username)
+      return res.status(400).json({ success: false });
+
+    if (await Users.findOne({ email }))
       return res
         .status(409)
         .json({ success: false, error: "Email already in use!" });
 
-    const user = await DatabaseConnection.db.collection("users").insertOne({
+    const user = await Users.insertOne({
       fullname: fullname,
       username: username,
       email: email,
@@ -52,4 +62,4 @@ class UserModel {
   }
 }
 
-export default new UserModel();
+export default new UserController();
