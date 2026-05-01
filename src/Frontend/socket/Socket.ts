@@ -4,10 +4,15 @@ let socket: Socket | null = null;
 
 export function getSocket() {
   if (!socket) {
-    socket = io("http://localhost:3000", {
-      autoConnect: false,
-      withCredentials: true,
-    });
+    socket = io(
+      import.meta.env.VITE_DEV === "true"
+        ? "http://localhost:3000"
+        : "https://fullstackapi.liamjorgensen.dev",
+      {
+        autoConnect: false,
+        withCredentials: true,
+      },
+    );
   }
   return socket;
 }
