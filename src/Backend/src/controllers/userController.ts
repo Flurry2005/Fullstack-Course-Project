@@ -1,6 +1,6 @@
 import Users from "../models/userModel.js";
 import { Request, Response, NextFunction } from "express";
-import JWTModel from "../middleware/JWT.js";
+import JWTModel from "../models/JWT.js";
 import bcrypt from "bcrypt";
 
 class UserController {
@@ -27,10 +27,10 @@ class UserController {
       const expiry = new Date(Date.now() + 1000 * 60 * 60);
       res.cookie("token", token, {
         httpOnly: true,
-        secure: true,
-        sameSite: "none",
+        secure: process.env.VITE_DEV ? false : true,
+        sameSite: process.env.VITE_DEV ? "lax" : "none",
         path: "/",
-        domain: ".liamjorgensen.dev",
+        domain: process.env.VITE_DEV ? undefined : ".liamjorgensen.dev",
         expires: expiry,
       });
       return res.status(200).json({ success: true, data: user });

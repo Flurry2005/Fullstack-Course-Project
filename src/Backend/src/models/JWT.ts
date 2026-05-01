@@ -3,14 +3,19 @@ import jwt from "jsonwebtoken";
 type ModelType = {
   createJwtToken: (username: string, email: string) => void;
   decode: (token: string) => any;
-  verify: (token: string) => jwt.JwtPayload | string;
+  verify: (token: string) => JWTPayload;
+};
+
+export type JWTPayload = {
+  username: string;
+  email: string;
 };
 
 const JWTModel = {} as ModelType;
 export default JWTModel;
 
 JWTModel.createJwtToken = (username: string, email: string) => {
-  const payload = {
+  const payload: JWTPayload = {
     username: username,
     email: email,
   };
@@ -27,6 +32,7 @@ JWTModel.decode = (token: string) => {
   return jwt.decode(token);
 };
 
+//@ts-ignore
 JWTModel.verify = (token: string) => {
   return jwt.verify(token, process.env.JWT_SECRET!);
 };

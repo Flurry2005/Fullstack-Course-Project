@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import type { AuthContextType, User } from "../types/User";
+import { connectSocket } from "../socket/Socket";
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
@@ -12,6 +13,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     if (userInStorage) {
       User = JSON.parse(userInStorage) as User;
       setUser(User);
+      connectSocket();
     }
   }, []);
 
