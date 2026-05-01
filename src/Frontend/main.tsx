@@ -10,12 +10,13 @@ import { AuthProvider } from "./Context/useAuth.tsx";
 import SellerDashBoard from "./SellerDashboard/SellerDashboard.tsx";
 import CreateNewGig from "./SellerDashboard/CreateNewGig/CreateNewGig.tsx";
 
+
 const router = createBrowserRouter([
   {
     children: [
       {
         path: "/",
-        element: <SellerDashBoard />,
+        element: <Home />,
       },
       {
         path: "/login",
