@@ -98,6 +98,7 @@ class SocketHandler {
                   chathistory: {
                     username: user.username,
                     message: data.message,
+                    time: new Date(),
                   },
                 },
               },

@@ -27,6 +27,35 @@ function ChatPanel({ activeOrder, onlineList }: Props) {
     setMessage("");
     updateOrders();
   };
+
+  const formatMessageTime = (input: string | Date) => {
+    const date = new Date(input);
+    const now = new Date();
+
+    const isToday =
+      date.getDate() === now.getDate() &&
+      date.getMonth() === now.getMonth() &&
+      date.getFullYear() === now.getFullYear();
+
+    const yesterday = new Date();
+    yesterday.setDate(now.getDate() - 1);
+
+    const isYesterday =
+      date.getDate() === yesterday.getDate() &&
+      date.getMonth() === yesterday.getMonth() &&
+      date.getFullYear() === yesterday.getFullYear();
+
+    const time = date.toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+
+    if (isToday) return `Today ${time}`;
+    if (isYesterday) return `Yesterday ${time}`;
+
+    return `${date.toLocaleDateString()} ${time}`;
+  };
+
   useEffect(() => {
     if (!chatRef.current) return;
 
@@ -56,12 +85,18 @@ function ChatPanel({ activeOrder, onlineList }: Props) {
       <section ref={chatRef} className="flex-1 px-20 py-5 overflow-y-auto">
         <div className="flex flex-col gap-10">
           {activeOrder.chathistory.map((message: Message, index) => (
-            <p
-              key={index}
-              className={`p-5 rounded-2xl ${message.username !== user.username ? "self-start bg-[#DDD9FF] text-black rounded-bl-none" : "self-end bg-[#0050D4] text-white rounded-br-none"}`}
-            >
-              {message.message}
-            </p>
+            <div key={index} className="flex flex-col w-full">
+              <p
+                className={`p-5 w-fit rounded-2xl ${message.username !== user.username ? "self-start bg-[#DDD9FF] text-black rounded-bl-none" : "self-end bg-[#0050D4] text-white rounded-br-none"}`}
+              >
+                {message.message}
+              </p>
+              <p
+                className={`${message.username !== user.username ? "self-start text-[#64748B] rounded-bl-none" : "self-end text-[#64748B] rounded-br-none"}`}
+              >
+                {formatMessageTime(message.time)}
+              </p>
+            </div>
           ))}
         </div>
       </section>
