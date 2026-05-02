@@ -38,7 +38,7 @@ const router = createBrowserRouter([
         element: <SellerDashBoard />,
       },
       {
-        path: "/dashboard/createnewgig",
+        path: "/dashboard/create",
         element: <CreateNewGig />,
       },
     ],
