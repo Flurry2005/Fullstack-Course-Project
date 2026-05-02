@@ -1,15 +1,19 @@
 import React, { type Dispatch, type SetStateAction } from "react";
-import { useOrder } from "../../Context/useOrders";
+import { useOrders } from "../../Context/useOrders";
 import me from "../../assets/me.jpeg";
 import type { Order } from "../../types/Order";
+import { useAuth } from "../../Context/useAuth";
+import type { OnlineList } from "../../types/OnlineList";
 
 interface Props {
   activeOrder: Order | null;
+  onlineList: OnlineList;
   setActiveOrder: Dispatch<SetStateAction<Order | null>>;
 }
 
-function Conversations({ setActiveOrder, activeOrder }: Props) {
-  const { orders } = useOrder();
+function Conversations({ setActiveOrder, activeOrder, onlineList }: Props) {
+  const { orders } = useOrders();
+  const { user } = useAuth();
 
   return (
     <section className="bg-[#F8FAFC] border-r-[#E2E8F0] w-3/10 h-screen">
@@ -38,11 +42,15 @@ function Conversations({ setActiveOrder, activeOrder }: Props) {
                   alt=""
                   className="rounded-full w-fit h-8/10 object-contain aspect-square"
                 />
-                <span className="self-end bg-green-500 rounded-full w-2 h-2" />
+                <span
+                  className={`self-end rounded-full w-2 h-2 ${onlineList?.find((entry: any) => entry.username === (user?.username === order?.buyerUsername ? order?.sellerUsername : order?.buyerUsername) && entry.status === "Online") ? "bg-green-500" : "bg-red-500"}`}
+                />
               </section>
               <section className="flex flex-col gap-1 py-2 w-6/10">
                 <p className="font-semibold text-[#4338CA]">
-                  {order.sellerUsername}
+                  {user?.username === order.buyerUsername
+                    ? order.sellerUsername
+                    : order.buyerUsername}
                 </p>
                 <p className="text-[#818CF8] text-xs">{order.gigname}</p>
               </section>

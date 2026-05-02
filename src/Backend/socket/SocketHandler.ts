@@ -3,7 +3,7 @@ import { Server, Socket } from "socket.io";
 import JWTModel, { JWTPayload } from "../src/models/JWT.ts";
 import {
   getSocketId,
-  getUserId,
+  getUsername,
   registerSocket,
   unregisterSocket,
 } from "./registry.ts";
@@ -42,18 +42,44 @@ class SocketHandler {
         const userCookie: JWTPayload = JWTModel.verify(token);
         console.log(userCookie.username, socket.id);
         const user = await Users.findOne({ username: userCookie.username });
-        if (!user) throw Error("No such user exists!");
 
+        if (!user) throw Error("No such user exists!");
+        const uid = new mongoose.Types.ObjectId(user._id);
         registerSocket(socket.id, user.username);
 
+        BroadcastOnlineStatus(uid, user.username, this.#io!, "Online");
+
         socket.on("disconnect", () => {
-          console.log(getUserId(socket.id), "disconnected!");
+          console.log(getUsername(socket.id), "disconnected!");
+          BroadcastOnlineStatus(uid, user.username, this.#io!, "Offline");
           unregisterSocket(socket.id);
+        });
+
+        socket.on("request_online_statuses", async () => {
+          const orders = await Orders.find({
+            $or: [{ buyerId: uid }, { sellerId: uid }],
+          });
+
+          const otherUsers = orders.map((order) =>
+            order.buyerId.toString() === uid.toString()
+              ? order.sellerUsername
+              : order.buyerUsername,
+          );
+
+          const usersWithStatus = otherUsers.map((username) => ({
+            username,
+            status: getSocketId(username) ? "Online" : "Offline",
+          }));
+
+          console.log("request_online_statuses received from", socket.id);
+          console.log("sending:", usersWithStatus);
+          socket.emit("online_status", usersWithStatus);
+
+          socket.emit("online_status", usersWithStatus);
         });
 
         socket.on("send_message", async (data) => {
           console.log(data);
-          const uid = new mongoose.Types.ObjectId(user._id);
           try {
             const order: OrderType | null = await Orders.findOneAndUpdate(
               {
@@ -98,16 +124,45 @@ class SocketHandler {
             console.log("Message wasnt stored in the database");
           }
         });
+
+        socket.emit("server_ready");
       } catch (error) {
         console.log(
           socket.handshake.address,
-          "was disconnected due to invalid token!",
-          error,
+          "was disconnected due to invalid JWTtoken!",
         );
         socket.disconnect();
       }
     });
   }
+}
+
+type OnlineStatus = "Online" | "Offline";
+
+async function BroadcastOnlineStatus(
+  uid: mongoose.Types.ObjectId,
+  username: string,
+  io: Server,
+  status: OnlineStatus,
+) {
+  const orders = await Orders.find({
+    $or: [{ buyerId: uid }, { sellerId: uid }],
+  });
+
+  const otherSockets: Socket[] = orders
+    .map((order) =>
+      order.buyerId.toString() === uid.toString()
+        ? order.sellerUsername
+        : order.buyerUsername,
+    )
+    .map((userId) => getSocketId(userId))
+    .filter((id): id is string => id !== undefined)
+    .map((socketId) => io.sockets.sockets.get(socketId))
+    .filter((socket): socket is Socket => socket !== undefined);
+
+  otherSockets.forEach((socket: Socket) =>
+    socket.emit("online_status", [{ username: username, status: status }]),
+  );
 }
 
 function parseCookies(cookieString = "") {
