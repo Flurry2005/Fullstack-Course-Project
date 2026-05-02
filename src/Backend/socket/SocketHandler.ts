@@ -3,7 +3,7 @@ import { Server, Socket } from "socket.io";
 import JWTModel, { JWTPayload } from "../src/models/JWT.ts";
 import {
   getSocketId,
-  getUserId,
+  getUsername,
   registerSocket,
   unregisterSocket,
 } from "./registry.ts";
@@ -50,7 +50,7 @@ class SocketHandler {
         BroadcastOnlineStatus(uid, user.username, this.#io!, "Online");
 
         socket.on("disconnect", () => {
-          console.log(getUserId(socket.id), "disconnected!");
+          console.log(getUsername(socket.id), "disconnected!");
           BroadcastOnlineStatus(uid, user.username, this.#io!, "Offline");
           unregisterSocket(socket.id);
         });
@@ -129,8 +129,7 @@ class SocketHandler {
       } catch (error) {
         console.log(
           socket.handshake.address,
-          "was disconnected due to invalid token!",
-          error,
+          "was disconnected due to invalid JWTtoken!",
         );
         socket.disconnect();
       }

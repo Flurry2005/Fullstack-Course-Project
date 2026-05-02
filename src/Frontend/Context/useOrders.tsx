@@ -1,10 +1,12 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import type { OrderContextType, Order } from "../types/Order";
+import { useAuth } from "./useAuth";
 
 const OrderContext = createContext<OrderContextType | undefined>(undefined);
 
 export function OrderProvider({ children }: { children: React.ReactNode }) {
   const [orders, setOrders] = useState<Order[] | null>(null);
+  const { logout } = useAuth();
 
   useEffect(() => {
     updateOrders();
@@ -22,6 +24,8 @@ export function OrderProvider({ children }: { children: React.ReactNode }) {
 
     if (res.success) {
       setOrders(res.data);
+    } else {
+      logout();
     }
   };
 
