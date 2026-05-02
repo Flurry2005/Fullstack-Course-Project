@@ -15,7 +15,6 @@ export function unregisterSocket(socketId: string) {
 }
 
 export function getSocketId(userId: string): string | undefined {
-  console.log(userToSocket);
   return userToSocket.get(userId);
 }
 

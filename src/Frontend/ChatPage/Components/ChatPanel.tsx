@@ -3,18 +3,20 @@ import type { Order, Message } from "../../types/Order";
 import me from "../../assets/me.jpeg";
 import InputField from "../../Components/General/InputField";
 import { getSocket } from "../../socket/Socket";
-import { useOrder } from "../../Context/useOrders";
+import { useOrders } from "../../Context/useOrders";
 import { useAuth } from "../../Context/useAuth";
+import type { OnlineList } from "../../types/OnlineList";
 interface Props {
   activeOrder: Order | null;
+  onlineList: OnlineList;
 }
 
-function ChatPanel({ activeOrder }: Props) {
+function ChatPanel({ activeOrder, onlineList }: Props) {
   const [message, setMessage] = useState<string>("");
   const { user } = useAuth();
 
   const chatRef = useRef<HTMLDivElement | null>(null);
-  const { updateOrders } = useOrder();
+  const { updateOrders } = useOrders();
 
   const sendMessage = (message: string) => {
     const socket = getSocket();
@@ -37,11 +39,15 @@ function ChatPanel({ activeOrder }: Props) {
       <section className="flex gap-5 bg-white px-5 w-full h-20">
         <div className="relative flex items-center">
           <img src={me} alt="" className="rounded-full h-10" />
-          <span className="right-0 bottom-4 box-content absolute bg-green-500 border-3 border-white rounded-full w-2 h-2" />
+          <span
+            className={`right-0 bottom-4 box-content absolute border-3 border-white rounded-full w-2 h-2 ${onlineList?.find((entry: any) => entry.username === (user?.username === activeOrder?.buyerUsername ? activeOrder?.sellerUsername : activeOrder?.buyerUsername) && entry.status === "Online") ? "bg-green-500" : "bg-red-500"}`}
+          />
         </div>
         <div className="flex flex-col justify-center leading-4">
           <p className="font-semibold text-[#2C2A51]">
-            {activeOrder.sellerUsername}
+            {user?.username === activeOrder.buyerUsername
+              ? activeOrder.sellerUsername
+              : activeOrder.buyerUsername}
           </p>
           <p className="text-[#0050D4]">{activeOrder.gigname}</p>
         </div>
@@ -49,9 +55,9 @@ function ChatPanel({ activeOrder }: Props) {
       {/* Chat Section */}
       <section ref={chatRef} className="flex-1 px-20 py-5 overflow-y-auto">
         <div className="flex flex-col gap-10">
-          {activeOrder.chathistory.map((message: Message) => (
+          {activeOrder.chathistory.map((message: Message, index) => (
             <p
-              key={message.message}
+              key={index}
               className={`p-5 rounded-2xl ${message.username !== user.username ? "self-start bg-[#DDD9FF] text-black rounded-bl-none" : "self-end bg-[#0050D4] text-white rounded-br-none"}`}
             >
               {message.message}

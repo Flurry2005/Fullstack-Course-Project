@@ -31,8 +31,8 @@ export function OrderProvider({ children }: { children: React.ReactNode }) {
     </OrderContext.Provider>
   );
 }
-export function useOrder() {
+export function useOrders() {
   const context = useContext(OrderContext);
-  if (!context) throw new Error("useorder must be used within orderProvider");
+  if (!context) throw new Error("useOrders must be used within orderProvider");
   return context;
 }

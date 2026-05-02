@@ -11,6 +11,7 @@ import SellerDashBoard from "./SellerDashboard/SellerDashboard.tsx";
 import CreateNewGig from "./SellerDashboard/CreateNewGig/CreateNewGig.tsx";
 import ChatPage from "./ChatPage/ChatPage.tsx";
 import { OrderProvider } from "./Context/useOrders.tsx";
+import { OnlineListProvider } from "./Context/useOnlineList.tsx";
 
 const router = createBrowserRouter([
   {
@@ -47,7 +48,9 @@ const router = createBrowserRouter([
         path: "/messages",
         element: (
           <OrderProvider>
-            <ChatPage />
+            <OnlineListProvider>
+              <ChatPage />
+            </OnlineListProvider>
           </OrderProvider>
         ),
       },
