@@ -1,3 +1,4 @@
+import type { ObjectId } from "mongodb";
 import type { Dispatch, SetStateAction } from "react";
 
 export type Order = {
@@ -12,6 +13,7 @@ export type Message = {
   username: string;
   message: string;
   time: Date;
+  readBy: ObjectId[];
 };
 
 export type OrderContextType = {

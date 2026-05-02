@@ -1,15 +1,13 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import NavBar from "../NavBar";
 import Footer from "../Footer";
 import Conversations from "./Components/Conversations";
 import ChatPanel from "./Components/ChatPanel";
-import type { Order } from "../types/Order";
 import { useOrders } from "../Context/useOrders";
-import { useOnlineList } from "../Context/useOnlineList";
+import { useSocket } from "../Context/useSocket";
 
 function ChatPage() {
-  const [activeOrder, setActiveOrder] = useState<Order | null>(null);
-  const { onlineList } = useOnlineList();
+  const { onlineList, activeOrder, setActiveOrder } = useSocket();
   const { orders } = useOrders();
 
   useEffect(() => {
@@ -20,6 +18,8 @@ function ChatPage() {
     if (match) {
       setActiveOrder(match);
     }
+
+    return () => setActiveOrder(null);
   }, [orders]);
   return (
     <>

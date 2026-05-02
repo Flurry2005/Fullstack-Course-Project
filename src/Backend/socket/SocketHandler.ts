@@ -78,6 +78,21 @@ class SocketHandler {
           socket.emit("online_status", usersWithStatus);
         });
 
+        socket.on("read_chat", async (data, ack) => {
+          await Orders.updateOne(
+            { _id: data.orderId },
+            {
+              $addToSet: {
+                "chathistory.$[].readBy": uid,
+              },
+            },
+          );
+
+          if (typeof ack === "function") {
+            ack({ success: true });
+          }
+        });
+
         socket.on("send_message", async (data) => {
           console.log(data);
           try {
@@ -98,6 +113,7 @@ class SocketHandler {
                   chathistory: {
                     username: user.username,
                     message: data.message,
+                    readBy: [uid],
                     time: new Date(),
                   },
                 },

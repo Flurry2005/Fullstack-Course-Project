@@ -1,11 +1,11 @@
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { Order, Message } from "../../types/Order";
 import me from "../../assets/me.jpeg";
 import InputField from "../../Components/General/InputField";
 import { getSocket } from "../../socket/Socket";
 import { useOrders } from "../../Context/useOrders";
 import { useAuth } from "../../Context/useAuth";
-import type { OnlineList } from "../../types/OnlineList";
+import type { OnlineList } from "../../types/Socket";
 interface Props {
   activeOrder: Order | null;
   onlineList: OnlineList;
@@ -16,9 +16,10 @@ function ChatPanel({ activeOrder, onlineList }: Props) {
   const { user } = useAuth();
 
   const chatRef = useRef<HTMLDivElement | null>(null);
-  const { updateOrders } = useOrders();
+  const { orders, updateOrders } = useOrders();
 
   const sendMessage = (message: string) => {
+    if (!user) return;
     const socket = getSocket();
     socket.emit("send_message", {
       orderId: activeOrder?._id,
@@ -84,20 +85,26 @@ function ChatPanel({ activeOrder, onlineList }: Props) {
       {/* Chat Section */}
       <section ref={chatRef} className="flex-1 px-20 py-5 overflow-y-auto">
         <div className="flex flex-col gap-10">
-          {activeOrder.chathistory.map((message: Message, index) => (
-            <div key={index} className="flex flex-col w-full">
-              <p
-                className={`p-5 w-fit rounded-2xl ${message.username !== user.username ? "self-start bg-[#DDD9FF] text-black rounded-bl-none" : "self-end bg-[#0050D4] text-white rounded-br-none"}`}
-              >
-                {message.message}
-              </p>
-              <p
-                className={`${message.username !== user.username ? "self-start text-[#64748B] rounded-bl-none" : "self-end text-[#64748B] rounded-br-none"}`}
-              >
-                {formatMessageTime(message.time)}
-              </p>
-            </div>
-          ))}
+          {activeOrder.chathistory && activeOrder.chathistory.length > 0 ? (
+            activeOrder.chathistory.map((message: Message, index) => (
+              <div key={index} className="flex flex-col w-full">
+                <p
+                  className={`p-5 w-fit rounded-2xl ${message.username !== user.username ? "self-start bg-[#DDD9FF] text-black rounded-bl-none" : "self-end bg-[#0050D4] text-white rounded-br-none"}`}
+                >
+                  {message.message}
+                </p>
+                <p
+                  className={`${message.username !== user.username ? "self-start text-[#64748B] rounded-bl-none" : "self-end text-[#64748B] rounded-br-none"}`}
+                >
+                  {formatMessageTime(message.time)}
+                </p>
+              </div>
+            ))
+          ) : (
+            <p className="text-[#64748B] text-center">
+              New conversation, send a message to start the conversation!
+            </p>
+          )}
         </div>
       </section>
       {/* Type Section */}

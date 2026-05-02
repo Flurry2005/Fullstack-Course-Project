@@ -1,9 +1,10 @@
-import React, { type Dispatch, type SetStateAction } from "react";
+import { type Dispatch, type SetStateAction } from "react";
 import { useOrders } from "../../Context/useOrders";
 import me from "../../assets/me.jpeg";
 import type { Order } from "../../types/Order";
 import { useAuth } from "../../Context/useAuth";
-import type { OnlineList } from "../../types/OnlineList";
+import type { OnlineList } from "../../types/Socket";
+import { getSocket } from "../../socket/Socket";
 
 interface Props {
   activeOrder: Order | null;
@@ -12,7 +13,7 @@ interface Props {
 }
 
 function Conversations({ setActiveOrder, activeOrder, onlineList }: Props) {
-  const { orders } = useOrders();
+  const { orders, setOrders } = useOrders();
   const { user } = useAuth();
 
   return (
@@ -32,8 +33,26 @@ function Conversations({ setActiveOrder, activeOrder, onlineList }: Props) {
             <article
               className={`flex gap-2 rounded-2xl border-[#F8FAFC] w-full box-content border h-22 ${activeOrder ? (activeOrder._id === order._id ? "bg-white border-[#E0E7FF]!" : "") : ""}`}
               key={order._id}
-              onClick={() => {
+              onClick={async () => {
                 setActiveOrder(order);
+                await getSocket().emitWithAck("read_chat", {
+                  orderId: order._id,
+                });
+                setOrders((prev) => {
+                  if (!prev || !user) return prev;
+
+                  return prev.map((order1) =>
+                    order1._id === order._id
+                      ? {
+                          ...order1,
+                          chathistory: order1.chathistory.map((m) => ({
+                            ...m,
+                            readBy: [...m.readBy, user._id],
+                          })),
+                        }
+                      : order1,
+                  );
+                });
               }}
             >
               <section className="flex flex-col justify-center px-4 py-2 w-fit h-full">

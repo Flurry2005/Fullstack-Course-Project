@@ -6,13 +6,14 @@ const OrderContext = createContext<OrderContextType | undefined>(undefined);
 
 export function OrderProvider({ children }: { children: React.ReactNode }) {
   const [orders, setOrders] = useState<Order[] | null>(null);
-  const { logout } = useAuth();
+  const { user, logout } = useAuth();
 
   useEffect(() => {
     updateOrders();
-  }, []);
+  }, [user]);
 
   const updateOrders = async () => {
+    if (!user) return;
     const response = await fetch(
       `${import.meta.env.VITE_DEV === "true" ? "http://localhost:3000" : "https://fullstackapi.liamjorgensen.dev"}/api/orders`,
       {
@@ -23,7 +24,7 @@ export function OrderProvider({ children }: { children: React.ReactNode }) {
     const res = await response.json();
 
     if (res.success) {
-      setOrders(res.data);
+      setOrders([...res.data]);
     } else {
       logout();
     }
