@@ -72,6 +72,19 @@ function Conversations({ setActiveOrder, activeOrder, onlineList }: Props) {
                     : order.buyerUsername}
                 </p>
                 <p className="text-[#818CF8] text-xs">{order.gigname}</p>
+                <div className="flex items-center gap-1">
+                  <p className="max-w-9/10 overflow-x-hidden text-[#64748B] text-xs truncate text-nowrap">
+                    {order.chathistory.at(order.chathistory.length - 1)
+                      ?.message || " "}
+                  </p>
+                  {user &&
+                    !order.chathistory
+                      .at(order.chathistory.length - 1)
+                      ?.readBy.includes(user?._id) &&
+                    order.chathistory.length > 0 && (
+                      <span className="bg-blue-500 rounded-full w-2 h-2" />
+                    )}
+                </div>
               </section>
             </article>
           );
