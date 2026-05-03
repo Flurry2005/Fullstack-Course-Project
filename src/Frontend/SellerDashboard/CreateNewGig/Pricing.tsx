@@ -5,37 +5,84 @@ import Package from "./Package";
 import type { Package as GigPackage } from "../../types/Gig";
 
 type PricingProps = {
+  //FML
   newGig: NewGig;
   setBasic: (GigPackage: GigPackage) => void;
   setStandard: (GigPackage: GigPackage) => void;
   setPremium: (GigPackage: GigPackage) => void;
+  basicInputPrice: string;
+  setBasicInputPrice: (v: string) => void;
+  basicDeliveryTime: string;
+  setBasicDeliveryTime: (v: string) => void;
+  basicInputFeature: string;
+  setBasicInputFeature: (v: string) => void;
+  basicFeatures: string[];
+  setBasicFeatures: (v: string[]) => void;
+  standardInputPrice: string;
+  setStandardInputPrice: (v: string) => void;
+  standardDeliveryTime: string;
+  setStandardDeliveryTime: (v: string) => void;
+  standardInputFeature: string;
+  setStandardInputFeature: (v: string) => void;
+  standardFeatures: string[];
+  setStandardFeatures: (v: string[]) => void;
+  premiumInputPrice: string;
+  setPremiumInputPrice: (v: string) => void;
+  premiumDeliveryTime: string;
+  setPremiumDeliveryTime: (v: string) => void;
+  premiumInputFeature: string;
+  setPremiumInputFeature: (v: string) => void;
+  premiumFeatures: string[];
+  setPremiumFeatures: (v: string[]) => void;
 };
 
-function Pricing({ newGig, setBasic, setStandard, setPremium }: PricingProps) {
+function Pricing({
+  //FML
+  newGig,
+  setBasic,
+  setStandard,
+  setPremium,
+  basicInputPrice,
+  setBasicInputPrice,
+  basicDeliveryTime,
+  setBasicDeliveryTime,
+  basicInputFeature,
+  setBasicInputFeature,
+  basicFeatures,
+  setBasicFeatures,
+  standardInputPrice,
+  setStandardInputPrice,
+  standardDeliveryTime,
+  setStandardDeliveryTime,
+  standardInputFeature,
+  setStandardInputFeature,
+  standardFeatures,
+  setStandardFeatures,
+  premiumInputPrice,
+  setPremiumInputPrice,
+  premiumDeliveryTime,
+  setPremiumDeliveryTime,
+  premiumInputFeature,
+  setPremiumInputFeature,
+  premiumFeatures,
+  setPremiumFeatures,
+}: PricingProps) {
   const basicFeatureRef = useRef<HTMLInputElement>(null);
   const standardFeatureRef = useRef<HTMLInputElement>(null);
   const premiumFeatureRef = useRef<HTMLInputElement>(null);
-  const [basicInputPrice, setBasicInputPrice] = useState("");
-  const [basicDeliveryTime, setBasicDeliveryTime] = useState("");
-  const [basicInputFeature, setBasicInputFeature] = useState("");
-  const [basicFeatures, setBasicFeatures] = useState<string[]>([]);
-  const [standardInputPrice, setStandardInputPrice] = useState("");
-  const [standardDeliveryTime, setStandardDeliveryTime] = useState("");
-  const [standardInputFeature, setStandardInputFeature] = useState("");
-  const [standardFeatures, setStandardFeatures] = useState<string[]>([]);
-  const [premiumInputPrice, setPremiumInputPrice] = useState("");
-  const [premiumDeliveryTime, setPremiumDeliveryTime] = useState("");
-  const [premiumInputFeature, setPremiumInputFeature] = useState("");
-  const [premiumFeatures, setPremiumFeatures] = useState<string[]>([]);
   const [standardActive, setStandardActive] = useState(false);
   const [premiumActive, setPremiumActive] = useState(false);
 
   useEffect(() => {
     setStandardActive(
-      standardInputPrice.length > 0 || standardInputFeature.length > 0 || standardFeatures.length > 0
+      standardInputPrice.length > 0 ||
+        standardInputFeature.length > 0 ||
+        standardFeatures.length > 0,
     );
     setPremiumActive(
-      premiumInputPrice.length > 0 || premiumInputFeature.length > 0 || premiumFeatures.length > 0
+      premiumInputPrice.length > 0 ||
+        premiumInputFeature.length > 0 ||
+        premiumFeatures.length > 0,
     );
   }, [
     standardInputPrice,
@@ -50,15 +97,27 @@ function Pricing({ newGig, setBasic, setStandard, setPremium }: PricingProps) {
     if (!basicFeatureRef.current?.value) return;
     const newFeature = basicFeatureRef.current.value.trim();
     if (!newFeature || basicFeatures.includes(newFeature)) return;
-    setBasicFeatures((prev) => [...prev, newFeature]);
+    setBasicFeatures([...basicFeatures, newFeature]);
     setBasicInputFeature("");
+  };
+
+  const removeBasicFeature = (removeId: number) => {
+    setBasicFeatures(basicFeatures.filter((_, id) => id !== removeId));
+  };
+
+  const removeStandardFeature = (removeId: number) => {
+    setStandardFeatures(standardFeatures.filter((_, id) => id !== removeId));
+  };
+
+  const removePremiumFeature = (removeId: number) => {
+    setPremiumFeatures(premiumFeatures.filter((_, id) => id !== removeId));
   };
 
   const addStandardFeature = () => {
     if (!standardFeatureRef.current?.value) return;
     const newFeature = standardFeatureRef.current.value.trim();
     if (!newFeature || standardFeatures.includes(newFeature)) return;
-    setStandardFeatures((prev) => [...prev, newFeature]);
+    setStandardFeatures([...standardFeatures, newFeature]);
     setStandardInputFeature("");
   };
 
@@ -66,7 +125,7 @@ function Pricing({ newGig, setBasic, setStandard, setPremium }: PricingProps) {
     if (!premiumFeatureRef.current?.value) return;
     const newFeature = premiumFeatureRef.current.value.trim();
     if (!newFeature || premiumFeatures.includes(newFeature)) return;
-    setPremiumFeatures((prev) => [...prev, newFeature]);
+    setPremiumFeatures([...premiumFeatures, newFeature]);
     setPremiumInputFeature("");
   };
 
@@ -80,6 +139,7 @@ function Pricing({ newGig, setBasic, setStandard, setPremium }: PricingProps) {
       </div>
       <div className="grid md:grid-cols-3 grid-cols-1 gap-6">
         <Package
+          newGig={newGig}
           tier="basic"
           setBasic={setBasic}
           setStandard={setStandard}
@@ -93,9 +153,11 @@ function Pricing({ newGig, setBasic, setStandard, setPremium }: PricingProps) {
           setFeatureInput={setBasicInputFeature}
           featureRef={basicFeatureRef}
           addFeature={addBasicFeature}
+          removeFeature={removeBasicFeature}
           features={basicFeatures}
         />
         <Package
+          newGig={newGig}
           tier="standard"
           setBasic={setBasic}
           setStandard={setStandard}
@@ -110,9 +172,11 @@ function Pricing({ newGig, setBasic, setStandard, setPremium }: PricingProps) {
           setFeatureInput={setStandardInputFeature}
           featureRef={standardFeatureRef}
           addFeature={addStandardFeature}
+          removeFeature={removeStandardFeature}
           features={standardFeatures}
         />
         <Package
+          newGig={newGig}
           setBasic={setBasic}
           setStandard={setStandard}
           setPremium={setPremium}
@@ -127,6 +191,7 @@ function Pricing({ newGig, setBasic, setStandard, setPremium }: PricingProps) {
           setFeatureInput={setPremiumInputFeature}
           featureRef={premiumFeatureRef}
           addFeature={addPremiumFeature}
+          removeFeature={removePremiumFeature}
           features={premiumFeatures}
         />
       </div>

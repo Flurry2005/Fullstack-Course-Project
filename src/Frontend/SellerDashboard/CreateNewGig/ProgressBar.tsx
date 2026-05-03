@@ -52,7 +52,7 @@ function ProgressBar({ currentStep }: ProgressBarProps) {
         <span
           className={`${currentStep === 3 ? "font-semibold" : "font-normal text-sm"}`}
         >
-          Summary
+          Review
         </span>
       </span>
     </div>

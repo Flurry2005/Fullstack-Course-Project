@@ -7,11 +7,11 @@ import infoIcon from "../../assets/info-icon.svg";
 import type { Gig as NewGig } from "../../types/Gig";
 
 type DescriptionProps = {
-  setDescription: (description : string) => void;
+  setDescription: (description: string) => void;
   newGig: NewGig;
 };
 
-function Description({ setDescription, newGig } : DescriptionProps) {
+function Description({ setDescription, newGig }: DescriptionProps) {
   const [primaryImagePreview, setPrimaryImagePreview] = useState<string>("");
   const [secondaryImagePreview, setSecondaryImagePreview] =
     useState<string>("");
@@ -211,7 +211,6 @@ function Description({ setDescription, newGig } : DescriptionProps) {
             rows={10}
             className="text-[#6B7280] w-full p-6 rounded-lg border resize-none border-[#C7C4D8]"
             value={newGig.description}
-          
           />
         </div>
       </div>

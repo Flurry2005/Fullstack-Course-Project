@@ -32,7 +32,7 @@ function Overview({
   };
 
   const removeTag = (index: number) => {
-    setFinalTags((newGig.tags || []).filter((_, i) => i !== index));
+    setFinalTags([...(newGig.tags || []).filter((_, i) => i !== index)]);
   };
 
   const handleMainCategoryChange = (value: string) => {
@@ -100,12 +100,12 @@ function Overview({
                   newGig.tags.map((tag, index) => (
                     <span
                       key={`${tag}-${index}`}
-                      className="font-semibold text-[#131B2E] gap-1 flex items-center border border-[#C7C4D8] bg-[#E2E7FF] px-6 py-1 rounded-3xl"
+                      className="text-[#54647A] font-medium gap-1 flex items-center bg-[#D0E1FB] px-6 py-1 rounded-lg min-h-9"
                     >
                       {tag}
                       <img
                         src={removeIcon}
-                        className="w-3 h-3 cursor-pointer"
+                        className="w-3 h-3 cursor-pointer contrast-100 invert-50"
                         onClick={() => removeTag(index)}
                       />
                     </span>

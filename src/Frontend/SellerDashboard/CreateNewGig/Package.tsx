@@ -1,6 +1,8 @@
 import checkIcon from "../../assets/circle-check-req-icon.svg";
 import { useEffect, type RefObject } from "react";
 import type { Package as GigPackage } from "../../types/Gig";
+import type { Gig as NewGig } from "../../types/Gig";
+import removeIcon from "../../assets/x-icon.svg";
 
 type PackageProps = {
   tier: "basic" | "standard" | "premium";
@@ -14,10 +16,12 @@ type PackageProps = {
   setFeatureInput?: (feature: string) => void;
   featureRef: RefObject<HTMLInputElement | null>;
   addFeature: () => void;
+  removeFeature: (id: number) => void;
   features: string[];
   setBasic: (GigPackage: GigPackage) => void;
   setStandard: (GigPackage: GigPackage) => void;
   setPremium: (GigPackage: GigPackage) => void;
+  newGig: NewGig;
 };
 
 const tierLabels = {
@@ -38,6 +42,7 @@ function Package({
   setFeatureInput,
   featureRef,
   addFeature,
+  removeFeature,
   features,
   setBasic,
   setStandard,
@@ -133,12 +138,13 @@ function Package({
           >
             Add feature
           </button>
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-1">
             <span className="font-semibold text-sm">{tierLabels[tier].label} Features</span>
-            {features.map((feature) => (
-              <span key={feature} className="flex min-w-0 items-start gap-2">
+            {features.map((feature, id) => (
+              <span key={id} className="flex min-w-0 items-start gap-2">
                 <img src={checkIcon} className="w-5 h-5" />
                 <span className="wrap-break-word break-all leading-tight">{feature}</span>
+                    <img src={removeIcon} onClick={() =>removeFeature(id)} className="cursor-pointer contrast-100 invert-50 w-3 h-3" />
               </span>
             ))}
           </div>
