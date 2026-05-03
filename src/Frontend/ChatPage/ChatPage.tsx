@@ -1,25 +1,14 @@
-import React, { useEffect, useState } from "react";
+import { useEffect } from "react";
 import NavBar from "../NavBar";
 import Footer from "../Footer";
 import Conversations from "./Components/Conversations";
 import ChatPanel from "./Components/ChatPanel";
-import type { Order } from "../types/Order";
-import { getSocket } from "../socket/Socket";
-import { useOrder } from "../Context/useOrders";
+import { useOrders } from "../Context/useOrders";
+import { useSocket } from "../Context/useSocket";
 
 function ChatPage() {
-  const [activeOrder, setActiveOrder] = useState<Order | null>(null);
-  const { orders, updateOrders } = useOrder();
-
-  useEffect(() => {
-    const socket = getSocket();
-
-    socket.on("message_received", () => updateOrders());
-
-    return () => {
-      socket.removeListener("message_received");
-    };
-  }, []);
+  const { onlineList, activeOrder, setActiveOrder } = useSocket();
+  const { orders } = useOrders();
 
   useEffect(() => {
     if (!orders || !activeOrder) return;
@@ -29,6 +18,8 @@ function ChatPage() {
     if (match) {
       setActiveOrder(match);
     }
+
+    return () => setActiveOrder(null);
   }, [orders]);
   return (
     <>
@@ -37,8 +28,9 @@ function ChatPage() {
         <Conversations
           setActiveOrder={setActiveOrder}
           activeOrder={activeOrder}
+          onlineList={onlineList}
         />
-        <ChatPanel activeOrder={activeOrder} />
+        <ChatPanel activeOrder={activeOrder} onlineList={onlineList} />
       </main>
       <Footer />
     </>

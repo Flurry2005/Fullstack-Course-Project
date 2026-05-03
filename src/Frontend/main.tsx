@@ -11,6 +11,7 @@ import SellerDashBoard from "./SellerDashboard/SellerDashboard.tsx";
 import CreateNewGig from "./SellerDashboard/CreateNewGig/CreateNewGig.tsx";
 import ChatPage from "./ChatPage/ChatPage.tsx";
 import { OrderProvider } from "./Context/useOrders.tsx";
+import { SocketProvider } from "./Context/useSocket.tsx";
 
 const router = createBrowserRouter([
   {
@@ -45,11 +46,7 @@ const router = createBrowserRouter([
       },
       {
         path: "/messages",
-        element: (
-          <OrderProvider>
-            <ChatPage />
-          </OrderProvider>
-        ),
+        element: <ChatPage />,
       },
     ],
   },
@@ -58,7 +55,11 @@ const router = createBrowserRouter([
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <AuthProvider>
-      <RouterProvider router={router} />
+      <OrderProvider>
+        <SocketProvider>
+          <RouterProvider router={router} />
+        </SocketProvider>
+      </OrderProvider>
     </AuthProvider>
   </StrictMode>,
 );

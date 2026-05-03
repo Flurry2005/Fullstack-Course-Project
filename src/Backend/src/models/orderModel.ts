@@ -2,6 +2,16 @@ import mongoose, { InferSchemaType } from "mongoose";
 
 export type OrderType = InferSchemaType<typeof orderSchema>;
 
+const messageSchema = new mongoose.Schema(
+  {
+    username: { type: String, required: true },
+    message: { type: String, required: true },
+    time: { type: Date, required: true },
+    readBy: [{ type: mongoose.Schema.Types.ObjectId }],
+  },
+  { _id: false },
+);
+
 const orderSchema = new mongoose.Schema(
   {
     gigname: {
@@ -27,8 +37,10 @@ const orderSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+
     chathistory: {
-      type: [{}],
+      type: [messageSchema],
+      default: [],
     },
   },
   { timestamps: true },
