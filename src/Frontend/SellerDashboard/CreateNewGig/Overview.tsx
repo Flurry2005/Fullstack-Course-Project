@@ -4,27 +4,57 @@ import { useRef } from "react";
 import removeIcon from "../../assets/x-icon.svg";
 import circleIcon from "../../assets/circle-check-icon.svg";
 import bookIcon from "../../assets/book-icon.svg";
+import type { Gig as NewGig } from "../../types/Gig";
+import { useEffect } from "react";
+import { categories } from "./Categories";
 
+type overviewProps = {
+  newGig: NewGig;
+  setTitle: (title: string) => void;
+  setCategory: (category: { main?: string; sub?: string }) => void;
+  setFinalTags: (tags: string[]) => void;
+};
 
-function Overview() {
-  const [tags, setTags] = useState<string[]>([]);
+function Overview({
+  setTitle,
+  setCategory,
+  setFinalTags,
+  newGig,
+}: overviewProps) {
+  const [mainCategory, setMainCategory] = useState(categories[0].main);
+  const [subCategory, setSubCategory] = useState(categories[0].subs[0]);
+
+  useEffect(() => {
+    if (!newGig.category?.main || !newGig.category?.sub) {
+      setCategory({ main: categories[0].main, sub: categories[0].subs[0] });
+    }
+  }, []);
   const tagRef = useRef<HTMLInputElement>(null);
 
   const addTag = () => {
     const newTag = tagRef.current?.value.trim();
     if (!newTag) return;
 
-    setTags((prev) => {
-      if (prev.length > 5) return prev;
-      return [...prev, newTag];
-    });
+    setFinalTags([...(newGig.tags || []), newTag]);
     if (tagRef.current) tagRef.current.value = "";
   };
 
   const removeTag = (index: number) => {
-    setTags((prev) => {
-      return prev.filter((_, i) => i !== index);
-    });
+    setFinalTags([...(newGig.tags || []).filter((_, i) => i !== index)]);
+  };
+
+  const handleMainCategoryChange = (value: string) => {
+    setMainCategory(value);
+    // Find the first subcategory for the new main category
+    const found = categories.find((cat) => cat.main === value);
+    const firstSub = found && found.subs.length > 0 ? found.subs[0] : "";
+    setSubCategory(firstSub);
+    setCategory({ main: value, sub: firstSub });
+  };
+
+  const handleSubCategoryChange = (value: string) => {
+    setSubCategory(value);
+    setCategory({ main: mainCategory, sub: value });
   };
 
   return (
@@ -41,7 +71,9 @@ function Overview() {
             </div>
             <input
               type="text"
+              onChange={(e) => setTitle(e.target.value)}
               className="text-[#6B7280] text-xl p-6 rounded-lg border border-[#C7C4D8]"
+              value={newGig?.title || ""}
             />
           </div>
           <div className="flex flex-col gap-6 shadow-md border border-[#C7C4D8] bg-white p-6 rounded-2xl">
@@ -52,11 +84,32 @@ function Overview() {
               </p>
             </div>
             <div className="grid gap-6 grid-cols-2">
-              <select className="text-[#6B7280] p-3 rounded-lg border border-[#C7C4D8]">
-                <option>Graphics & Design</option>
+              <select
+                className="text-[#6B7280] p-3 rounded-lg border border-[#C7C4D8]"
+                onChange={(e) => handleMainCategoryChange(e.target.value)}
+                value={newGig.category?.main || mainCategory}
+              >
+                {categories.map((cat) => (
+                  <option key={cat.main} value={cat.main}>
+                    {cat.main}
+                  </option>
+                ))}
               </select>
-              <select className="text-[#6B7280] p-3 rounded-lg border border-[#C7C4D8]">
-                <option>Graphics & Design</option>
+              <select
+                className="text-[#6B7280] p-3 rounded-lg border border-[#C7C4D8]"
+                onChange={(e) => handleSubCategoryChange(e.target.value)}
+                value={newGig.category?.sub || subCategory}
+              >
+                {(
+                  categories.find(
+                    (cat) =>
+                      cat.main === (newGig.category?.main || mainCategory),
+                  )?.subs || []
+                ).map((sub) => (
+                  <option key={sub} value={sub}>
+                    {sub}
+                  </option>
+                ))}
               </select>
             </div>
           </div>
@@ -66,16 +119,16 @@ function Overview() {
               <h3 className="text-xl font-bold">Search Tags</h3>
               <p>Add up to 5 tags to help buyers find your Gig. Be specific.</p>
               <div className="flex flex-wrap gap-1">
-                {tags.length > 0 &&
-                  tags.map((tag, index) => (
+                {newGig.tags &&
+                  newGig.tags.map((tag, index) => (
                     <span
                       key={`${tag}-${index}`}
-                      className="font-semibold text-[#131B2E] gap-1 flex items-center border border-[#C7C4D8] bg-[#E2E7FF] px-6 py-1 rounded-3xl"
+                      className="text-[#54647A] font-medium gap-1 flex items-center bg-[#D0E1FB] px-6 py-1 rounded-lg min-h-9"
                     >
                       {tag}
                       <img
                         src={removeIcon}
-                        className="w-3 h-3 cursor-pointer"
+                        className="w-3 h-3 cursor-pointer contrast-100 invert-50"
                         onClick={() => removeTag(index)}
                       />
                     </span>
