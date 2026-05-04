@@ -19,7 +19,7 @@ const router = createBrowserRouter([
     children: [
       {
         path: "/",
-        element: <Home />,
+        element: <SellerDashBoard />,
       },
       {
         path: "/login",
@@ -42,7 +42,7 @@ const router = createBrowserRouter([
         element: <SellerDashBoard />,
       },
       {
-        path: "/dashboard/createnewgig",
+        path: "/dashboard/create",
         element: <CreateNewGig />,
       },
       {

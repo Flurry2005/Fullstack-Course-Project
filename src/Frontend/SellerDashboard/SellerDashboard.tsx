@@ -88,7 +88,7 @@ function SellerDashBoard() {
               </h3>
             </div>
             <Link
-              to="/dashboard/createnewgig"
+              to="/dashboard/create"
               className="flex w-fit sm:ml-auto place-self-end font-semibold items-center gap-1 md:text-xl text-white bg-linear-to-r from-[#4F46E5] to-[#4e46e5c2] rounded-xl md:px-9 px-3 py-3"
             >
               <img

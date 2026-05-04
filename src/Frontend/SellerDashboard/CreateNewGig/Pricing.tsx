@@ -1,57 +1,132 @@
 import { useRef, useEffect, useState } from "react";
-import checkIcon from "../../assets/circle-check-req-icon.svg";
+import tipIcon from "../../assets/light-bulb-icon-green.svg";
+import type { Gig as NewGig } from "../../types/Gig";
+import Package from "./Package";
+import type { Package as GigPackage } from "../../types/Gig";
 
-function Pricing() {
+type PricingProps = {
+  //FML
+  newGig: NewGig;
+  setBasic: (GigPackage: GigPackage) => void;
+  setStandard: (GigPackage: GigPackage) => void;
+  setPremium: (GigPackage: GigPackage) => void;
+  basicInputPrice: string;
+  setBasicInputPrice: (v: string) => void;
+  basicDeliveryTime: string;
+  setBasicDeliveryTime: (v: string) => void;
+  basicInputFeature: string;
+  setBasicInputFeature: (v: string) => void;
+  basicFeatures: string[];
+  setBasicFeatures: (v: string[]) => void;
+  standardInputPrice: string;
+  setStandardInputPrice: (v: string) => void;
+  standardDeliveryTime: string;
+  setStandardDeliveryTime: (v: string) => void;
+  standardInputFeature: string;
+  setStandardInputFeature: (v: string) => void;
+  standardFeatures: string[];
+  setStandardFeatures: (v: string[]) => void;
+  premiumInputPrice: string;
+  setPremiumInputPrice: (v: string) => void;
+  premiumDeliveryTime: string;
+  setPremiumDeliveryTime: (v: string) => void;
+  premiumInputFeature: string;
+  setPremiumInputFeature: (v: string) => void;
+  premiumFeatures: string[];
+  setPremiumFeatures: (v: string[]) => void;
+};
+
+function Pricing({
+  //FML
+  newGig,
+  setBasic,
+  setStandard,
+  setPremium,
+  basicInputPrice,
+  setBasicInputPrice,
+  basicDeliveryTime,
+  setBasicDeliveryTime,
+  basicInputFeature,
+  setBasicInputFeature,
+  basicFeatures,
+  setBasicFeatures,
+  standardInputPrice,
+  setStandardInputPrice,
+  standardDeliveryTime,
+  setStandardDeliveryTime,
+  standardInputFeature,
+  setStandardInputFeature,
+  standardFeatures,
+  setStandardFeatures,
+  premiumInputPrice,
+  setPremiumInputPrice,
+  premiumDeliveryTime,
+  setPremiumDeliveryTime,
+  premiumInputFeature,
+  setPremiumInputFeature,
+  premiumFeatures,
+  setPremiumFeatures,
+}: PricingProps) {
   const basicFeatureRef = useRef<HTMLInputElement>(null);
   const standardFeatureRef = useRef<HTMLInputElement>(null);
   const premiumFeatureRef = useRef<HTMLInputElement>(null);
-  const [standardInputPrice, setStandardInputPrice] = useState("");
-  const [premiumInputPrice, setPremiumInputPrice] = useState("");
-  const [standardInputFeature, setStandardInputFeature] = useState("");
-  const [premiumInputFeature, setPremiumInputFeature] = useState("");
-  const [features, setFeatures] = useState<Record<string, string>>({});
   const [standardActive, setStandardActive] = useState(false);
   const [premiumActive, setPremiumActive] = useState(false);
 
   useEffect(() => {
     setStandardActive(
-      standardInputPrice.length > 0 || standardInputFeature.length > 0,
+      standardInputPrice.length > 0 ||
+        standardInputFeature.length > 0 ||
+        standardFeatures.length > 0,
     );
     setPremiumActive(
-      premiumInputPrice.length > 0 || premiumInputFeature.length > 0,
+      premiumInputPrice.length > 0 ||
+        premiumInputFeature.length > 0 ||
+        premiumFeatures.length > 0,
     );
   }, [
     standardInputPrice,
     standardInputFeature,
+    standardFeatures,
     premiumInputFeature,
     premiumInputPrice,
+    premiumFeatures,
   ]);
 
   const addBasicFeature = () => {
     if (!basicFeatureRef.current?.value) return;
+    const newFeature = basicFeatureRef.current.value.trim();
+    if (!newFeature || basicFeatures.includes(newFeature)) return;
+    setBasicFeatures([...basicFeatures, newFeature]);
+    setBasicInputFeature("");
+  };
 
-    const newFeature = basicFeatureRef.current?.value;
-    setFeatures((prev) => {
-      return { ...prev, [newFeature]: "basic" };
-    });
+  const removeBasicFeature = (removeId: number) => {
+    setBasicFeatures(basicFeatures.filter((_, id) => id !== removeId));
+  };
+
+  const removeStandardFeature = (removeId: number) => {
+    setStandardFeatures(standardFeatures.filter((_, id) => id !== removeId));
+  };
+
+  const removePremiumFeature = (removeId: number) => {
+    setPremiumFeatures(premiumFeatures.filter((_, id) => id !== removeId));
   };
 
   const addStandardFeature = () => {
     if (!standardFeatureRef.current?.value) return;
-
-    const newFeature = standardFeatureRef.current?.value;
-    setFeatures((prev) => {
-      return { ...prev, [newFeature]: "standard" };
-    });
+    const newFeature = standardFeatureRef.current.value.trim();
+    if (!newFeature || standardFeatures.includes(newFeature)) return;
+    setStandardFeatures([...standardFeatures, newFeature]);
+    setStandardInputFeature("");
   };
 
   const addPremiumFeature = () => {
     if (!premiumFeatureRef.current?.value) return;
-
-    const newFeature = premiumFeatureRef.current?.value;
-    setFeatures((prev) => {
-      return { ...prev, [newFeature]: "premium" };
-    });
+    const newFeature = premiumFeatureRef.current.value.trim();
+    if (!newFeature || premiumFeatures.includes(newFeature)) return;
+    setPremiumFeatures([...premiumFeatures, newFeature]);
+    setPremiumInputFeature("");
   };
 
   return (
@@ -62,315 +137,73 @@ function Pricing() {
           Define your packages to offer variety to your clients.
         </p>
       </div>
-
       <div className="grid md:grid-cols-3 grid-cols-1 gap-6">
-        <div className="flex flex-col shadow-md rounded-2xl h-fit border border-[#C7C4D8]">
-          <div className="flex gap-1  rounded-t-2xl flex-col p-6 bg-[#F2F3FF]">
-            <span className="text-[#3525CD]">TIER 01</span>
-            <span className="text-xl text-[#131B2E] font-semibold">Basic</span>
-          </div>
-          <div className="flex border-t p-6 gap-6 border-b-0 h-full bg-white rounded-b-2xl border-t-[#C7C4D8] flex-col">
-            <div className="flex flex-col gap-1">
-              <span className="text-[#464555] text-sm">Package Price ($)</span>
-              <input
-                type="text"
-                className="text-[#6B7280] bg-[#FFFFFF] text-xl p-3 rounded-lg border border-[#C7C4D8]"
-              />
-            </div>
-            <div className="flex flex-col gap-1">
-              <span className="text-[#464555] text-sm">Delivery Time</span>
-              <select className="text-[#6B7280] bg-[#FFFFFF] text-xl p-3 rounded-lg border border-[#C7C4D8]">
-                <option>1 Day</option>
-                <option>2 Days</option>
-                <option>3 Days</option>
-                <option>5 Days</option>
-                <option>1 Week</option>
-                <option>10 Days</option>
-                <option>2 Weeks</option>
-              </select>
-            </div>
-            <div className="flex flex-col gap-3">
-              <div className="flex flex-col gap-1">
-                <span className="text-[#464555] text-sm">
-                  Included Features
-                </span>
-                <input
-                  type="text"
-                  ref={basicFeatureRef}
-                  className="text-[#6B7280] bg-[#FFFFFF] text-xl p-3 rounded-lg border border-[#C7C4D8]"
-                />
-              </div>
-              <button
-                onClick={() => addBasicFeature()}
-                className="place-self-start cursor-pointer py-1 rounded-lg font-semibold text-white bg-[#4F46E5] px-6"
-              >
-                Add feature
-              </button>
-              <div className="grid grid-cols-3 gap-2">
-                <div className="flex min-w-0 flex-col gap-1 border-r border-[#C7C4D8] p-1">
-                  <span className="font-semibold text-sm">Basic</span>
-                  {Object.entries(features)
-                    .filter(([, value]) => value === "basic")
-                    .map(([feature]) => (
-                      <span
-                        key={feature}
-                        className="flex min-w-0 items-start gap-2"
-                      >
-                        <img src={checkIcon} className="w-5 h-5" />
-                        <span className="wrap-break-word leading-tight">
-                          {feature}
-                        </span>
-                      </span>
-                    ))}
-                </div>
-                <div className="flex min-w-0 flex-col gap-1 border-r border-[#C7C4D8] p-1">
-                  <span className="font-semibold text-sm">Standard</span>
-                  {Object.entries(features)
-                    .filter(([, value]) => value === "standard")
-                    .map(([feature]) => (
-                      <span
-                        key={feature}
-                        className="flex min-w-0 items-start gap-2 opacity-50"
-                      >
-                        <img src={checkIcon} className="w-5 h-5" />
-                        <span className="wrap-break-word leading-tight">
-                          {feature}
-                        </span>
-                      </span>
-                    ))}
-                </div>
-                <div className="flex min-w-0 flex-col gap-1 p-1">
-                  <span className="font-semibold text-sm">Premium</span>
-                  {Object.entries(features)
-                    .filter(([, value]) => value === "premium")
-                    .map(([feature]) => (
-                      <span
-                        key={feature}
-                        className="flex min-w-0 items-start gap-2 opacity-50"
-                      >
-                        <img src={checkIcon} className="w-5 h-5 opacity-50" />
-                        <span className="wrap-break-word leading-tight">
-                          {feature}
-                        </span>
-                      </span>
-                    ))}
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div
-          className={`${standardActive ? "opacity-100" : "opacity-25"} flex flex-col shadow-md rounded-2xl hover:border-[#4e46e58c] h-fit border border-[#C7C4D8]
-         `}
-        >
-          <div
-            onClick={() => setStandardActive((prev) => !prev)}
-            className="cursor-pointer hover:bg-[#4e46e58c] flex gap-1 rounded-t-2xl flex-col p-6 bg-[#F2F3FF]"
-          >
-            <span className="text-[#3525CD]">TIER 02</span>
-            <span className="text-xl text-[#131B2E] font-semibold">
-              Standard
-            </span>
-          </div>
-          <div className="flex border-t p-6 gap-6 border-b-0 h-full bg-white rounded-b-2xl border-t-[#C7C4D8] flex-col">
-            <div className="flex flex-col gap-1">
-              <span className="text-[#464555] text-sm">Package Price ($)</span>
-              <input
-                onChange={(e) => setStandardInputPrice(e.target.value)}
-                type="text"
-                className="text-[#6B7280] bg-[#FFFFFF] text-xl p-3 rounded-lg border border-[#C7C4D8]"
-              />
-            </div>
-            <div className="flex flex-col gap-1">
-              <span className="text-[#464555] text-sm">Delivery Time</span>
-              <select className="text-[#6B7280] bg-[#FFFFFF] text-xl p-3 rounded-lg border border-[#C7C4D8]">
-                <option>1 Day</option>
-                <option>2 Days</option>
-                <option>3 Days</option>
-                <option>5 Days</option>
-                <option>1 Week</option>
-                <option>10 Days</option>
-                <option>2 Weeks</option>
-              </select>
-            </div>
-            <div className="flex flex-col gap-3">
-              <div className="flex flex-col gap-1">
-                <span className="text-[#464555] text-sm">
-                  Included Features
-                </span>
-                <input
-                  onChange={(e) => setStandardInputFeature(e.target.value)}
-                  type="text"
-                  ref={standardFeatureRef}
-                  className="text-[#6B7280] bg-[#FFFFFF] text-xl p-3 rounded-lg border border-[#C7C4D8]"
-                />
-              </div>
-              <button
-                onClick={() => addStandardFeature()}
-                className="place-self-start cursor-pointer py-1 rounded-lg font-semibold text-white bg-[#4F46E5] px-6"
-              >
-                Add feature
-              </button>
-              <div className="grid grid-cols-3 gap-2">
-                <div className="flex min-w-0 flex-col border-r border-[#C7C4D8] p-1 gap-1">
-                  <span className="font-semibold text-sm">Basic</span>
-                  {Object.entries(features)
-                    .filter(([, value]) => value === "basic")
-                    .map(([feature]) => (
-                      <span
-                        key={feature}
-                        className="flex min-w-0 items-start gap-2"
-                      >
-                        <img src={checkIcon} className="w-5 h-5" />
-                        <span className="wrap-break-word leading-tight">
-                          {feature}
-                        </span>
-                      </span>
-                    ))}
-                </div>
-                <div className="flex min-w-0 flex-col border-r border-[#C7C4D8] p-1 gap-1">
-                  <span className="font-semibold text-sm">Standard</span>
-                  {Object.entries(features)
-                    .filter(([, value]) => value === "standard")
-                    .map(([feature]) => (
-                      <span
-                        key={feature}
-                        className="flex min-w-0 items-start gap-2"
-                      >
-                        <img src={checkIcon} className="w-5 h-5" />
-                        <span className="wrap-break-word leading-tight">
-                          {feature}
-                        </span>
-                      </span>
-                    ))}
-                </div>
-                <div className="flex min-w-0 flex-col gap-1 p-1">
-                  <span className="font-semibold text-sm">Premium</span>
-                  {Object.entries(features)
-                    .filter(([, value]) => value === "premium")
-                    .map(([feature]) => (
-                      <span
-                        key={feature}
-                        className="flex min-w-0 items-start gap-2 opacity-50"
-                      >
-                        <img src={checkIcon} className="w-5 h-5 opacity-50" />
-                        <span className="wrap-break-word leading-tight">
-                          {feature}
-                        </span>
-                      </span>
-                    ))}
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div
-          className={`${premiumActive ? "opacity-100" : "opacity-25"} flex flex-col shadow-md rounded-2xl hover:border-[#4e46e58c] h-fit border border-[#C7C4D8]
-         `}
-        >
-          <div
-            onClick={() => setPremiumActive((prev) => !prev)}
-            className="cursor-pointer hover:bg-[#4e46e58c] flex gap-1 rounded-t-2xl flex-col p-6 bg-[#F2F3FF]"
-          >
-            <span className="text-[#3525CD]">TIER 03</span>
-            <span className="text-xl text-[#131B2E] font-semibold">
-              Premium
-            </span>
-          </div>
-          <div className="flex border-t p-6 gap-6 border-b-0 h-full bg-white rounded-b-2xl border-t-[#C7C4D8] flex-col">
-            <div className="flex flex-col gap-1">
-              <span className="text-[#464555] text-sm">Package Price ($)</span>
-              <input
-                onChange={(e) => setPremiumInputPrice(e.target.value)}
-                type="text"
-                className="text-[#6B7280] bg-[#FFFFFF] text-xl p-3 rounded-lg border border-[#C7C4D8]"
-              />
-            </div>
-            <div className="flex flex-col gap-1">
-              <span className="text-[#464555] text-sm">Delivery Time</span>
-              <select className="text-[#6B7280] bg-[#FFFFFF] text-xl p-3 rounded-lg border border-[#C7C4D8]">
-                <option>1 Day</option>
-                <option>2 Days</option>
-                <option>3 Days</option>
-                <option>5 Days</option>
-                <option>1 Week</option>
-                <option>10 Days</option>
-                <option>2 Weeks</option>
-              </select>
-            </div>
-            <div className="flex flex-col gap-3">
-              <div className="flex flex-col gap-1">
-                <span className="text-[#464555] text-sm">
-                  Included Features
-                </span>
-                <input
-                  onChange={(e) => setPremiumInputFeature(e.target.value)}
-                  type="text"
-                  ref={premiumFeatureRef}
-                  className="text-[#6B7280] bg-[#FFFFFF] text-xl p-3 rounded-lg border border-[#C7C4D8]"
-                />
-              </div>
-              <button
-                onClick={() => addPremiumFeature()}
-                className="place-self-start cursor-pointer py-1 rounded-lg font-semibold text-white bg-[#4F46E5] px-6"
-              >
-                Add feature
-              </button>
-              <div className="grid grid-cols-3 gap-2">
-                <div className="flex min-w-0 flex-col border-r border-[#C7C4D8] p-1 gap-1">
-                  <span className="font-semibold text-sm">Basic</span>
-                  {Object.entries(features)
-                    .filter(([, value]) => value === "basic")
-                    .map(([feature]) => (
-                      <span
-                        key={feature}
-                        className="flex min-w-0 items-start gap-2"
-                      >
-                        <img src={checkIcon} className="w-5 h-5" />
-                        <span className="wrap-break-word leading-tight">
-                          {feature}
-                        </span>
-                      </span>
-                    ))}
-                </div>
-                <div className="flex min-w-0 flex-col border-r border-[#C7C4D8] p-1 gap-1">
-                  <span className="font-semibold text-sm">Standard</span>
-                  {Object.entries(features)
-                    .filter(([, value]) => value === "standard")
-                    .map(([feature]) => (
-                      <span
-                        key={feature}
-                        className="flex min-w-0 items-start gap-2"
-                      >
-                        <img src={checkIcon} className="w-5 h-5" />
-                        <span className="wrap-break-word leading-tight">
-                          {feature}
-                        </span>
-                      </span>
-                    ))}
-                </div>
-                <div className="flex min-w-0 flex-col border-r border-[#C7C4D8] p-1 gap-1">
-                  <span className="font-semibold text-sm">Premium</span>
-                  {Object.entries(features)
-                    .filter(([, value]) => value === "premium")
-                    .map(([feature]) => (
-                      <span
-                        key={feature}
-                        className="flex min-w-0 items-start gap-2"
-                      >
-                        <img src={checkIcon} className="w-5 h-5" />
-                        <span className="wrap-break-word leading-tight">
-                          {feature}
-                        </span>
-                      </span>
-                    ))}
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+        <Package
+          newGig={newGig}
+          tier="basic"
+          setBasic={setBasic}
+          setStandard={setStandard}
+          setPremium={setPremium}
+          active={true}
+          price={basicInputPrice}
+          setPrice={setBasicInputPrice}
+          deliveryTime={basicDeliveryTime}
+          setDeliveryTime={setBasicDeliveryTime}
+          featureInput={basicInputFeature}
+          setFeatureInput={setBasicInputFeature}
+          featureRef={basicFeatureRef}
+          addFeature={addBasicFeature}
+          removeFeature={removeBasicFeature}
+          features={basicFeatures}
+        />
+        <Package
+          newGig={newGig}
+          tier="standard"
+          setBasic={setBasic}
+          setStandard={setStandard}
+          setPremium={setPremium}
+          active={standardActive}
+          setActive={setStandardActive}
+          price={standardInputPrice}
+          setPrice={setStandardInputPrice}
+          deliveryTime={standardDeliveryTime}
+          setDeliveryTime={setStandardDeliveryTime}
+          featureInput={standardInputFeature}
+          setFeatureInput={setStandardInputFeature}
+          featureRef={standardFeatureRef}
+          addFeature={addStandardFeature}
+          removeFeature={removeStandardFeature}
+          features={standardFeatures}
+        />
+        <Package
+          newGig={newGig}
+          setBasic={setBasic}
+          setStandard={setStandard}
+          setPremium={setPremium}
+          tier="premium"
+          active={premiumActive}
+          setActive={setPremiumActive}
+          price={premiumInputPrice}
+          setPrice={setPremiumInputPrice}
+          deliveryTime={premiumDeliveryTime}
+          setDeliveryTime={setPremiumDeliveryTime}
+          featureInput={premiumInputFeature}
+          setFeatureInput={setPremiumInputFeature}
+          featureRef={premiumFeatureRef}
+          addFeature={addPremiumFeature}
+          removeFeature={removePremiumFeature}
+          features={premiumFeatures}
+        />
+      </div>
+      <div className="flex flex-col rounded-2xl w-[50vw] p-6 md:col-span-3 place-self-center text-[#67F4B7] bg-[#006E4B] gap-3">
+        <span className="flex gap-1">
+          <img src={tipIcon} className="w-6 h-6" />
+          Pro Tip
+        </span>
+        <p className="px-6">
+          Keep it sharp and to the point - concise features make it easier for
+          people to quickly grasp the value.
+        </p>
       </div>
     </div>
   );

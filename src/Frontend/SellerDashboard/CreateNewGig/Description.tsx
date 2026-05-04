@@ -4,8 +4,14 @@ import removeImageicon from "../../assets/x-icon.svg";
 import { useState, useRef } from "react";
 import checkIcon from "../../assets/circle-check-req-icon.svg";
 import infoIcon from "../../assets/info-icon.svg";
+import type { Gig as NewGig } from "../../types/Gig";
 
-function Description() {
+type DescriptionProps = {
+  setDescription: (description: string) => void;
+  newGig: NewGig;
+};
+
+function Description({ setDescription, newGig }: DescriptionProps) {
   const [primaryImagePreview, setPrimaryImagePreview] = useState<string>("");
   const [secondaryImagePreview, setSecondaryImagePreview] =
     useState<string>("");
@@ -201,8 +207,10 @@ function Description() {
             </p>
           </div>
           <textarea
+            onChange={(e) => setDescription(e.target.value)}
             rows={10}
             className="text-[#6B7280] w-full p-6 rounded-lg border resize-none border-[#C7C4D8]"
+            value={newGig.description}
           />
         </div>
       </div>
