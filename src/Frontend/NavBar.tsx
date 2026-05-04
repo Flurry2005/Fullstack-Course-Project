@@ -14,7 +14,7 @@ function NavBar() {
       <nav className="flex items-center gap-6">
         <Logo />
         <Navlink
-          to={"/"}
+          to={"/services"}
           text={"Browse Categories"}
           className={"text-[1.5rem]"}
         />
