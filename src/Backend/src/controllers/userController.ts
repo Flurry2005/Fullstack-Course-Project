@@ -23,7 +23,7 @@ class UserController {
       //@ts-ignore
       delete userObj.passwordHash;
 
-      const token = JWTModel.createJwtToken(user.username, email);
+      const token = JWTModel.createJwtToken(user.username, email, user._id);
       const expiry = new Date(Date.now() + 1000 * 60 * 60);
       res.cookie("token", token, {
         httpOnly: true,

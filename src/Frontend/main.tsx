@@ -12,13 +12,14 @@ import CreateNewGig from "./SellerDashboard/CreateNewGig/CreateNewGig.tsx";
 import ChatPage from "./ChatPage/ChatPage.tsx";
 import { OrderProvider } from "./Context/useOrders.tsx";
 import { SocketProvider } from "./Context/useSocket.tsx";
+import ServiceListings from "./ServiceListings/ServiceListings.tsx";
 
 const router = createBrowserRouter([
   {
     children: [
       {
         path: "/",
-        element: <Home />,
+        element: <SellerDashBoard />,
       },
       {
         path: "/login",
@@ -41,12 +42,16 @@ const router = createBrowserRouter([
         element: <SellerDashBoard />,
       },
       {
-        path: "/dashboard/createnewgig",
+        path: "/dashboard/create",
         element: <CreateNewGig />,
       },
       {
         path: "/messages",
         element: <ChatPage />,
+      },
+      {
+        path: "/services",
+        element: <ServiceListings />,
       },
     ],
   },
