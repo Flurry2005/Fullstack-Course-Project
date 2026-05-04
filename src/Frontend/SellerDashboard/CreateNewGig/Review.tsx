@@ -16,7 +16,7 @@ function Review({ newGig, setSuccess, success }: ReviewProps) {
     const body = JSON.stringify(newGig);
     const response = await fetch(
       `${import.meta.env.VITE_DEV === "true" ? "http://localhost:3000" : "https://fullstackapi.liamjorgensen.dev"}/api${"/gig"}`,
-      { method: "POST", headers: header, body: body },
+      { method: "POST", headers: header, body: body, credentials: 'include'},
     );
     const data = await response.json();
     console.log(data);

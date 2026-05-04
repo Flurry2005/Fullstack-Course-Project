@@ -1,10 +1,14 @@
-import moongose from "mongoose";
+import mongoose from "mongoose";
 
-const gigsSchema = new moongose.Schema({
-  seller: {
+const gigsSchema = new mongoose.Schema({
+  sellerUsername: {
     type: String,
     required: true,
   },
+    sellerId: {
+      type: mongoose.Schema.Types.ObjectId,
+      required: true,
+    },
   title: {
     type: String,
     required: true,
@@ -39,6 +43,6 @@ const gigsSchema = new moongose.Schema({
   },
 });
 
-export default moongose.model("Gigs", gigsSchema);
+export default mongoose.model("Gigs", gigsSchema);
 
 

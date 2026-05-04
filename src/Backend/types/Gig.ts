@@ -12,8 +12,9 @@ export type Package = {
 };
 
 export type Gig = {
-  seller?: string;
-  title?: string;
+  sellerUsername?: string;
+  sellerId?: ObjectId; 
+  title: string;
   category?: Category;
   tags?: string[];
   description?: string;

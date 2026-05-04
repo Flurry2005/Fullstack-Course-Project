@@ -83,12 +83,14 @@ function CreateNewGig() {
   const [premiumInputFeature, setPremiumInputFeature] = useState("");
   const [premiumFeatures, setPremiumFeatures] = useState<string[]>([]);
 
-  const setSeller = () => {
-    const seller = user?.username;
-    setNewGig((prev) => {
-      return { ...prev, seller };
-    });
-  };
+  // const setSeller = () => {
+  //   const seller = user?.username;
+  //   setNewGig((prev) => {
+  //     return { ...prev, seller };
+  //   });
+  // };
+
+
   const setTitle = (title: string) => {
     setNewGig((prev) => {
       return { ...prev, title };
@@ -132,9 +134,7 @@ function CreateNewGig() {
     });
   };
 
-  useEffect(() => {
-    setSeller();
-  }, []);
+
 
   useEffect(() => {
     console.log("updated gig: ");

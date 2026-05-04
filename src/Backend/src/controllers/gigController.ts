@@ -1,11 +1,18 @@
+
 import type { Gig } from "../../types/Gig";
 import gigsModel from "../models/gigsModel";
+import { Request, Response, NextFunction } from "express";
+
+
+
 
 class GigController {
-  async createGig(newGig: Gig) {
+  async createGig(req: Request, res: Response, next: NextFunction) {
+
+    const newGig: Gig = req.body;
+
     console.log(newGig);
     if (
-      !newGig.seller ||
       !newGig.title ||
       !newGig.category?.main ||
       !newGig.category?.sub ||
@@ -35,7 +42,8 @@ class GigController {
 
     try {
       await gigsModel.insertOne({
-        seller: newGig.seller,
+        sellerUsername: res.locals.jwt.username,
+        sellerId: res.locals.jwt._id,
         title: newGig.title,
         category: {
           main: newGig.category?.main,
