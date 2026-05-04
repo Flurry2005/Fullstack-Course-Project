@@ -5,6 +5,8 @@ import removeIcon from "../../assets/x-icon.svg";
 import circleIcon from "../../assets/circle-check-icon.svg";
 import bookIcon from "../../assets/book-icon.svg";
 import type { Gig as NewGig } from "../../types/Gig";
+import { useEffect } from "react";
+import { categories } from "./Categories";
 
 type overviewProps = {
   newGig: NewGig;
@@ -19,8 +21,14 @@ function Overview({
   setFinalTags,
   newGig,
 }: overviewProps) {
-  const [mainCategory, setMainCategory] = useState("");
-  const [subCategory, setSubCategory] = useState("");
+  const [mainCategory, setMainCategory] = useState(categories[0].main);
+  const [subCategory, setSubCategory] = useState(categories[0].subs[0]);
+
+  useEffect(() => {
+    if (!newGig.category?.main || !newGig.category?.sub) {
+      setCategory({ main: categories[0].main, sub: categories[0].subs[0] });
+    }
+  }, []);
   const tagRef = useRef<HTMLInputElement>(null);
 
   const addTag = () => {
@@ -37,7 +45,11 @@ function Overview({
 
   const handleMainCategoryChange = (value: string) => {
     setMainCategory(value);
-    setCategory({ main: value, sub: subCategory });
+    // Find the first subcategory for the new main category
+    const found = categories.find((cat) => cat.main === value);
+    const firstSub = found && found.subs.length > 0 ? found.subs[0] : "";
+    setSubCategory(firstSub);
+    setCategory({ main: value, sub: firstSub });
   };
 
   const handleSubCategoryChange = (value: string) => {
@@ -61,7 +73,7 @@ function Overview({
               type="text"
               onChange={(e) => setTitle(e.target.value)}
               className="text-[#6B7280] text-xl p-6 rounded-lg border border-[#C7C4D8]"
-              value={newGig.title || ""}
+              value={newGig?.title || ""}
             />
           </div>
           <div className="flex flex-col gap-6 shadow-md border border-[#C7C4D8] bg-white p-6 rounded-2xl">
@@ -75,18 +87,29 @@ function Overview({
               <select
                 className="text-[#6B7280] p-3 rounded-lg border border-[#C7C4D8]"
                 onChange={(e) => handleMainCategoryChange(e.target.value)}
-                value={newGig.category?.main || ""}
+                value={newGig.category?.main || mainCategory}
               >
-                <option>Graphics & Design</option>
-                <option>Electronics</option>
+                {categories.map((cat) => (
+                  <option key={cat.main} value={cat.main}>
+                    {cat.main}
+                  </option>
+                ))}
               </select>
               <select
                 className="text-[#6B7280] p-3 rounded-lg border border-[#C7C4D8]"
                 onChange={(e) => handleSubCategoryChange(e.target.value)}
-                value={newGig.category?.sub || ""}
+                value={newGig.category?.sub || subCategory}
               >
-                <option>Graphics & Design</option>
-                <option>Coding</option>
+                {(
+                  categories.find(
+                    (cat) =>
+                      cat.main === (newGig.category?.main || mainCategory),
+                  )?.subs || []
+                ).map((sub) => (
+                  <option key={sub} value={sub}>
+                    {sub}
+                  </option>
+                ))}
               </select>
             </div>
           </div>
