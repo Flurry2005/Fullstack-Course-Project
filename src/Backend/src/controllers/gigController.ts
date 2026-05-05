@@ -7,6 +7,24 @@ import { Request, Response, NextFunction } from "express";
 
 
 class GigController {
+  async getGigs() {
+    try {
+      return await gigsModel.find().lean();
+    } catch (error) {
+      console.error(error);
+      return null;
+    }
+  }
+
+  async getGigById(req: Request) {
+    try {
+      return await gigsModel.findById(req.params.id).lean();
+    } catch (error) {
+      console.error(error);
+      return null;
+    }
+  }
+
   async createGig(req: Request, res: Response, next: NextFunction) {
 
     const newGig: Gig = req.body;
