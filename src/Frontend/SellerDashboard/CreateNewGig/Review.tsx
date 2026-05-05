@@ -7,8 +7,14 @@ type ReviewProps = {
   newGig: NewGig;
   setSuccess: (value: boolean) => void;
   success: boolean;
+  primaryImagePreview: string;
 };
-function Review({ newGig, setSuccess, success }: ReviewProps) {
+function Review({
+  newGig,
+  setSuccess,
+  success,
+  primaryImagePreview,
+}: ReviewProps) {
   const [TOS, setTOS] = useState(false);
 
   const publishGig = async () => {
@@ -16,31 +22,35 @@ function Review({ newGig, setSuccess, success }: ReviewProps) {
     const body = JSON.stringify(newGig);
     const response = await fetch(
       `${import.meta.env.VITE_DEV === "true" ? "http://localhost:3000" : "https://fullstackapi.liamjorgensen.dev"}/api${"/gig"}`,
-      { method: "POST", headers: header, body: body, credentials: 'include'},
+      { method: "POST", headers: header, body: body, credentials: "include" },
     );
     const data = await response.json();
     console.log(data);
-    if (response.ok) setSuccess(true);
+    setSuccess(response.ok);
   };
 
   return (
     <div className="flex flex-col gap-12">
       {success && (
-        <div className="flex flex-col text-center gap-6">
-          {" "}
+        <div className="flex flex-col gap-3 text-center">
           <h2 className="text-4xl">Success!</h2>
-          <p>Your gig will be reviewed before it will be published.</p>
+          <p className="text-[#464555] text-xl ">
+            Your gig will be reviewed before it will be published.
+          </p>
         </div>
       )}
       {!success && (
         <>
-          <div className="text-center">
-            <h2 className="text-4xl">Review & Publish </h2>
+          <div className="flex flex-col gap-3 text-center">
+            <h2 className="text-4xl">Review & Publish</h2>
+            <p className="text-[#464555] text-xl ">
+              Double-check your details and publish your gig when you're ready.
+            </p>
           </div>
-          <div className="flex flex-col mx-auto gap-6 md:w-[75vw]">
+          <div className="flex flex-col mx-auto gap-6 md:w-[50vw]">
             <div className="flex flex-col shadow-md border border-[#C7C4D8] bg-white rounded-2xl overflow-hidden">
               <img
-                src={fish}
+                src={primaryImagePreview || fish}
                 className="w-full h-75"
                 style={{ borderRadius: 0 }}
               />
@@ -92,24 +102,36 @@ function Review({ newGig, setSuccess, success }: ReviewProps) {
                         </span>
 
                         {(newGig?.basic?.features ?? []).map((e, id) => (
-                          <span className="flex gap-2 items-center" key={id}>
-                            <img src={checkIcon} className="w-5 h-5" /> {e}
+                          <span
+                            key={id}
+                            className="flex min-w-0 items-start gap-2"
+                          >
+                            <img src={checkIcon} className="w-5 h-5" />
+                            <span className="wrap-break-word break-all leading-tight">
+                              {e}
+                            </span>
                           </span>
                         ))}
                         {(newGig?.standard?.features ?? []).map((e, id) => (
                           <span
-                            className="opacity-25 flex gap-2 items-center"
                             key={id}
+                            className="flex min-w-0 opacity-25 items-start gap-2"
                           >
-                            <img src={checkIcon} className="w-5 h-5" /> {e}
+                            <img src={checkIcon} className="w-5 h-5" />
+                            <span className="wrap-break-word break-all leading-tight">
+                              {e}
+                            </span>
                           </span>
                         ))}
                         {(newGig?.premium?.features ?? []).map((e, id) => (
                           <span
-                            className="opacity-25 flex gap-2 items-center"
                             key={id}
+                            className="flex min-w-0 opacity-25 items-start gap-2"
                           >
-                            <img src={checkIcon} className="w-5 h-5" /> {e}
+                            <img src={checkIcon} className="w-5 h-5" />
+                            <span className="wrap-break-word break-all leading-tight">
+                              {e}
+                            </span>
                           </span>
                         ))}
                       </div>
@@ -132,21 +154,36 @@ function Review({ newGig, setSuccess, success }: ReviewProps) {
                         </span>
 
                         {(newGig?.basic?.features ?? []).map((e, id) => (
-                          <span className="flex gap-2 items-center" key={id}>
-                            <img src={checkIcon} className="w-5 h-5" /> {e}
+                          <span
+                            key={id}
+                            className="flex min-w-0 items-start gap-2"
+                          >
+                            <img src={checkIcon} className="w-5 h-5" />
+                            <span className="wrap-break-word break-all leading-tight">
+                              {e}
+                            </span>
                           </span>
                         ))}
                         {(newGig?.standard?.features ?? []).map((e, id) => (
-                          <span className="flex gap-2 items-center" key={id}>
-                            <img src={checkIcon} className="w-5 h-5" /> {e}
+                          <span
+                            key={id}
+                            className="flex min-w-0 items-start gap-2"
+                          >
+                            <img src={checkIcon} className="w-5 h-5" />
+                            <span className="wrap-break-word break-all leading-tight">
+                              {e}
+                            </span>
                           </span>
                         ))}
                         {(newGig?.premium?.features ?? []).map((e, id) => (
                           <span
-                            className="opacity-25 flex gap-2 items-center"
                             key={id}
+                            className="flex min-w-0 opacity-25 items-start gap-2"
                           >
-                            <img src={checkIcon} className="w-5 h-5" /> {e}
+                            <img src={checkIcon} className="w-5 h-5" />
+                            <span className="wrap-break-word break-all leading-tight">
+                              {e}
+                            </span>
                           </span>
                         ))}
                       </div>
@@ -169,18 +206,36 @@ function Review({ newGig, setSuccess, success }: ReviewProps) {
                         </span>
 
                         {(newGig?.basic?.features ?? []).map((e, id) => (
-                          <span className="flex gap-2 items-center" key={id}>
-                            <img src={checkIcon} className="w-5 h-5" /> {e}
+                          <span
+                            key={id}
+                            className="flex min-w-0 items-start gap-2"
+                          >
+                            <img src={checkIcon} className="w-5 h-5" />
+                            <span className="wrap-break-word break-all leading-tight">
+                              {e}
+                            </span>
                           </span>
                         ))}
                         {(newGig?.standard?.features ?? []).map((e, id) => (
-                          <span className="flex gap-2 items-center" key={id}>
-                            <img src={checkIcon} className="w-5 h-5" /> {e}
+                          <span
+                            key={id}
+                            className="flex min-w-0 items-start gap-2"
+                          >
+                            <img src={checkIcon} className="w-5 h-5" />
+                            <span className="wrap-break-word break-all leading-tight">
+                              {e}
+                            </span>
                           </span>
                         ))}
                         {(newGig?.premium?.features ?? []).map((e, id) => (
-                          <span className="flex gap-2 items-center" key={id}>
-                            <img src={checkIcon} className="w-5 h-5" /> {e}
+                          <span
+                            key={id}
+                            className="flex min-w-0 items-start gap-2"
+                          >
+                            <img src={checkIcon} className="w-5 h-5" />
+                            <span className="wrap-break-word break-all leading-tight">
+                              {e}
+                            </span>
                           </span>
                         ))}
                       </div>
