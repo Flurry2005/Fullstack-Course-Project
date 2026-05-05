@@ -1,8 +1,10 @@
 import { useEffect, useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Footer from "../Footer";
 import NavBar from "../NavBar";
 import fishImage from "../assets/fish.jpg";
 import meImage from "../assets/me.jpeg";
+import type { Gig } from "../types/Gig";
 import ListingsHeader from "./components/ListingsHeader";
 import Sidebar from "./components/Sidebar";
 
@@ -14,6 +16,7 @@ type Listing = {
   price: string;
   category: string;
   deliveryTime: string;
+  deliveryTimes: string[];
   rating: string;
   reviews: string;
   tag: string;
@@ -21,158 +24,76 @@ type Listing = {
   avatar: string;
 };
 
-const listings: Listing[] = [
-  {
-    id: "logo-brand-identity",
-    seller: "Elena Vance",
-    level: "Level 2 Seller",
-    title: "I will design a professional logo and full brand identity system for your startup",
-    price: "$450",
-    category: "Design & Creative",
-    deliveryTime: "Up to 3 days",
-    rating: "4.9",
-    reviews: "1.2k",
-    tag: "Digital Craft",
-    image: fishImage,
-    avatar: meImage,
-  },
-  {
-    id: "react-web-app",
-    seller: "Julian Chen",
-    level: "Top Rated Seller",
-    title: "I will develop a high-performance React web application with custom animations",
-    price: "$1,200",
-    category: "Development & IT",
-    deliveryTime: "Up to 7 days",
-    rating: "5.0",
-    reviews: "842",
-    tag: "Featured Pro",
-    image: fishImage,
-    avatar: meImage,
-  },
-  {
-    id: "digital-illustrations",
-    seller: "Mia Sol",
-    level: "Level 2 Seller",
-    title: "I will create a unique set of custom digital illustrations for your mobile app",
-    price: "$180",
-    category: "Design & Creative",
-    deliveryTime: "Express (24h)",
-    rating: "4.8",
-    reviews: "319",
-    tag: "Artistic",
-    image: fishImage,
-    avatar: meImage,
-  },
-  {
-    id: "social-growth",
-    seller: "Marcus Thorne",
-    level: "New Seller",
-    title: "I will manage your entire social media presence and drive organic growth",
-    price: "$850",
-    category: "Digital Marketing",
-    deliveryTime: "Up to 7 days",
-    rating: "5.0",
-    reviews: "12",
-    tag: "Strategy",
-    image: fishImage,
-    avatar: meImage,
-  },
-  {
-    id: "seo-blog-posts",
-    seller: "Sarah Bloom",
-    level: "Level 2 Seller",
-    title: "I will write SEO-optimized blog posts that rank on the first page of search",
-    price: "$95",
-    category: "Writing & Translation",
-    deliveryTime: "Up to 3 days",
-    rating: "4.9",
-    reviews: "452",
-    tag: "Writing",
-    image: fishImage,
-    avatar: meImage,
-  },
-  {
-    id: "commercial-video-edit",
-    seller: "David Ross",
-    level: "Top Rated Seller",
-    title: "I will professionally edit your cinematic commercial videos and color grade",
-    price: "$320",
-    category: "Digital Marketing",
-    deliveryTime: "Express (24h)",
-    rating: "5.0",
-    reviews: "1.8k",
-    tag: "Media",
-    image: fishImage,
-    avatar: meImage,
-  },
-    {
-    id: "seo-blog-posts-extra-one",
-    seller: "Sarah Bloom",
-    level: "Level 2 Seller",
-    title: "I will write SEO-optimized blog posts that rank on the first page of search",
-    price: "$95",
-    category: "Writing & Translation",
-    deliveryTime: "Up to 3 days",
-    rating: "4.9",
-    reviews: "452",
-    tag: "Writing",
-    image: fishImage,
-    avatar: meImage,
-  },
-  {
-    id: "commercial-video-edit-extra-one",
-    seller: "David Ross",
-    level: "Top Rated Seller",
-    title: "I will professionally edit your cinematic commercial videos and color grade",
-    price: "$320",
-    category: "Digital Marketing",
-    deliveryTime: "Express (24h)",
-    rating: "5.0",
-    reviews: "1.8k",
-    tag: "Media",
-    image: fishImage,
-    avatar: meImage,
-  },
-    {
-    id: "seo-blog-posts-extra-two",
-    seller: "Sarah Bloom",
-    level: "Level 2 Seller",
-    title: "I will write SEO-optimized blog posts that rank on the first page of search",
-    price: "$95",
-    category: "Writing & Translation",
-    deliveryTime: "Up to 3 days",
-    rating: "4.9",
-    reviews: "452",
-    tag: "Writing",
-    image: fishImage,
-    avatar: meImage,
-  },
-  {
-    id: "commercial-video-edit-extra-two",
-    seller: "David Ross",
-    level: "Top Rated Seller",
-    title: "I will professionally edit your cinematic commercial videos and color grade",
-    price: "$320",
-    category: "Digital Marketing",
-    deliveryTime: "Express (24h)",
-    rating: "5.0",
-    reviews: "1.8k",
-    tag: "Media",
-    image: fishImage,
-    avatar: meImage,
-  },
-];
-
 const itemsPerPage = 6;
+const apiUrl =
+  import.meta.env.VITE_DEV === "true"
+    ? "http://localhost:3000"
+    : "https://fullstackapi.liamjorgensen.dev";
 
 function getListingPrice(listing: Listing) {
   return Number(listing.price.replace(/[$,]/g, ""));
 }
 
-function ServiceListingCard({ listing }: { listing: Listing }) {
+function getPackagePrices(gig: Gig) {
+  return [gig.basic?.price, gig.standard?.price, gig.premium?.price].filter(
+    (price): price is string | number => Boolean(price) && Number(price) > 0,
+  );
+}
+
+function getStartingPrice(gig: Gig) {
+  const packagePrices = getPackagePrices(gig);
+  const startingPrice =
+    packagePrices.length > 0
+      ? Math.min(...packagePrices.map((price) => Number(price)))
+      : 0;
+
+  return `$${startingPrice.toLocaleString()}`;
+}
+
+function getStartingDelivery(gig: Gig) {
+  return gig.basic?.delivery || gig.standard?.delivery || gig.premium?.delivery || "";
+}
+
+function getDeliveryTimes(gig: Gig) {
+  return Array.from(
+    new Set(
+      [gig.basic?.delivery, gig.standard?.delivery, gig.premium?.delivery].filter(
+        (delivery): delivery is string => Boolean(delivery),
+      ),
+    ),
+  );
+}
+
+function mapGigToListing(gig: Gig): Listing {
+  return {
+    id: gig._id || "",
+    seller: gig.sellerUsername || "Unknown seller",
+    level: gig.category?.sub || "New Seller",
+    title: gig.title || "Untitled service",
+    price: getStartingPrice(gig),
+    category: gig.category?.main || "Other",
+    deliveryTime: getStartingDelivery(gig),
+    deliveryTimes: getDeliveryTimes(gig),
+    rating: "5.0",
+    reviews: "0",
+    tag: gig.tags?.[0] || gig.category?.sub || "Service",
+    image: fishImage,
+    avatar: meImage,
+  };
+}
+
+function ServiceListingCard({
+  listing,
+  onClick,
+}: {
+  listing: Listing;
+  onClick: () => void;
+}) {
   return (
-    <article className="bg-white p-3 rounded-2xl shadow-sm hover:shadow-md transition hover:-translate-y-1 cursor-pointer">
+    <article
+      onClick={onClick}
+      className="bg-white p-3 rounded-2xl shadow-sm hover:shadow-md transition hover:-translate-y-1 cursor-pointer"
+    >
       <div className="relative overflow-hidden rounded-lg h-56">
         <img
           src={listing.image}
@@ -220,6 +141,10 @@ function ServiceListingCard({ listing }: { listing: Listing }) {
 }
 
 function ServiceListings() {
+  const navigate = useNavigate();
+  const [listings, setListings] = useState<Listing[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [fetchError, setFetchError] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
   const [sortBy, setSortBy] = useState("Most Relevant");
   const [currentPage, setCurrentPage] = useState(1);
@@ -228,6 +153,28 @@ function ServiceListings() {
   const [maxPrice, setMaxPrice] = useState("");
   const [selectedRating, setSelectedRating] = useState(0);
   const [selectedDeliveryTime, setSelectedDeliveryTime] = useState("");
+
+  useEffect(() => {
+    const fetchGigs = async () => {
+      try {
+        const response = await fetch(`${apiUrl}/api/gig`);
+
+        if (!response.ok) {
+          throw new Error("Could not fetch gigs");
+        }
+
+        const gigs = (await response.json()) as Gig[];
+        setListings(gigs.map(mapGigToListing));
+      } catch (error) {
+        console.error(error);
+        setFetchError("Could not load services right now.");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchGigs();
+  }, []);
 
   const toggleCategory = (category: string) => {
     setSelectedCategories((currentCategories) =>
@@ -271,6 +218,7 @@ function ServiceListings() {
           listing.tag,
           listing.category,
           listing.deliveryTime,
+          listing.deliveryTimes.join(" "),
           listing.rating,
         ]
           .join(" ")
@@ -284,7 +232,8 @@ function ServiceListings() {
       const matchesRating =
         selectedRating === 0 || Number(listing.rating) >= selectedRating;
       const matchesDeliveryTime =
-        !selectedDeliveryTime || listing.deliveryTime === selectedDeliveryTime;
+        !selectedDeliveryTime ||
+        listing.deliveryTimes.includes(selectedDeliveryTime);
 
       return (
         matchesSearch &&
@@ -309,6 +258,7 @@ function ServiceListings() {
   }, [
     maxPrice,
     minPrice,
+    listings,
     searchQuery,
     selectedCategories,
     selectedDeliveryTime,
@@ -320,6 +270,16 @@ function ServiceListings() {
   const paginatedListings = filteredListings.slice(
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage,
+  );
+  const categoryOptions = Array.from(
+    new Set(listings.map((listing) => listing.category)),
+  );
+  const deliveryOptions = Array.from(
+    new Set(
+      listings
+        .flatMap((listing) => listing.deliveryTimes)
+        .filter((deliveryTime) => deliveryTime.length > 0),
+    ),
   );
 
   useEffect(() => {
@@ -339,6 +299,8 @@ function ServiceListings() {
       <NavBar />
       <section className="flex flex-col lg:flex-row gap-8 px-6 md:px-10 py-8">
         <Sidebar
+          categories={categoryOptions}
+          deliveryTimes={deliveryOptions}
           selectedCategories={selectedCategories}
           minPrice={minPrice}
           maxPrice={maxPrice}
@@ -361,10 +323,26 @@ function ServiceListings() {
             onSortChange={setSortBy}
           />
 
-          {filteredListings.length > 0 ? (
+          {isLoading ? (
+            <div className="flex justify-center items-center bg-white mt-8 p-12 rounded-2xl text-[#6f6f9a]">
+              Loading services...
+            </div>
+          ) : fetchError ? (
+            <div className="flex flex-col justify-center items-center bg-white mt-8 p-12 rounded-2xl text-center">
+              <i className="mb-4 text-[#c4bdf4] text-4xl fa-solid fa-triangle-exclamation"></i>
+              <h2 className="font-bold text-[#2c2a51] text-xl">
+                Services could not load
+              </h2>
+              <p className="mt-2 max-w-md text-[#6f6f9a]">{fetchError}</p>
+            </div>
+          ) : filteredListings.length > 0 ? (
             <div className="gap-6 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 mt-8">
               {paginatedListings.map((listing) => (
-                <ServiceListingCard key={listing.id} listing={listing} />
+                <ServiceListingCard
+                  key={listing.id}
+                  listing={listing}
+                  onClick={() => navigate(`/services/${listing.id}`)}
+                />
               ))}
             </div>
           ) : (
