@@ -13,6 +13,7 @@ import ChatPage from "./ChatPage/ChatPage.tsx";
 import { OrderProvider } from "./Context/useOrders.tsx";
 import { SocketProvider } from "./Context/useSocket.tsx";
 import ServiceListings from "./ServiceListings/ServiceListings.tsx";
+import ServiceDetail from "./ServiceDetail/Main.tsx";
 
 const router = createBrowserRouter([
   {
@@ -52,6 +53,16 @@ const router = createBrowserRouter([
       {
         path: "/services",
         element: <ServiceListings />,
+      },
+      {
+        path: "/services/:gigId",
+        element: (
+          <ServiceDetail
+            mainCategory={null}
+            subCategoryOne={null}
+            subCategoryTwo={null}
+          />
+        ),
       },
     ],
   },
