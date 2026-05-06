@@ -9,3 +9,8 @@ userRouter.post("/login", async (req, res, next) => {
 userRouter.post("/register", async (req, res, next) => {
   userController.register(req, res, next);
 });
+
+userRouter.get("/", async (req, res) => {
+  const id = req.query.id;
+  userController.getUser(req, res, id);
+});

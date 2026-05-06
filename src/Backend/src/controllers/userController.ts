@@ -60,6 +60,27 @@ class UserController {
 
     return res.status(200).json({ success: true, message: "User created!" });
   }
+
+  async getUser(req: Request, res: Response, id: string | any) {
+    if (!id)
+      return res
+        .status(400)
+        .json({ response: "Bad request", message: "No user id provided." });
+
+    const result = await Users.findOne({ _id: id });
+    if (result) {
+      const user = {
+        fullname: result.fullname,
+        username: result.username,
+        email: result.email,
+      };
+      return res.status(200).json(user);
+    } else {
+      return res
+        .status(404)
+        .json({ response: "Not Found", message: "User was not found." });
+    }
+  }
 }
 
 export default new UserController();
