@@ -4,6 +4,7 @@ import QuoteButton from "./QuoteButton";
 import { useState } from "react";
 import type { Package } from "../types/Gig";
 import featureIcon from "../assets/circle-check-req-icon.svg";
+import timeIcon from "../assets/time-icon.svg";
 
 type PurchaseOptionsProps = {
   options: {
@@ -59,7 +60,11 @@ function PurchaseOptions({ options = {} }: PurchaseOptionsProps) {
          
               {currentPlan?.features?.map((feature) => (<div className="flex flex-col"><span className="flex font-semibold gap-3 items-center"><img src={featureIcon} className="h-6 w-6"/>{feature}</span></div>))}
      
+               <span className="text-[#464555] text-sm">Delivery in</span>
+                <span className="font-semibold flex items-center gap-3"><img src={timeIcon} className="h-6 w-6"/>{currentPlan?.delivery}</span>
+               
             </div>
+                  
             <span className="text-3xl md:text-4xl ml-auto font-semibold">
               ${currentPlan?.price}
             </span>

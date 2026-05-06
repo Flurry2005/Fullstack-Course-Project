@@ -49,13 +49,11 @@ function Main({ mainCategory, subCategoryOne, subCategoryTwo }: MainProps) {
         <>
           {/* Service category section */}
           <main className="flex flex-col gap-3  bg-[#f9f5ff] p-6">
-            <div className="flex text-[#5A5781] gap-1">
-              <span>{gig.category?.main}</span>
-              <span>{">"}</span>
-              <span>{gig.category?.sub}</span>
-            </div>
-
             <div className="flex place-self-center gap-6 flex-col ld:w-[75vw]">
+              <span className="flex gap-1">
+                {gig.category?.main} {">"} {gig.category?.sub}
+              </span>
+
               {/*  ServiceHeader and PurchaseOptions */}
               <div className="flex flex-col md:flex-row w-full gap-6">
                 <div className="w-full md:w-2/3">
