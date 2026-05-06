@@ -7,13 +7,20 @@ import CheckoutPage from "./checkoutPage/checkoutPage.tsx";
 import Home from "./Home.tsx";
 import RecoverPassword from "./LoginPage/RecoverPassword.tsx";
 import { AuthProvider } from "./Context/useAuth.tsx";
+import SellerDashBoard from "./SellerDashboard/SellerDashboard.tsx";
+import CreateNewGig from "./SellerDashboard/CreateNewGig/CreateNewGig.tsx";
+import ChatPage from "./ChatPage/ChatPage.tsx";
+import { OrderProvider } from "./Context/useOrders.tsx";
+import { SocketProvider } from "./Context/useSocket.tsx";
+import ServiceListings from "./ServiceListings/ServiceListings.tsx";
+import ServiceDetail from "./ServiceDetail/Main.tsx";
 
 const router = createBrowserRouter([
   {
     children: [
       {
         path: "/",
-        element: <Home />,
+        element: <SellerDashBoard />,
       },
       {
         path: "/login",
@@ -31,6 +38,32 @@ const router = createBrowserRouter([
         path: "/checkout",
         element: <CheckoutPage />,
       },
+      {
+        path: "/dashboard",
+        element: <SellerDashBoard />,
+      },
+      {
+        path: "/dashboard/create",
+        element: <CreateNewGig />,
+      },
+      {
+        path: "/messages",
+        element: <ChatPage />,
+      },
+      {
+        path: "/services",
+        element: <ServiceListings />,
+      },
+      {
+        path: "/services/:gigId",
+        element: (
+          <ServiceDetail
+            mainCategory={null}
+            subCategoryOne={null}
+            subCategoryTwo={null}
+          />
+        ),
+      },
     ],
   },
 ]);
@@ -38,7 +71,11 @@ const router = createBrowserRouter([
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <AuthProvider>
-      <RouterProvider router={router} />
+      <OrderProvider>
+        <SocketProvider>
+          <RouterProvider router={router} />
+        </SocketProvider>
+      </OrderProvider>
     </AuthProvider>
   </StrictMode>,
 );
