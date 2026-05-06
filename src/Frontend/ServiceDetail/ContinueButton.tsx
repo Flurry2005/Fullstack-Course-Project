@@ -1,5 +1,5 @@
 type ContinueButtonProps = {
-  price?: number;
+  price?: number | any;
 };
 
 function ContinueButton({ price }: ContinueButtonProps) {

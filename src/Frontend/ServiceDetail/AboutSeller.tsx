@@ -2,12 +2,28 @@ import me from "../assets/me.jpeg";
 import locationIcon from "../assets/location-icon.svg";
 import responseTimeIcon from "../assets/response-time-icon.svg";
 import ContactMeButton from "./ContactMeButton";
+import { useEffect, useState } from "react";
+import type { User } from "../types/User";
 
 type AboutSellerProps = {
-  about: string | null;
+  id: string | any;
 };
 
-function AboutSeller({ about }: AboutSellerProps) {
+function AboutSeller({ id }: AboutSellerProps) {
+  const [seller, setSeller] = useState<User>();
+
+  const getSeller = async () => {
+    const response = await fetch(
+      `${import.meta.env.VITE_DEV === "true" ? "http://localhost:3000" : "https://fullstackapi.liamjorgensen.dev"}/api${"/?id="}${id}`,
+    );
+    const data = await response.json();
+    console.log(data);
+    response.ok && setSeller(data);
+  };
+
+  useEffect(() => {
+    getSeller();
+  }, []);
   return (
     <div className="flex flex-col gap-6">
       <h3 className="text-2xl text-[#2C2A51]">Meet The Creator</h3>
@@ -21,7 +37,7 @@ function AboutSeller({ about }: AboutSellerProps) {
             <div className="flex gap-3">
               <div className="flex flex-col gap-1 w-full">
                 <h4 className="font-bold text-[#2C2A51] text-xl">
-                  Johan Kronholm
+                  {seller?.username}
                 </h4>
                 <span className="text-sm text-[#5A5781]">Fisherman</span>
 
