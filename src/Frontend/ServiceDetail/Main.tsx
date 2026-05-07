@@ -46,16 +46,16 @@ function Main({ mainCategory, subCategoryOne, subCategoryTwo }: MainProps) {
       {loaded && !gig && "Not found!"}
 
       {loaded && gig && (
-        <>
+        <div className="bg-[#f9f5ff]">
           {/* Service category section */}
-          <main className="flex flex-col gap-3  bg-[#f9f5ff] p-6">
-            <div className="flex place-self-center gap-6 flex-col ld:w-[75vw]">
+          <main className="flex flex-col gap-3 bg-[#f9f5ff] mx-auto px-6 lg:px-24 py-6 container">
+            <div className="flex flex-col place-self-center gap-6 ld:w-[75vw]">
               <span className="flex gap-1">
                 {gig.category?.main} {">"} {gig.category?.sub}
               </span>
 
               {/*  ServiceHeader and PurchaseOptions */}
-              <div className="flex flex-col md:flex-row w-full gap-6">
+              <div className="flex md:flex-row flex-col gap-6 w-full">
                 <div className="w-full md:w-2/3">
                   <ServiceHeader
                     title={gig?.title}
@@ -82,7 +82,7 @@ function Main({ mainCategory, subCategoryOne, subCategoryTwo }: MainProps) {
               </div>
             </div>
           </main>
-        </>
+        </div>
       )}
 
       <Footer />

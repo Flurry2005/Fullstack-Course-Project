@@ -15,6 +15,7 @@ import { OrderProvider } from "./Context/useOrders.tsx";
 import { SocketProvider } from "./Context/useSocket.tsx";
 import ServiceListings from "./ServiceListings/ServiceListings.tsx";
 import ServiceDetail from "./ServiceDetail/Main.tsx";
+import Home from "./Home.tsx";
 
 const router = createBrowserRouter([
   {
@@ -30,7 +31,7 @@ const router = createBrowserRouter([
     children: [
       {
         path: "/",
-        element: <SellerDashBoard />,
+        element: <Home />,
       },
       {
         path: "/login",
