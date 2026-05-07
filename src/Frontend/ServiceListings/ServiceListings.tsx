@@ -47,7 +47,7 @@ function getStartingPrice(gig: Gig) {
       ? Math.min(...packagePrices.map((price) => Number(price)))
       : 0;
 
-  return `$${startingPrice.toLocaleString()}`;
+  return `$${startingPrice}`;
 }
 
 function getStartingDelivery(gig: Gig) {
@@ -165,6 +165,7 @@ function ServiceListings() {
 
         const gigs = (await response.json()) as Gig[];
         setListings(gigs.map(mapGigToListing));
+        
       } catch (error) {
         console.error(error);
         setFetchError("Could not load services right now.");
@@ -206,6 +207,7 @@ function ServiceListings() {
     const normalizedQuery = searchQuery.trim().toLowerCase();
     const minPriceNumber = minPrice === "" ? 0 : Number(minPrice);
     const maxPriceNumber = maxPrice === "" ? Infinity : Number(maxPrice);
+    
 
     const matchingListings = listings.filter((listing) => {
       const listingPrice = getListingPrice(listing);
