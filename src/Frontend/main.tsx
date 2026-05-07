@@ -4,7 +4,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import "./index.css";
 import LoginPage from "./LoginPage/LoginPage.tsx";
 import CheckoutPage from "./checkoutPage/checkoutPage.tsx";
-import Home from "./Home.tsx";
+import { Outlet } from "react-router-dom";
 import RecoverPassword from "./LoginPage/RecoverPassword.tsx";
 import { AuthProvider } from "./Context/useAuth.tsx";
 import SellerDashBoard from "./SellerDashboard/SellerDashboard.tsx";
@@ -18,6 +18,15 @@ import ServiceDetail from "./ServiceDetail/Main.tsx";
 
 const router = createBrowserRouter([
   {
+    element: (
+      <AuthProvider>
+        <OrderProvider>
+          <SocketProvider>
+            <Outlet />
+          </SocketProvider>
+        </OrderProvider>
+      </AuthProvider>
+    ),
     children: [
       {
         path: "/",
@@ -75,12 +84,6 @@ const router = createBrowserRouter([
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <AuthProvider>
-      <OrderProvider>
-        <SocketProvider>
-          <RouterProvider router={router} />
-        </SocketProvider>
-      </OrderProvider>
-    </AuthProvider>
+    <RouterProvider router={router} />
   </StrictMode>,
 );

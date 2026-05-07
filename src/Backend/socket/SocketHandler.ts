@@ -134,7 +134,11 @@ class SocketHandler {
               const recipientSocket =
                 this.#io!.sockets.sockets.get(recipientSocketId);
 
-              recipientSocket!.emit("message_received");
+              recipientSocket!.emit("message_received", {
+                sender: user.username,
+                message: data.message,
+                orderId: data.orderId,
+              });
               console.log("emitting to", recipientSocketId);
             }
           } catch (error) {

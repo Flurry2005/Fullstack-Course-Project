@@ -31,7 +31,7 @@ function Conversations({ setActiveOrder, activeOrder, onlineList }: Props) {
         {orders?.map((order) => {
           return (
             <article
-              className={`flex gap-2 rounded-2xl border-[#F8FAFC] w-full box-content border h-22 ${activeOrder ? (activeOrder._id === order._id ? "bg-white border-[#E0E7FF]!" : "") : ""}`}
+              className={`flex gap-2 rounded-2xl border-[#F8FAFC] w-full justify-between box-content border h-22 ${activeOrder ? (activeOrder._id === order._id ? "bg-white border-[#E0E7FF]!" : "") : ""}`}
               key={order._id}
               onClick={async () => {
                 setActiveOrder(order);
@@ -55,37 +55,39 @@ function Conversations({ setActiveOrder, activeOrder, onlineList }: Props) {
                 });
               }}
             >
-              <section className="flex flex-col justify-center px-4 py-2 w-fit h-full">
-                <img
-                  src={me}
-                  alt=""
-                  className="rounded-full w-fit h-8/10 object-contain aspect-square"
-                />
-                <span
-                  className={`self-end rounded-full w-2 h-2 ${onlineList?.find((entry: any) => entry.username === (user?.username === order?.buyerUsername ? order?.sellerUsername : order?.buyerUsername) && entry.status === "Online") ? "bg-green-500" : "bg-red-500"}`}
-                />
-              </section>
-              <section className="flex flex-col gap-1 py-2 w-6/10">
-                <p className="font-semibold text-[#4338CA]">
-                  {user?.username === order.buyerUsername
-                    ? order.sellerUsername
-                    : order.buyerUsername}
-                </p>
-                <p className="text-[#818CF8] text-xs">{order.gigname}</p>
-                <div className="flex items-center gap-1">
-                  <p className="max-w-9/10 overflow-x-hidden text-[#64748B] text-xs truncate text-nowrap">
-                    {order.chathistory.at(order.chathistory.length - 1)
-                      ?.message || " "}
+              <div className="flex w-9/10">
+                <section className="flex flex-col justify-center px-4 py-2 w-fit h-full">
+                  <img
+                    src={me}
+                    alt=""
+                    className="rounded-full w-fit h-8/10 object-contain aspect-square"
+                  />
+                  <span
+                    className={`self-end rounded-full w-2 h-2 ${onlineList?.find((entry: any) => entry.username === (user?.username === order?.buyerUsername ? order?.sellerUsername : order?.buyerUsername) && entry.status === "Online") ? "bg-green-500" : "bg-red-500"}`}
+                  />
+                </section>
+                <section className="flex flex-col gap-1 py-2 w-6/10">
+                  <p className="font-semibold text-[#4338CA]">
+                    {user?.username === order.buyerUsername
+                      ? order.sellerUsername
+                      : order.buyerUsername}
                   </p>
-                  {user &&
-                    !order.chathistory
-                      .at(order.chathistory.length - 1)
-                      ?.readBy.includes(user?._id) &&
-                    order.chathistory.length > 0 && (
-                      <span className="bg-blue-500 rounded-full w-2 h-2" />
-                    )}
-                </div>
-              </section>
+                  <p className="text-[#818CF8] text-xs">{order.gigname}</p>
+                  <div className="flex items-center gap-1">
+                    <p className="max-w-9/10 overflow-x-hidden text-[#64748B] text-xs truncate text-nowrap">
+                      {order.chathistory.at(order.chathistory.length - 1)
+                        ?.message || " "}
+                    </p>
+                  </div>
+                </section>
+              </div>
+              {user &&
+                !order.chathistory
+                  .at(order.chathistory.length - 1)
+                  ?.readBy.includes(user?._id) &&
+                order.chathistory.length > 0 && (
+                  <span className="self-center bg-blue-500 mr-2 rounded-full w-3 h-3 animate-pulse" />
+                )}
             </article>
           );
         })}
