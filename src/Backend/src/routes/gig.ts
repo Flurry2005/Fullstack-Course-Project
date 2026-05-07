@@ -22,6 +22,13 @@ gigRouter.get("/:id", async (req, res) => {
     : res.status(404).json("Could not find gig");
 });
 
+gigRouter.get("/user/:userId", async (req, res) => {
+    const gigs = await gigController.getGigByUser(req); 
+
+    return gigs ? res.status(200).json(gigs)
+    : res.status(404).json({status: "404", message: "User not found"});
+} )
+
 gigRouter.post("/", jwtMiddleware.jwtTokenIsValid, async (req, res, next) => {
   return (await gigController.createGig(req, res, next))
     ? res.status(201).json("Great success")

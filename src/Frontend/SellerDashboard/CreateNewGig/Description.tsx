@@ -5,6 +5,7 @@ import { useState, useRef } from "react";
 import checkIcon from "../../assets/circle-check-req-icon.svg";
 import infoIcon from "../../assets/info-icon.svg";
 import type { Gig as NewGig } from "../../types/Gig";
+import { useAuth } from "../../Context/useAuth";
 
 type DescriptionProps = {
   setDescription: (description: string) => void;
@@ -31,6 +32,7 @@ function Description({
   const secondaryImageRef = useRef<HTMLInputElement>(null);
   const ternaryImageRef = useRef<HTMLInputElement>(null);
 
+  const { user } = useAuth();
   return (
     <div className="flex flex-col gap-12">
       <div className="flex flex-col gap-3 text-center">
@@ -41,7 +43,7 @@ function Description({
       </div>
       <div className="md:flex grid grid-cols-1 md:w-screen gap-6 justify-center">
         <div className="flex flex-col gap-6 md:w-[50vw]">
-          <div className="flex flex-col gap-6 shadow-md border border-[#C7C4D8] bg-white p-6 rounded-2xl">
+          <div className="flex flex-col gap-6 shadow-md border border-[#ACA8D7]/15 bg-white p-6 rounded-2xl">
             <div className="flex flex-col gap-3">
               <h3 className="text-xl font-bold">Showcase Your Work</h3>
               <p>
@@ -216,7 +218,7 @@ function Description({
             </div>
           </div>
 
-          <div className="flex flex-col gap-6 shadow-md border border-[#C7C4D8] bg-white p-6 rounded-2xl">
+          <div className="flex flex-col gap-6 shadow-md border border-[#ACA8D7]/15 bg-white p-6 rounded-2xl">
             <div className="flex flex-col gap-3">
               <h3 className="text-xl font-bold">Describe Your Work</h3>
               <p>
@@ -234,7 +236,7 @@ function Description({
         </div>
 
         <div className="flex flex-col gap-6 md:w-[20vw]">
-          <div className="flex flex-col p-6 rounded-2xl gap-6 shadow-md bg-white border border-[#C7C4D8] text-[#DAD7FF]">
+          <div className="flex flex-col p-6 rounded-2xl gap-6 shadow-md bg-white border border-[#ACA8D7]/15 text-[#DAD7FF]">
             <span className="text-[#131B2E] font-semibold">
               Quality Checklist
             </span>
@@ -262,7 +264,7 @@ function Description({
               </li>
             </ul>
           </div>
-          <div className="flex flex-col shadow-md bg-white rounded-2xl border-[#C7C4D8] border">
+          <div className="flex h-fit flex-col shadow-md bg-white rounded-2xl border-[#ACA8D7]/15 border">
             <div className="relative">
               <img
                 src={
@@ -276,10 +278,13 @@ function Description({
             </div>
             <div className="flex flex-col p-6 gap-3 text-[#131B2E]">
               <div className="flex gap-3 items-center">
-                <img src={me} className="rounded-full h-8 w-8" />
-                <span>Johan Kronholm</span>
+                <img src={me} className="border-2 border-[#1857f7] rounded-full w-9 h-9 object-cover" />
+                <div className="flex flex-col">
+                <span className="font-bold text-[#2c2a51] text-sm">{user?.username}</span>
+                       <span className="text-[#6f6f9a] text-xs">{newGig.category?.main}</span>
+                </div>
               </div>
-              <p className="text-xl">{newGig.title}</p>
+              <p className="min-h-18 wrap-anywhere text-[#2c2a51] text-lg leading-6">{newGig.title}</p>
             </div>
           </div>
         </div>

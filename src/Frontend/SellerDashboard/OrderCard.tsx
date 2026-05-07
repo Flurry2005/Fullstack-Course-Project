@@ -19,10 +19,10 @@ function OrderCard() {
           </div>
           <StatusBadge status={true} />
         </div>
-        <div className="flex flex-col gap-1">
-          <span className="text-[#5A5781]">Due in</span>
+        <div className="flex flex-col">
+          <span className="text-[#5A5781] text-sm">Due in</span>
           <div className="flex">
-            <span className="text-2xl font-semibold">2 Days, 4h</span>
+            <span className="text-2xl font-semibold">2 Days</span>
             <span className="ml-auto text-2xl text-[#0050D4]">$450.00</span>
           </div>
         </div>

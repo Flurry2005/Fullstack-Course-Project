@@ -67,7 +67,7 @@ function Overview({
       </div>
       <div className="md:flex grid grid-cols-1 md:w-screen gap-6 justify-center">
         <div className="flex flex-col gap-6 md:w-[50vw]">
-          <div className="flex flex-col gap-6 shadow-md border border-[#C7C4D8] bg-white p-6 rounded-2xl">
+          <div className="flex flex-col gap-6 shadow-md border border-[#ACA8D7]/15 bg-white p-6 rounded-2xl">
             <div className="flex flex-col gap-3">
               <h3 className="text-xl font-bold">Gig Title</h3>
               <p>
@@ -82,14 +82,14 @@ function Overview({
               value={newGig?.title || ""}
             />
           </div>
-          <div className="flex flex-col gap-6 shadow-md border border-[#C7C4D8] bg-white p-6 rounded-2xl">
+          <div className="flex flex-col gap-6 shadow-md border border-[#ACA8D7]/15 bg-white p-6 rounded-2xl">
             <div className="flex flex-col gap-3">
               <h3 className="text-xl font-bold">Category</h3>
               <p>
                 Select the industry and specialty that best fits your services.
               </p>
             </div>
-            <div className="grid gap-6 grid-cols-2">
+            <div className="flex flex-col md:grid gap-6 md:grid-cols-2">
               <select
                 className="text-[#6B7280] p-3 rounded-lg border border-[#C7C4D8]"
                 onChange={(e) => handleMainCategoryChange(e.target.value)}
@@ -120,7 +120,7 @@ function Overview({
             </div>
           </div>
 
-          <div className="flex flex-col gap-6 shadow-md border border-[#C7C4D8] bg-white p-6 rounded-2xl">
+          <div className="flex flex-col gap-6 shadow-md border border-[#ACA8D7]/15 bg-white p-6 rounded-2xl">
             <div className="flex flex-col gap-3">
               <h3 className="text-xl font-bold">Search Tags</h3>
               <p>Add up to 5 tags to help buyers find your Gig. Be specific.</p>
@@ -181,7 +181,7 @@ function Overview({
             </ul>
           </div>
 
-          <div className="flex flex-col p-6 rounded-2xl gap-3 border-[#C7C4D8] border bg-[#EAEDFF] text-[#DAD7FF]">
+          <div className="flex flex-col p-6 rounded-2xl gap-3 border-[#C7C4D8]/15 border bg-[#EAEDFF] text-[#DAD7FF]">
             <span className="text-[#464555] font-semibold">Need help?</span>
             <span className="text-[#3525CD] font-semibold flex gap-1 items-center">
               {" "}

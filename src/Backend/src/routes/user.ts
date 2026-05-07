@@ -14,3 +14,6 @@ userRouter.get("/", async (req, res) => {
   const id = req.query.id;
   userController.getUser(req, res, id);
 });
+
+
+

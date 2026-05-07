@@ -6,8 +6,36 @@ import GigCard from "./GigCard";
 import profileRatingsIcon from "../assets/profile-ratings-icon.svg";
 import createNewIcon from "../assets/create-plus-icon.svg";
 import { Link } from "react-router-dom";
+import { useAuth } from "../Context/useAuth";
+import { useEffect, useState } from "react";
+import type { Gig } from "../types/Gig";
 
 function SellerDashBoard() {
+  const { user } = useAuth();
+  const [gigs, setGigs] = useState<Gig[]>();
+  const [gigsLoaded, setGigsLoaded] = useState(false);
+
+  const getGigs = async () => {
+    const response = await fetch(
+      `${import.meta.env.VITE_DEV === "true" ? "http://localhost:3000" : "https://fullstackapi.liamjorgensen.dev"}/api${"/gig/user/"}${user?._id}`,
+    );
+    const data = await response.json();
+    console.log(data);
+    response.ok && setGigs(data);
+    setGigsLoaded(true);
+  };
+
+  const getOrders = async () => {
+    const response = await fetch(
+      `${import.meta.env.VITE_DEV === "true" ? "http://localhost:3000" : "https://fullstackapi.liamjorgensen.dev"}/api${"/gig/orders/"}${user?._id}`,
+    );
+    const data = await response.json();
+    console.log(data);
+  };
+
+  useEffect(() => {
+    getGigs();
+  }, []);
   return (
     <>
       <Navbar />
@@ -99,30 +127,20 @@ function SellerDashBoard() {
             </Link>
           </div>
           <div className="grid md:grid-cols-3 grid-cols-1 gap-6">
-            <GigCard
-              title={"I will teach you how to fish and master bait"}
-              views={13}
-              checkouts={10}
-              price={1000}
-              rating={5.3}
-              reviewerAmount={120}
-            />
-            <GigCard
-              title={"I will teach you fishing"}
-              views={15}
-              checkouts={11}
-              price={599}
-              rating={3.2}
-              reviewerAmount={9}
-            />
-            <GigCard
-              title={"I will teach you about bait"}
-              views={78}
-              checkouts={9}
-              price={299}
-              rating={2.1}
-              reviewerAmount={12}
-            />
+            {!gigsLoaded && <span>Loading gigs..</span>}
+            {gigs?.map((gig) => (
+              <Link to={`/services/${gig._id}`}>
+                <GigCard
+                  id={gig?._id}
+                  title={gig?.title}
+                  views={13}
+                  checkouts={10}
+                  price={gig?.basic?.price}
+                  rating={5.3}
+                  reviewerAmount={120}
+                />
+              </Link>
+            ))}
           </div>
         </section>
       </main>
