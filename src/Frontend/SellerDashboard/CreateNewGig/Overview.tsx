@@ -58,10 +58,16 @@ function Overview({
   };
 
   return (
-    <>
-      <div className="flex w-screen gap-6 justify-center">
-        <div className="flex flex-col gap-6 w-[50vw]">
-          <div className="flex flex-col gap-6 shadow-md border border-[#C7C4D8] bg-white p-6 rounded-2xl">
+    <div className="flex flex-col gap-12">
+      <div className="flex flex-col gap-3 text-center">
+        <h2 className="text-4xl">Overview </h2>
+        <p className="text-[#464555] text-xl ">
+          Provide a snapshot of your services and what clients can expect.
+        </p>
+      </div>
+      <div className="md:flex grid grid-cols-1 md:w-screen gap-6 justify-center">
+        <div className="flex flex-col gap-6 md:w-[50vw]">
+          <div className="flex flex-col gap-6 shadow-md border border-[#ACA8D7]/15 bg-white p-6 rounded-2xl">
             <div className="flex flex-col gap-3">
               <h3 className="text-xl font-bold">Gig Title</h3>
               <p>
@@ -76,14 +82,14 @@ function Overview({
               value={newGig?.title || ""}
             />
           </div>
-          <div className="flex flex-col gap-6 shadow-md border border-[#C7C4D8] bg-white p-6 rounded-2xl">
+          <div className="flex flex-col gap-6 shadow-md border border-[#ACA8D7]/15 bg-white p-6 rounded-2xl">
             <div className="flex flex-col gap-3">
               <h3 className="text-xl font-bold">Category</h3>
               <p>
                 Select the industry and specialty that best fits your services.
               </p>
             </div>
-            <div className="grid gap-6 grid-cols-2">
+            <div className="flex flex-col md:grid gap-6 md:grid-cols-2">
               <select
                 className="text-[#6B7280] p-3 rounded-lg border border-[#C7C4D8]"
                 onChange={(e) => handleMainCategoryChange(e.target.value)}
@@ -114,7 +120,7 @@ function Overview({
             </div>
           </div>
 
-          <div className="flex flex-col gap-6 shadow-md border border-[#C7C4D8] bg-white p-6 rounded-2xl">
+          <div className="flex flex-col gap-6 shadow-md border border-[#ACA8D7]/15 bg-white p-6 rounded-2xl">
             <div className="flex flex-col gap-3">
               <h3 className="text-xl font-bold">Search Tags</h3>
               <p>Add up to 5 tags to help buyers find your Gig. Be specific.</p>
@@ -137,11 +143,14 @@ function Overview({
               <input
                 type="text"
                 ref={tagRef}
-                className="text-[#6B7280] p-3 rounded-lg border border-[#C7C4D8]"
+                className={`text-[#6B7280] p-3 rounded-lg border border-[#C7C4D8]`}
               />
               <button
+                disabled={
+                  Array.isArray(newGig.tags) && newGig.tags?.length === 5
+                }
                 onClick={() => addTag()}
-                className="place-self-start cursor-pointer py-1 rounded-lg font-semibold text-white bg-[#4F46E5] px-6"
+                className={`${Array.isArray(newGig.tags) && newGig.tags?.length === 5 ? "opacity-50" : "opacity-100"} place-self-start cursor-pointer py-1 rounded-lg font-semibold text-white bg-[#4F46E5] px-6`}
               >
                 Create Tag
               </button>
@@ -149,7 +158,7 @@ function Overview({
           </div>
         </div>
 
-        <div className="flex flex-col gap-6 w-[20vw]">
+        <div className="flex flex-col gap-6 md:w-[20vw]">
           <div className="flex flex-col p-6 rounded-2xl gap-3 bg-[#4F46E5] text-[#DAD7FF]">
             <span className="text-xl flex gap-1 font-bold items-center">
               <img src={tipsIcon} className="w-6 h-6" />
@@ -172,7 +181,7 @@ function Overview({
             </ul>
           </div>
 
-          <div className="flex flex-col p-6 rounded-2xl gap-3 border-[#C7C4D8] border bg-[#EAEDFF] text-[#DAD7FF]">
+          <div className="flex flex-col p-6 rounded-2xl gap-3 border-[#C7C4D8]/15 border bg-[#EAEDFF] text-[#DAD7FF]">
             <span className="text-[#464555] font-semibold">Need help?</span>
             <span className="text-[#3525CD] font-semibold flex gap-1 items-center">
               {" "}
@@ -182,7 +191,7 @@ function Overview({
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 }
 

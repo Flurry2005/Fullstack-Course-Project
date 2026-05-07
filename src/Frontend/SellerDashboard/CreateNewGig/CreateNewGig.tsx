@@ -11,15 +11,17 @@ import Review from "./Review";
 import type { Gig as NewGig } from "../../types/Gig";
 import type { Category } from "../../types/Gig";
 import type { Package } from "../../types/Gig";
-import { useAuth } from "../../Context/useAuth";
 
 function CreateNewGig() {
+  const [primaryImagePreview, setPrimaryImagePreview] = useState<string>("");
+  const [secondaryImagePreview, setSecondaryImagePreview] =
+    useState<string>("");
+  const [ternaryImagePreview, setTernaryImagePreview] = useState<string>("");
   const [newGig, setNewGig] = useState<NewGig>({});
   const [currentStep, setCurrentStep] = useState<number>(0);
   const [stepOneComplete, setStepOneComplete] = useState(false);
   const [stepTwoComplete, setStepTwoComplete] = useState(false);
   const [stepThreeComplete, setStepThreeComplete] = useState(false);
-  const { user } = useAuth();
   const [success, setSuccess] = useState(false);
 
   //Step verification
@@ -38,7 +40,7 @@ function CreateNewGig() {
       console.log("Incomplete (Step 1)");
     }
 
-    if (newGig?.description) {
+    if (newGig?.description && primaryImagePreview) {
       setStepTwoComplete(true);
       console.log("Step 2 complete");
     } else {
@@ -47,7 +49,7 @@ function CreateNewGig() {
     }
 
     const isValidPrice = (price: any) =>
-      price && !Number.isNaN(parseInt(price));
+      price && !Number.isNaN(parseInt(price)) && price > 0;
     const hasFeatures = (pkg: any) =>
       Array.isArray(pkg?.features) && pkg.features.length > 0;
 
@@ -67,7 +69,7 @@ function CreateNewGig() {
       setStepThreeComplete(false);
       console.log("Step 3 incomplete");
     }
-  }, [newGig]);
+  }, [newGig, primaryImagePreview]);
 
   // FML in the name of interactivity
   const [basicInputPrice, setBasicInputPrice] = useState("");
@@ -82,14 +84,6 @@ function CreateNewGig() {
   const [premiumDeliveryTime, setPremiumDeliveryTime] = useState("1 Day");
   const [premiumInputFeature, setPremiumInputFeature] = useState("");
   const [premiumFeatures, setPremiumFeatures] = useState<string[]>([]);
-
-  // const setSeller = () => {
-  //   const seller = user?.username;
-  //   setNewGig((prev) => {
-  //     return { ...prev, seller };
-  //   });
-  // };
-
 
   const setTitle = (title: string) => {
     setNewGig((prev) => {
@@ -134,8 +128,6 @@ function CreateNewGig() {
     });
   };
 
-
-
   useEffect(() => {
     console.log("updated gig: ");
     console.log(newGig);
@@ -153,7 +145,7 @@ function CreateNewGig() {
       </div>
 
       <main className="flex flex-col w-full bg-[#f9f5ff] p-6 gap-10">
-        {!success && (<ProgressBar currentStep={currentStep} />)}
+        {!success && <ProgressBar currentStep={currentStep} />}
         <section>
           {currentStep === 0 && (
             <Overview
@@ -164,7 +156,16 @@ function CreateNewGig() {
             />
           )}
           {currentStep === 1 && (
-            <Description newGig={newGig} setDescription={setDescription} />
+            <Description
+              newGig={newGig}
+              setDescription={setDescription}
+              primaryImagePreview={primaryImagePreview}
+              setPrimaryImagePreview={setPrimaryImagePreview}
+              secondaryImagePreview={secondaryImagePreview}
+              setSecondaryImagePreview={setSecondaryImagePreview}
+              ternaryImagePreview={ternaryImagePreview}
+              setTernaryImagePreview={setTernaryImagePreview}
+            />
           )}
           {currentStep === 2 && (
             <Pricing
@@ -199,10 +200,17 @@ function CreateNewGig() {
               setPremiumFeatures={setPremiumFeatures}
             />
           )}
-          {currentStep === 3 && <Review success={success} setSuccess={setSuccess} newGig={newGig} />}
+          {currentStep === 3 && (
+            <Review
+              success={success}
+              setSuccess={setSuccess}
+              newGig={newGig}
+              primaryImagePreview={primaryImagePreview}
+            />
+          )}
         </section>
         <div className="flex gap-1 justify-between">
-          {(currentStep > 0 && !success) && (
+          {currentStep > 0 && !success && (
             <button
               className="mr-auto cursor-pointer py-3 rounded-lg font-semibold text-white bg-linear-to-r from-[#4F46E5] to-[#4e46e5c2] px-6"
               onClick={() => setCurrentStep(currentStep - 1)}

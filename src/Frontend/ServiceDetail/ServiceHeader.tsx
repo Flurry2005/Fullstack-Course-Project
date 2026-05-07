@@ -3,11 +3,10 @@ import fish from "../assets/fish.jpg";
 import profileRatingsIcon from "../assets/profile-ratings-icon.svg";
 
 type ServiceProps = {
-  title: string;
-  seller: string;
+  title: string | any;
+  seller: string | any;
   rating: number;
   reviewsAmount: number;
-  about: string;
 };
 
 function ServiceHeader({
@@ -15,7 +14,6 @@ function ServiceHeader({
   seller,
   rating,
   reviewsAmount,
-  about,
 }: ServiceProps) {
   return (
     <div className="flex flex-col gap-6">
@@ -35,10 +33,10 @@ function ServiceHeader({
         </div>
       </div>
       <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
-        <img src={fish} className="h-full w-full rounded-2xl object-cover" />
+        <img src={fish} className="h-64 md:h-full w-full rounded-2xl object-cover" />
         <div className="grid w-full gap-3">
-          <img src={fish} className="h-full w-full rounded-2xl object-cover" />
-          <img src={fish} className="h-full w-full rounded-2xl object-cover" />
+          <img src={fish} className="h-32 md:h-full w-full rounded-2xl object-cover" />
+          <img src={fish} className="h-32 md:h-full w-full rounded-2xl object-cover" />
         </div>
       </div>
     </div>

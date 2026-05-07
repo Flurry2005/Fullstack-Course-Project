@@ -1,14 +1,8 @@
-const categories = [
-  "Design & Creative",
-  "Development & IT",
-  "Digital Marketing",
-  "Writing & Translation",
-];
-
-const deliveryTimes = ["Express (24h)", "Up to 3 days", "Up to 7 days"];
 const ratings = [5, 4, 3, 2, 1];
 
 type SidebarProps = {
+  categories: string[];
+  deliveryTimes: string[];
   selectedCategories: string[];
   minPrice: string;
   maxPrice: string;
@@ -23,6 +17,8 @@ type SidebarProps = {
 };
 
 function Sidebar({
+  categories,
+  deliveryTimes,
   selectedCategories,
   minPrice,
   maxPrice,

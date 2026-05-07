@@ -137,7 +137,7 @@ function Pricing({
           Define your packages to offer variety to your clients.
         </p>
       </div>
-      <div className="grid md:grid-cols-3 grid-cols-1 gap-6">
+      <div className="grid md:grid-cols-3 md:w-[75vw] md:mx-auto grid-cols-1 gap-6">
         <Package
           newGig={newGig}
           tier="basic"
@@ -195,7 +195,7 @@ function Pricing({
           features={premiumFeatures}
         />
       </div>
-      <div className="flex flex-col rounded-2xl w-[50vw] p-6 md:col-span-3 place-self-center text-[#67F4B7] bg-[#006E4B] gap-3">
+      <div className="flex flex-col rounded-2xl md:w-[50vw] p-6 md:col-span-3 place-self-center text-[#67F4B7] bg-[#006E4B] gap-3">
         <span className="flex gap-1">
           <img src={tipIcon} className="w-6 h-6" />
           Pro Tip
