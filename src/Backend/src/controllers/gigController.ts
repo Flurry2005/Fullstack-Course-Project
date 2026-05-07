@@ -1,10 +1,6 @@
-
 import type { Gig } from "../../types/Gig";
 import gigsModel from "../models/gigsModel";
 import { Request, Response, NextFunction } from "express";
-
-
-
 
 class GigController {
   async getGigs() {
@@ -25,8 +21,19 @@ class GigController {
     }
   }
 
-  async createGig(req: Request, res: Response, next: NextFunction) {
+  async getGigByUser(req: Request) {
+    const userId = req.params.userId;
+    if (!userId) return false;
 
+    try {
+      return await gigsModel.find({ sellerId: userId }).lean();
+    } catch (error) {
+      console.error(error);
+      return false;
+    }
+  }
+
+  async createGig(req: Request, res: Response, next: NextFunction) {
     const newGig: Gig = req.body;
 
     console.log(newGig);

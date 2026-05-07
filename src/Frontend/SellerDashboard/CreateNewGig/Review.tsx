@@ -48,7 +48,7 @@ function Review({
             </p>
           </div>
           <div className="flex flex-col mx-auto gap-6 md:w-[50vw]">
-            <div className="flex flex-col shadow-md border border-[#C7C4D8] bg-white rounded-2xl overflow-hidden">
+            <div className="flex flex-col shadow-md border border-[#ACA8D7]/15 bg-white rounded-2xl overflow-hidden">
               <img
                 src={primaryImagePreview || fish}
                 className="w-full h-75"
@@ -65,7 +65,7 @@ function Review({
                 </h3>
               </div>
             </div>
-            <div className="flex flex-col gap-6 shadow-md border border-[#C7C4D8] bg-white p-6 rounded-2xl">
+            <div className="flex flex-col gap-6 shadow-md border border-[#ACA8D7]/15 bg-white p-6 rounded-2xl">
               <div className="flex flex-col gap-3">
                 <h3 className="text-xl text-[#131B2E]  font-semibold">
                   Description
@@ -74,7 +74,7 @@ function Review({
               </div>
             </div>
 
-            <div className="flex flex-col gap-6 shadow-md border border-[#C7C4D8] bg-white p-6 rounded-2xl">
+            <div className="flex flex-col gap-6 shadow-md border border-[#ACA8D7]/15 bg-white p-6 rounded-2xl">
               <div className="flex flex-col gap-3">
                 <h3 className="text-xl text-[#131B2E]  font-semibold">
                   Gallery
@@ -88,7 +88,7 @@ function Review({
               </h3>
               <div className="grid md:grid-cols-3 gap-3 grid-cols-1">
                 {newGig.basic?.price && (
-                  <div className="flex flex-col gap-6 shadow-md border border-[#C7C4D8] bg-white p-6 rounded-2xl">
+                  <div className="flex flex-col gap-6 shadow-md border border-[#ACA8D7]/15 bg-white p-6 rounded-2xl">
                     <div className="flex flex-col gap-6">
                       <div className="flex flex-col gap-1">
                         <h3 className="text-[#464555]">BASIC</h3>
@@ -105,28 +105,6 @@ function Review({
                           <span
                             key={id}
                             className="flex min-w-0 items-start gap-2"
-                          >
-                            <img src={checkIcon} className="w-5 h-5" />
-                            <span className="wrap-break-word break-all leading-tight">
-                              {e}
-                            </span>
-                          </span>
-                        ))}
-                        {(newGig?.standard?.features ?? []).map((e, id) => (
-                          <span
-                            key={id}
-                            className="flex min-w-0 opacity-25 items-start gap-2"
-                          >
-                            <img src={checkIcon} className="w-5 h-5" />
-                            <span className="wrap-break-word break-all leading-tight">
-                              {e}
-                            </span>
-                          </span>
-                        ))}
-                        {(newGig?.premium?.features ?? []).map((e, id) => (
-                          <span
-                            key={id}
-                            className="flex min-w-0 opacity-25 items-start gap-2"
                           >
                             <img src={checkIcon} className="w-5 h-5" />
                             <span className="wrap-break-word break-all leading-tight">
@@ -152,33 +130,11 @@ function Review({
                         <span className="text-sm font-semibold">
                           Basic features
                         </span>
-
-                        {(newGig?.basic?.features ?? []).map((e, id) => (
-                          <span
-                            key={id}
-                            className="flex min-w-0 items-start gap-2"
-                          >
-                            <img src={checkIcon} className="w-5 h-5" />
-                            <span className="wrap-break-word break-all leading-tight">
-                              {e}
-                            </span>
-                          </span>
-                        ))}
+              
                         {(newGig?.standard?.features ?? []).map((e, id) => (
                           <span
                             key={id}
                             className="flex min-w-0 items-start gap-2"
-                          >
-                            <img src={checkIcon} className="w-5 h-5" />
-                            <span className="wrap-break-word break-all leading-tight">
-                              {e}
-                            </span>
-                          </span>
-                        ))}
-                        {(newGig?.premium?.features ?? []).map((e, id) => (
-                          <span
-                            key={id}
-                            className="flex min-w-0 opacity-25 items-start gap-2"
                           >
                             <img src={checkIcon} className="w-5 h-5" />
                             <span className="wrap-break-word break-all leading-tight">
@@ -204,29 +160,7 @@ function Review({
                         <span className="text-sm font-semibold">
                           Basic features
                         </span>
-
-                        {(newGig?.basic?.features ?? []).map((e, id) => (
-                          <span
-                            key={id}
-                            className="flex min-w-0 items-start gap-2"
-                          >
-                            <img src={checkIcon} className="w-5 h-5" />
-                            <span className="wrap-break-word break-all leading-tight">
-                              {e}
-                            </span>
-                          </span>
-                        ))}
-                        {(newGig?.standard?.features ?? []).map((e, id) => (
-                          <span
-                            key={id}
-                            className="flex min-w-0 items-start gap-2"
-                          >
-                            <img src={checkIcon} className="w-5 h-5" />
-                            <span className="wrap-break-word break-all leading-tight">
-                              {e}
-                            </span>
-                          </span>
-                        ))}
+            
                         {(newGig?.premium?.features ?? []).map((e, id) => (
                           <span
                             key={id}
@@ -244,7 +178,7 @@ function Review({
                 )}
               </div>
 
-              <div className="flex flex-col gap-6 shadow-md border border-[#C7C4D8] bg-white p-6 rounded-2xl">
+              <div className="flex flex-col gap-6 shadow-md border border-[#ACA8D7]/15 bg-white p-6 rounded-2xl">
                 <div className="flex flex-col gap-3">
                   <h3 className="text-xl text-[#131B2E]  font-semibold">
                     Search Tags

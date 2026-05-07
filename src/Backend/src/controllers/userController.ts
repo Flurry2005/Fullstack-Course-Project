@@ -67,7 +67,7 @@ class UserController {
         .status(400)
         .json({ response: "Bad request", message: "No user id provided." });
 
-    const result = await Users.findOne({ _id: id });
+    const result = await Users.findOne({ _id: id }).lean();
     if (result) {
       const user = {
         fullname: result.fullname,

@@ -43,7 +43,7 @@ function PurchaseOptions({ options = {} }: PurchaseOptionsProps) {
             .map(([planName]) => (
               <div
                 key={planName}
-                className={`cursor-pointer flex border-b border-b-[#5A5781]/10 justify-center w-full p-4 ${selectedPlan === planName ? "bg-[#F3EEFF]" : ""}`}
+                className={`cursor-pointer flex border-b border-b-[#5A5781]/10 justify-center w-full p-4 ${selectedPlan === planName ? "bg-[#F3EEFF]" : ""} ${selectedPlan === "Basic" ? "rounded-tl-2xl" : ""}  ${selectedPlan === "Premium" ? "rounded-tr-2xl" : ""}`}
                 onClick={() => displayCurrentPlan(planName)}
               >
                 <span className="max-sm:text-sm font-bold text-[#5A5781]">
@@ -55,21 +55,30 @@ function PurchaseOptions({ options = {} }: PurchaseOptionsProps) {
 
         <div className="flex flex-col p-6 gap-6">
           <div className="flex flex-wrap gap-6 items-center">
-            <div className="flex flex-col gap-3 ">
+            <div className="flex flex-col gap-2">
               <span className="text-[#464555] text-sm">Included features</span>
-         
-              {currentPlan?.features?.map((feature) => (<div className="flex flex-col"><span className="flex font-semibold gap-3 items-center"><img src={featureIcon} className="h-6 w-6"/>{feature}</span></div>))}
-     
-               <span className="text-[#464555] text-sm">Delivery in</span>
-                <span className="font-semibold flex items-center gap-3"><img src={timeIcon} className="h-6 w-6"/>{currentPlan?.delivery}</span>
-               
+
+              {currentPlan?.features?.map((feature) => (
+                <div className="flex flex-col">
+                  <span className="flex font-semibold gap-3 items-center">
+                    <img src={featureIcon} className="h-6 w-6" />
+                    {feature}
+                  </span>
+                </div>
+              ))}
+
+              <span className="text-[#464555] text-sm">Delivery in</span>
+              <span className="font-semibold flex items-center gap-3">
+                <img src={timeIcon} className="h-6 w-6" />
+                {currentPlan?.delivery}
+              </span>
             </div>
-                  
-            <span className="text-3xl md:text-4xl ml-auto font-semibold">
+
+            <span className="text-6xl text-[#464555]  ld:ml-auto mx-auto font-semibold">
               ${currentPlan?.price}
             </span>
           </div>
-         
+
           <div className="flex flex-col items-center gap-3">
             <ContinueButton price={currentPlan?.price} />
             <ContactSellerButton />
