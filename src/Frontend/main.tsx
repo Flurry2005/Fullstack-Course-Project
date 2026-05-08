@@ -70,7 +70,7 @@ const router = createBrowserRouter([
         element: <ServiceListings />,
       },
       {
-        path: "/services/:gigId",
+        path: "/services/:slug/:sub_slug/:gigId",
         element: (
           <ServiceDetail
             mainCategory={null}

@@ -25,6 +25,8 @@ const gigsSchema = new mongoose.Schema({
   category: {
     main: { type: String, required: true },
     sub: { type: String, required: true },
+    main_slug: {type: String, required: true},
+    sub_slug: {type: String, required: true}
   },
   basic: {
     price: { type: Number, required: true },

@@ -1,6 +1,8 @@
 import type { Gig } from "../../types/Gig";
 import gigsModel from "../models/gigsModel";
 import { Request, Response, NextFunction } from "express";
+import { categories } from '../../../Frontend/SellerDashboard/CreateNewGig/Categories'
+
 
 class GigController {
   async getGigs() {
@@ -47,6 +49,16 @@ class GigController {
       return false;
     }
 
+    // finds corresponding slug to category and sub category
+    const mainCategory = categories.find((cat) => cat.main.name === newGig.category!.main)
+    const subCategory = mainCategory?.subs.find((sub) => sub.sub === newGig.category!.sub)
+
+    const mainSlug = mainCategory?.main.slug ? mainCategory?.main.slug : categories[0].main.slug
+    const subSlug = subCategory?.sub_slug ? subCategory?.sub_slug : categories[0].subs[0].sub_slug
+
+
+
+
     const isValidPrice = (price: any) =>
       price && !Number.isNaN(parseInt(price));
     const hasFeatures = (pkg: any) =>
@@ -73,6 +85,8 @@ class GigController {
         category: {
           main: newGig.category?.main,
           sub: newGig.category?.sub,
+          main_slug: mainSlug,
+          sub_slug: subSlug
         },
         tags: newGig.tags,
         description: newGig.description,

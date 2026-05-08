@@ -21,12 +21,13 @@ function Overview({
   setFinalTags,
   newGig,
 }: overviewProps) {
-  const [mainCategory, setMainCategory] = useState(categories[0].main);
-  const [subCategory, setSubCategory] = useState(categories[0].subs[0]);
+  const [mainCategory, setMainCategory] = useState(categories[0].main.name);
+  const [subCategory, setSubCategory] = useState(categories[0].subs[0].sub);
 
   useEffect(() => {
     if (!newGig.category?.main || !newGig.category?.sub) {
-      setCategory({ main: categories[0].main, sub: categories[0].subs[0] });
+      setCategory({ main: categories[0].main.name, sub: categories[0].subs[0].sub });
+      
     }
   }, []);
   const tagRef = useRef<HTMLInputElement>(null);
@@ -43,17 +44,21 @@ function Overview({
     setFinalTags([...(newGig.tags || []).filter((_, i) => i !== index)]);
   };
 
-  const handleMainCategoryChange = (value: string) => {
-    setMainCategory(value);
-    // Find the first subcategory for the new main category
-    const found = categories.find((cat) => cat.main === value);
-    const firstSub = found && found.subs.length > 0 ? found.subs[0] : "";
-    setSubCategory(firstSub);
-    setCategory({ main: value, sub: firstSub });
-  };
+    const handleMainCategoryChange = (value: string) => {
+      setMainCategory(value);
+
+      const found = categories.find((cat) => cat.main.name === value);
+      const firstSub = found?.subs[0];
+
+      if (!firstSub) return;
+
+      setSubCategory(firstSub.sub);
+      setCategory({ main: value, sub: firstSub.sub });
+    };
 
   const handleSubCategoryChange = (value: string) => {
     setSubCategory(value);
+    
     setCategory({ main: mainCategory, sub: value });
   };
 
@@ -96,8 +101,8 @@ function Overview({
                 value={newGig.category?.main || mainCategory}
               >
                 {categories.map((cat) => (
-                  <option key={cat.main} value={cat.main}>
-                    {cat.main}
+                  <option key={cat.main.name} value={cat.main.name}>
+                    {cat.main.name}
                   </option>
                 ))}
               </select>
@@ -109,11 +114,11 @@ function Overview({
                 {(
                   categories.find(
                     (cat) =>
-                      cat.main === (newGig.category?.main || mainCategory),
+                      cat.main.name === (newGig.category?.main || mainCategory),
                   )?.subs || []
                 ).map((sub) => (
-                  <option key={sub} value={sub}>
-                    {sub}
+                  <option key={sub.sub} value={sub.sub}>
+                    {sub.sub}
                   </option>
                 ))}
               </select>

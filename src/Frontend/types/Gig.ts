@@ -1,6 +1,8 @@
 export type Category = {
   main?: string;
   sub?: string;
+  main_slug?: string;
+  sub_slug?: string;
 };
 
 export type Package = {
