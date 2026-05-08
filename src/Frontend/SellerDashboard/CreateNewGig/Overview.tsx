@@ -137,11 +137,13 @@ function Overview({
                       className="text-[#54647A] font-medium gap-1 flex items-center bg-[#D0E1FB] px-6 py-1 rounded-lg min-h-9"
                     >
                       {tag}
-                      <img
-                        src={removeIcon}
-                        className="w-3 h-3 cursor-pointer contrast-100 invert-50"
-                        onClick={() => removeTag(index)}
-                      />
+                             <span
+                    className="ml-2 cursor-pointer text-neutral-400 font-bold"
+                    onClick={() => removeTag(index)}
+                    title="Remove tag"
+                  >
+                    ×
+                  </span>
                     </span>
                   ))}
               </div>

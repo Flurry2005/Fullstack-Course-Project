@@ -2,8 +2,6 @@ import { Router } from "express";
 import gigController from "../controllers/gigController";
 import { jwtMiddleware } from "../middleware/jwtMiddleware.js";
 
-
-
 export const gigRouter = Router();
 
 gigRouter.get("/", async (_req, res) => {
@@ -23,14 +21,27 @@ gigRouter.get("/:id", async (req, res) => {
 });
 
 gigRouter.get("/user/:userId", async (req, res) => {
-    const gigs = await gigController.getGigByUser(req); 
+  const gigs = await gigController.getGigByUser(req);
 
-    return gigs ? res.status(200).json(gigs)
-    : res.status(404).json({status: "404", message: "User not found"});
-} )
+  return gigs
+    ? res.status(200).json(gigs)
+    : res.status(404).json({ status: "404", message: "User not found" });
+});
 
 gigRouter.post("/", jwtMiddleware.jwtTokenIsValid, async (req, res, next) => {
   return (await gigController.createGig(req, res, next))
     ? res.status(201).json("Great success")
     : res.status(400).json("Could not publish gig");
+});
+
+gigRouter.put("/", jwtMiddleware.jwtTokenIsValid, async (req, res, next) => {
+  return (await gigController.updateGig(req, res, next))
+    ? res.status(200).json("Updated Gig")
+    : res.status(400).json("Could not update gig");
+});
+
+gigRouter.delete("/", jwtMiddleware.jwtTokenIsValid, async (req, res, next) => {
+  return (await gigController.deleteGig(req, res, next))
+    ? res.status(200).json("Deleted Gig")
+    : res.status(400).json("Could not delete gig");
 });

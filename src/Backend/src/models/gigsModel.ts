@@ -22,6 +22,11 @@ const gigsSchema = new mongoose.Schema({
     required: true,
   },
 
+  pending: {
+    type: Boolean,
+    required: true,
+  },
+
   category: {
     main: { type: String, required: true },
     sub: { type: String, required: true },

@@ -56,7 +56,7 @@ function Review({
               <div className="flex flex-col gap-1 px-6 py-6">
                 <div className="flex items-center gap-2 font-semibold text-[#3525CD]">
                   <span>{newGig.category?.main}</span>
-                  <span>•</span>
+                  <span>{">"}</span>
                   <span>{newGig.category?.sub}</span>
                 </div>
                 <h3 className="text-3xl text-[#131B2E] font-semibold">

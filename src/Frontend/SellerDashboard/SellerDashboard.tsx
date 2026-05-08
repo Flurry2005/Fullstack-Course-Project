@@ -129,7 +129,10 @@ function SellerDashBoard() {
           <div className="grid md:grid-cols-3 grid-cols-1 gap-6">
             {!gigsLoaded && <span>Loading gigs..</span>}
             {gigs?.map((gig) => (
-              <Link to={`/services/${gig._id}`}>
+              <Link
+                to={`/services/${gig.category?.main_slug}/${gig.category?.sub_slug}/${gig._id}`}
+                key={gig._id}
+              >
                 <GigCard
                   id={gig?._id}
                   title={gig?.title}
