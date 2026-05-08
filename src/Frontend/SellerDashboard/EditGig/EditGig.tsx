@@ -85,7 +85,9 @@ function EditGig() {
             setConfirm={setConfirm}
           />
         )}
-        {deleteState && <Delete gig={gig} setDeleteState={setDeleteState} />}
+        {deleteState && gig && (
+          <Delete gig={gig} setDeleteState={setDeleteState} />
+        )}
 
         <main
           onClick={() => setEditState(false)}
