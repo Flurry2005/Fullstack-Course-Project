@@ -15,6 +15,9 @@ type Listing = {
   title: string;
   price: string;
   category: string;
+  subCategory: string;
+  main_slug: string;
+  sub_slug: string;
   deliveryTime: string;
   deliveryTimes: string[];
   rating: string;
@@ -72,6 +75,9 @@ function mapGigToListing(gig: Gig): Listing {
     title: gig.title || "Untitled service",
     price: getStartingPrice(gig),
     category: gig.category?.main || "Other",
+    subCategory: gig.category?.sub || "Other",
+    main_slug: gig.category!.main_slug || "Other",
+    sub_slug: gig.category!.sub_slug || "Other",
     deliveryTime: getStartingDelivery(gig),
     deliveryTimes: getDeliveryTimes(gig),
     rating: "5.0",
@@ -343,7 +349,7 @@ function ServiceListings() {
                 <ServiceListingCard
                   key={listing.id}
                   listing={listing}
-                  onClick={() => navigate(`/services/${listing.id}`)}
+                  onClick={() => navigate(`/services/${listing.main_slug}/${listing.sub_slug}/${listing.id}`)}
                 />
               ))}
             </div>

@@ -25,7 +25,6 @@ function Review({
       { method: "POST", headers: header, body: body, credentials: "include" },
     );
     const data = await response.json();
-    console.log(data);
     setSuccess(response.ok);
   };
 
