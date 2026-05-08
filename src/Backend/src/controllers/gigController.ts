@@ -1,8 +1,7 @@
 import type { Gig } from "../../types/Gig";
 import gigsModel from "../models/gigsModel";
 import { Request, Response, NextFunction } from "express";
-import { categories } from '../../../Frontend/SellerDashboard/CreateNewGig/Categories'
-
+import { categories } from "../../../Frontend/SellerDashboard/CreateNewGig/Categories";
 
 class GigController {
   async getGigs() {
@@ -50,14 +49,19 @@ class GigController {
     }
 
     // finds corresponding slug to category and sub category
-    const mainCategory = categories.find((cat) => cat.main.name === newGig.category!.main)
-    const subCategory = mainCategory?.subs.find((sub) => sub.sub === newGig.category!.sub)
+    const mainCategory = categories.find(
+      (cat) => cat.main.name === newGig.category!.main,
+    );
+    const subCategory = mainCategory?.subs.find(
+      (sub) => sub.sub === newGig.category!.sub,
+    );
 
-    const mainSlug = mainCategory?.main.slug ? mainCategory?.main.slug : categories[0].main.slug
-    const subSlug = subCategory?.sub_slug ? subCategory?.sub_slug : categories[0].subs[0].sub_slug
-
-
-
+    const mainSlug = mainCategory?.main.slug
+      ? mainCategory?.main.slug
+      : categories[0].main.slug;
+    const subSlug = subCategory?.sub_slug
+      ? subCategory?.sub_slug
+      : categories[0].subs[0].sub_slug;
 
     const isValidPrice = (price: any) =>
       price && !Number.isNaN(parseInt(price));
@@ -86,7 +90,7 @@ class GigController {
           main: newGig.category?.main,
           sub: newGig.category?.sub,
           main_slug: mainSlug,
-          sub_slug: subSlug
+          sub_slug: subSlug,
         },
         tags: newGig.tags,
         description: newGig.description,
@@ -111,7 +115,122 @@ class GigController {
           delivery: newGig.premium?.delivery ?? "",
           features: newGig.premium?.features ?? [],
         },
+        pending: true,
       });
+      return true;
+    } catch (error) {
+      console.error(error);
+      return false;
+    }
+  }
+
+  async updateGig(req: Request, res: Response, next: NextFunction) {
+    const updatedGig: Gig = req.body;
+
+    console.log(updatedGig);
+    if (
+      !updatedGig.title ||
+      !updatedGig.category?.main ||
+      !updatedGig.category?.sub ||
+      !updatedGig.description ||
+      !updatedGig.tags
+    ) {
+      return false;
+    }
+
+    // finds corresponding slug to category and sub category
+    const mainCategory = categories.find(
+      (cat) => cat.main.name === updatedGig.category!.main,
+    );
+    const subCategory = mainCategory?.subs.find(
+      (sub) => sub.sub === updatedGig.category!.sub,
+    );
+
+    const mainSlug = mainCategory?.main.slug
+      ? mainCategory?.main.slug
+      : categories[0].main.slug;
+    const subSlug = subCategory?.sub_slug
+      ? subCategory?.sub_slug
+      : categories[0].subs[0].sub_slug;
+
+    const isValidPrice = (price: any) =>
+      price && !Number.isNaN(parseInt(price));
+    const hasFeatures = (pkg: any) =>
+      Array.isArray(pkg?.features) && pkg.features.length > 0;
+
+    const basicValid =
+      isValidPrice(updatedGig.basic?.price) && hasFeatures(updatedGig.basic);
+    const standardValid =
+      (!updatedGig.standard?.price && !hasFeatures(updatedGig.standard)) ||
+      (isValidPrice(updatedGig.standard?.price) &&
+        hasFeatures(updatedGig.standard));
+    const premiumValid =
+      (!updatedGig.premium?.price && !hasFeatures(updatedGig.premium)) ||
+      (isValidPrice(updatedGig.premium?.price) &&
+        hasFeatures(updatedGig.premium));
+
+    if (!basicValid && standardValid && premiumValid) {
+      return false;
+    }
+
+    try {
+      await gigsModel.updateOne(
+        { _id: updatedGig._id },
+        {
+          $set: {
+            sellerUsername: res.locals.jwt.username,
+            sellerId: res.locals.jwt._id,
+            title: updatedGig.title,
+            category: {
+              main: updatedGig.category?.main,
+              sub: updatedGig.category?.sub,
+              main_slug: mainSlug,
+              sub_slug: subSlug,
+            },
+            tags: updatedGig.tags,
+            description: updatedGig.description,
+            basic: {
+              price: isNaN(parseInt(updatedGig.basic?.price ?? ""))
+                ? 0
+                : parseInt(updatedGig.basic?.price ?? ""),
+              delivery: updatedGig.basic?.delivery ?? "",
+              features: updatedGig.basic?.features ?? [],
+            },
+            standard: {
+              price: isNaN(parseInt(updatedGig.standard?.price ?? ""))
+                ? 0
+                : parseInt(updatedGig.standard?.price ?? ""),
+              delivery: updatedGig.standard?.delivery ?? "",
+              features: updatedGig.standard?.features ?? [],
+            },
+            premium: {
+              price: isNaN(parseInt(updatedGig.premium?.price ?? ""))
+                ? 0
+                : parseInt(updatedGig.premium?.price ?? ""),
+              delivery: updatedGig.premium?.delivery ?? "",
+              features: updatedGig.premium?.features ?? [],
+            },
+            pending: true,
+          },
+        },
+      );
+      return true;
+    } catch (error) {
+      console.error(error);
+      return false;
+    }
+  }
+
+  async deleteGig(req: Request, res: Response, next: NextFunction) {
+    const id = req.body.id;
+    if (!id) {
+      return res
+        .status(400)
+        .json({ success: false, message: "No id provided" });
+    }
+
+    try {
+      await gigsModel.findByIdAndDelete(id);
       return true;
     } catch (error) {
       console.error(error);

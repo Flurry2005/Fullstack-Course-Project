@@ -22,4 +22,5 @@ export type Gig = {
   basic?: Package;
   standard?: Package;
   premium?: Package;
+  pending?: boolean;
 };

@@ -16,13 +16,18 @@ import nextIcon from "../../assets/next-icon.svg";
 import galleryIcon from "../../assets/image-regular-icon.svg";
 import Overview from "./Overview";
 import Confirm from "./Confirm";
+import Delete from "./Delete";
+import { useNavigate } from "react-router-dom";
 
 function EditGig() {
+  const navigate = useNavigate();
   const { gigId } = useParams();
   const [gig, setGig] = useState<Gig>();
   const [editState, setEditState] = useState(false);
+  const [deleteState, setDeleteState] = useState(false);
   const [overView, setOverview] = useState(false);
   const [confirm, setConfirm] = useState(false);
+  const [confirmConfirm, setConfirmConfirm] = useState(false);
 
   const getGig = async () => {
     const response = await fetch(
@@ -31,7 +36,7 @@ function EditGig() {
     const data = await response.json();
     console.log(data);
 
-    response.ok && setGig(data);
+    response.ok ? setGig(data) : navigate("/dashboard");
   };
 
   useEffect(() => {
@@ -39,9 +44,16 @@ function EditGig() {
   }, []);
 
   useEffect(() => {
+    getGig();
+  }, [deleteState]);
+
+  useEffect(() => {
+    console.log(gig);
+  }, [gig]);
+
+  useEffect(() => {
     if (!editState) {
       setOverview(false);
-      setConfirm(false);
     }
   }, [editState]);
 
@@ -54,27 +66,36 @@ function EditGig() {
           <Link to="..">
             <img src={GoBackIcon} className="cursor-pointer w-10 h-14" />
           </Link>
-          <h2 className="text-3xl font-semibold p-6">Edit Gig</h2>
+          <h2 className="text-3xl font-semibold p-6">Gig Details</h2>
         </div>
       </div>
       <div className="relative">
-        {overView && editState && (
-          <Overview
-            confirm={confirm}
+        {confirmConfirm && gig && (
+          <Confirm
+            gig={gig}
             setConfirm={setConfirm}
-            setEditState={setEditState}
+            setConfirmConfirm={setConfirmConfirm}
           />
         )}
-        {confirm && <Confirm setConfirm={setConfirm} />}
+        {overView && editState && gig && (
+          <Overview
+            gig={gig}
+            setGig={setGig}
+            setEditState={setEditState}
+            setConfirm={setConfirm}
+          />
+        )}
+        {deleteState && <Delete gig={gig} setDeleteState={setDeleteState} />}
+
         <main
           onClick={() => setEditState(false)}
-          className={`flex ${editState ? "opacity-25" : "opacity-100"} flex-col w-full bg-[#f9f5ff] p-6 gap-6`}
+          className={`flex ${editState || confirmConfirm || deleteState ? "opacity-25" : "opacity-100"} flex-col w-full bg-[#f9f5ff] p-6 gap-6`}
         >
           <div className="flex flex-col gap-3">
             <div className="flex gap-3 items-center">
               <span
-                className="inline-flex items-center px-5 py-2 rounded-2xl"
-                style={{ background: "#7fffd4", width: "fit-content" }}
+                className={`inline-flex items-center px-5 py-2 rounded-2xl {
+                ${gig?.pending ? "bg-[#fffd7f]" : "bg-[#7fffd4]"} width: "fit-content" `}
               >
                 <span
                   className="inline-block mr-2"
@@ -89,7 +110,7 @@ function EditGig() {
                   className=" text-black text-base"
                   style={{ lineHeight: "1" }}
                 >
-                  Live
+                  {gig?.pending ? "Pending" : "Live"}
                 </span>
               </span>
               <span className="text-[#464555]">Last updated 2 days ago</span>
@@ -117,6 +138,7 @@ function EditGig() {
                       className="ml-auto"
                       onClick={(e) => {
                         (e.stopPropagation(),
+                          e.preventDefault(),
                           setOverview(true),
                           setEditState(true));
                       }}
@@ -254,15 +276,27 @@ function EditGig() {
                     <img src={nextIcon} className="ml-auto w-8 h-8" />
                   </div>
                   <div className="flex gap-3 border-t border-t-[#E2E7FF] text-[#131B2E]">
-                    <div className="flex gap-3 mt-6">
+                    <div
+                      onClick={() => setDeleteState(true)}
+                      className="cursor-pointer flex gap-3 mt-6"
+                    >
                       <img src={deleteIcon} className="w-8 h-8" />
-                      <span className="text-xl text-[#BA1A1A]">Delete Gig</span>
+                      <span className=" text-xl text-[#BA1A1A]">
+                        Delete Gig
+                      </span>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
+          <button
+            className={`${confirm ? "opacity-100" : "opacity-25"} ml-auto cursor-pointer py-3 rounded-lg font-semibold text-white bg-linear-to-r from-[#4F46E5] to-[#4e46e5c2] px-6`}
+            disabled={!confirm}
+            onClick={() => setConfirmConfirm(true)}
+          >
+            Save changes
+          </button>
         </main>
         <Footer />
       </div>
