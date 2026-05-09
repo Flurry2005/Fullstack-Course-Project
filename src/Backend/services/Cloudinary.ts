@@ -18,6 +18,7 @@ export function uploadBuffer(buffer: Buffer, publicId: string) {
       {
         public_id: publicId,
         overwrite: true,
+        invalidate: true,
         format: "webp",
 
         transformation: {
@@ -46,8 +47,10 @@ export function getOptimizedImage(publicId: string) {
   });
 }
 
-export function getSquareImage(publicId: string, size = 500) {
+
+export function getSquareImage(publicId: string, version?: number, size = 500) {
   return cloudinary.url(publicId, {
+    version,
     width: size,
     height: size,
     crop: "fill",

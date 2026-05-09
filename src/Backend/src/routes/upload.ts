@@ -12,23 +12,25 @@ uploadRouter.post("/upload", upload.single("file"), async (req, res) => {
       return res.status(400).json({ error: "No file uploaded" });
     }
 
-    const result = await uploadBuffer(
+    const result: any = await uploadBuffer(
       fileBuffer,
       res.locals.jwt.username + "-profilePicture",
     );
+
+
+    const url = getSquareImage(result.public_id, result.version);
+
 
     await userModel.updateOne(
       { _id: res.locals.jwt._id },
       {
         $set: {
-          profilePictureUrl: await getSquareImage(
-            res.locals.jwt.username + "-profilePicture",
-          ),
+          profilePictureUrl: url
         },
       },
     );
 
-    res.json(result);
+    res.send(url);
   } catch (err) {
     res.status(500).json(err);
   }
