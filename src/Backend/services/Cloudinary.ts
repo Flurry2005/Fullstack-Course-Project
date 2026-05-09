@@ -1,4 +1,7 @@
 import { v2 as cloudinary } from "cloudinary";
+import streamifier from "streamifier";
+import dotenv from "dotenv";
+dotenv.config();
 
 // =====================
 // CONFIG
@@ -9,21 +12,30 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET!,
 });
 
-export async function uploadImage(base64: string, publicId: string) {
-  return cloudinary.uploader.upload(base64, {
-    public_id: publicId,
-    overwrite: true,
-    format: "webp",
-    transformation: [
+export function uploadBuffer(buffer: Buffer, publicId: string) {
+  return new Promise((resolve, reject) => {
+    const stream = cloudinary.uploader.upload_stream(
       {
-        width: 1200,
-        height: 1200,
-        crop: "limit",
-        quality: "auto:good",
-      },
-    ],
+        public_id: publicId,
+        overwrite: true,
+        format: "webp",
 
-    strip: true,
+        transformation: {
+          width: 1200,
+          height: 1200,
+          crop: "limit",
+          quality: "auto:good",
+        },
+
+        strip: true,
+      },
+      (error, result) => {
+        if (error) return reject(error);
+        resolve(result);
+      },
+    );
+
+    streamifier.createReadStream(buffer).pipe(stream);
   });
 }
 
