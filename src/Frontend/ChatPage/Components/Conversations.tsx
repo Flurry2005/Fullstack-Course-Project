@@ -70,9 +70,17 @@ function Conversations({ setActiveOrder, activeOrder, onlineList }: Props) {
                 <div className="flex w-9/10">
                   <section className="flex flex-col justify-center px-4 py-2 w-fit h-full">
                     <img
-                      src={me}
+                      src={
+                        order.buyerUsername === user?.username
+                          ? `https://res.cloudinary.com/dnpnpkqig/image/upload/c_fill,f_auto,g_auto,h_500,q_auto,w_500/v1778358513/${order.sellerUsername}-profilePicture?_a=BAMAPqUs0&t=1778358700344`
+                          : `https://res.cloudinary.com/dnpnpkqig/image/upload/c_fill,f_auto,g_auto,h_500,q_auto,w_500/v1778358513/${order.buyerUsername}-profilePicture?_a=BAMAPqUs0&t=1778358700344`
+                      }
                       alt=""
                       className="rounded-full w-fit h-8/10 object-contain aspect-square"
+                      onError={(e) => {
+                        e.currentTarget.src =
+                          "https://res.cloudinary.com/dnpnpkqig/image/upload/c_fill,f_auto,g_auto,h_500,q_auto,w_500/v1778358513/default-profilePicture?_a=BAMAPqUs0&t=1778358700344";
+                      }}
                     />
                     <span
                       className={`self-end rounded-full w-2 h-2 ${onlineList?.find((entry: any) => entry.username === (user?.username === order?.buyerUsername ? order?.sellerUsername : order?.buyerUsername) && entry.status === "Online") ? "bg-green-500" : "bg-red-500"}`}

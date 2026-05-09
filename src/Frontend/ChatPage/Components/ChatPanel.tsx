@@ -68,7 +68,19 @@ function ChatPanel({ activeOrder, onlineList }: Props) {
     <main className="flex flex-col bg-[#F9F5FF] w-7/10 h-full">
       <section className="flex gap-5 bg-white px-5 w-full h-20">
         <div className="relative flex items-center">
-          <img src={me} alt="" className="rounded-full h-10" />
+          <img
+            src={
+              activeOrder.buyerUsername === user?.username
+                ? `https://res.cloudinary.com/dnpnpkqig/image/upload/c_fill,f_auto,g_auto,h_500,q_auto,w_500/v1778358513/${activeOrder.sellerUsername}-profilePicture?_a=BAMAPqUs0&t=1778358700344`
+                : `https://res.cloudinary.com/dnpnpkqig/image/upload/c_fill,f_auto,g_auto,h_500,q_auto,w_500/v1778358513/${activeOrder.buyerUsername}-profilePicture?_a=BAMAPqUs0&t=1778358700344`
+            }
+            alt=""
+            className="rounded-full h-10"
+            onError={(e) => {
+              e.currentTarget.src =
+                "https://res.cloudinary.com/dnpnpkqig/image/upload/c_fill,f_auto,g_auto,h_500,q_auto,w_500/v1778358513/default-profilePicture?_a=BAMAPqUs0&t=1778358700344";
+            }}
+          />
           <span
             className={`right-0 bottom-4 box-content absolute border-3 border-white rounded-full w-2 h-2 ${onlineList?.find((entry: any) => entry.username === (user?.username === activeOrder?.buyerUsername ? activeOrder?.sellerUsername : activeOrder?.buyerUsername) && entry.status === "Online") ? "bg-green-500" : "bg-red-500"}`}
           />
