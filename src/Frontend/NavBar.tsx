@@ -135,7 +135,7 @@ function NavBar() {
         </div>
       </nav>
       <div
-        className={`z-40 top-16 left-0 bg-black/50 backdrop-blur-xs w-full h-full fixed transition-opacity duration-300 ${navOpen ? "opacity-100" : "opacity-0 pointer-events-none"}`}
+        className={`md:hidden z-40 top-16 left-0 bg-black/50 backdrop-blur-xs w-full h-full fixed transition-opacity duration-300 ${navOpen ? "opacity-100" : "opacity-0 pointer-events-none"}`}
         onClick={toggleNav}
       ></div>
     </header>
