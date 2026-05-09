@@ -54,15 +54,19 @@ function getStartingPrice(gig: Gig) {
 }
 
 function getStartingDelivery(gig: Gig) {
-  return gig.basic?.delivery || gig.standard?.delivery || gig.premium?.delivery || "";
+  return (
+    gig.basic?.delivery || gig.standard?.delivery || gig.premium?.delivery || ""
+  );
 }
 
 function getDeliveryTimes(gig: Gig) {
   return Array.from(
     new Set(
-      [gig.basic?.delivery, gig.standard?.delivery, gig.premium?.delivery].filter(
-        (delivery): delivery is string => Boolean(delivery),
-      ),
+      [
+        gig.basic?.delivery,
+        gig.standard?.delivery,
+        gig.premium?.delivery,
+      ].filter((delivery): delivery is string => Boolean(delivery)),
     ),
   );
 }
@@ -84,7 +88,7 @@ function mapGigToListing(gig: Gig): Listing {
     reviews: "0",
     tag: gig.tags?.[0] || gig.category?.sub || "Service",
     image: fishImage,
-    avatar: meImage,
+    avatar: `https://res.cloudinary.com/dnpnpkqig/image/upload/c_fill,f_auto,g_auto,h_500,q_auto,w_500/v1778358513/profilePictures/${gig.sellerUsername}-profilePicture?_a=BAMAPqUs0&t=1778358700344`,
   };
 }
 
@@ -98,15 +102,15 @@ function ServiceListingCard({
   return (
     <article
       onClick={onClick}
-      className="bg-white p-3 rounded-2xl shadow-sm hover:shadow-md transition hover:-translate-y-1 cursor-pointer"
+      className="bg-white shadow-sm hover:shadow-md p-3 rounded-2xl transition hover:-translate-y-1 cursor-pointer"
     >
-      <div className="relative overflow-hidden rounded-lg h-56">
+      <div className="relative rounded-lg h-56 overflow-hidden">
         <img
           src={listing.image}
           alt={listing.title}
           className="w-full h-full object-cover"
         />
-        <span className="top-4 left-4 absolute bg-white px-4 py-1.5 rounded-full font-bold text-[#4f46e5] text-xs tracking-wide uppercase">
+        <span className="top-4 left-4 absolute bg-white px-4 py-1.5 rounded-full font-bold text-[#4f46e5] text-xs uppercase tracking-wide">
           {listing.tag}
         </span>
       </div>
@@ -115,21 +119,31 @@ function ServiceListingCard({
         <div className="flex items-center gap-3 mb-4">
           <img
             src={listing.avatar}
+            onError={(e) => {
+              e.currentTarget.src =
+                "https://res.cloudinary.com/dnpnpkqig/image/upload/c_fill,f_auto,g_auto,h_500,q_auto,w_500/v1778358513/default-profilePicture?_a=BAMAPqUs0&t=1778358700344";
+            }}
             alt={listing.seller}
-            className="border-2 border-[#1857f7] rounded-full w-9 h-9 object-cover"
+            className="border-[#1857f7] border-2 rounded-full w-9 h-9 object-cover"
           />
           <div>
-            <h2 className="font-bold text-[#2c2a51] text-sm">{listing.seller}</h2>
+            <h2 className="font-bold text-[#2c2a51] text-sm">
+              {listing.seller}
+            </h2>
             <p className="text-[#6f6f9a] text-xs">{listing.level}</p>
           </div>
         </div>
 
-        <p className="min-h-18 text-[#2c2a51] text-lg leading-6">{listing.title}</p>
+        <p className="min-h-18 text-[#2c2a51] text-lg leading-6">
+          {listing.title}
+        </p>
 
-        <div className="flex items-end justify-between border-[#f0eef8] border-t mt-5 pt-4">
+        <div className="flex justify-between items-end mt-5 pt-4 border-[#f0eef8] border-t">
           <div className="flex items-center gap-1 text-sm">
-            <i className="fa-solid fa-star text-[#f7b500] text-xs"></i>
-            <span className="font-semibold text-[#2c2a51]">{listing.rating}</span>
+            <i className="text-[#f7b500] text-xs fa-solid fa-star"></i>
+            <span className="font-semibold text-[#2c2a51]">
+              {listing.rating}
+            </span>
             <span className="text-[#6f6f9a]">({listing.reviews})</span>
           </div>
           <div className="text-right">
@@ -171,7 +185,6 @@ function ServiceListings() {
 
         const gigs = (await response.json()) as Gig[];
         setListings(gigs.map(mapGigToListing));
-        
       } catch (error) {
         console.error(error);
         setFetchError("Could not load services right now.");
@@ -186,7 +199,9 @@ function ServiceListings() {
   const toggleCategory = (category: string) => {
     setSelectedCategories((currentCategories) =>
       currentCategories.includes(category)
-        ? currentCategories.filter((currentCategory) => currentCategory !== category)
+        ? currentCategories.filter(
+            (currentCategory) => currentCategory !== category,
+          )
         : [...currentCategories, category],
     );
   };
@@ -206,14 +221,15 @@ function ServiceListings() {
   };
 
   const toggleDeliveryTime = (time: string) => {
-    setSelectedDeliveryTime((currentTime) => (currentTime === time ? "" : time));
+    setSelectedDeliveryTime((currentTime) =>
+      currentTime === time ? "" : time,
+    );
   };
 
   const filteredListings = useMemo(() => {
     const normalizedQuery = searchQuery.trim().toLowerCase();
     const minPriceNumber = minPrice === "" ? 0 : Number(minPrice);
     const maxPriceNumber = maxPrice === "" ? Infinity : Number(maxPrice);
-    
 
     const matchingListings = listings.filter((listing) => {
       const listingPrice = getListingPrice(listing);
@@ -305,7 +321,7 @@ function ServiceListings() {
   return (
     <main className="bg-[#f9f5ff] min-h-screen">
       <NavBar />
-      <section className="flex flex-col lg:flex-row gap-8 px-6 md:px-10 py-8">
+      <section className="flex lg:flex-row flex-col gap-8 px-6 md:px-10 py-8">
         <Sidebar
           categories={categoryOptions}
           deliveryTimes={deliveryOptions}
@@ -349,7 +365,11 @@ function ServiceListings() {
                 <ServiceListingCard
                   key={listing.id}
                   listing={listing}
-                  onClick={() => navigate(`/services/${listing.main_slug}/${listing.sub_slug}/${listing.id}`)}
+                  onClick={() =>
+                    navigate(
+                      `/services/${listing.main_slug}/${listing.sub_slug}/${listing.id}`,
+                    )
+                  }
                 />
               ))}
             </div>
@@ -389,9 +409,9 @@ function ServiceListings() {
                   setCurrentPage((page) => Math.min(page + 1, totalPages))
                 }
                 disabled={currentPage === totalPages}
-                className="rounded-full w-12 h-12 hover:bg-[#efe9ff] disabled:opacity-40 cursor-pointer disabled:cursor-not-allowed"
+                className="hover:bg-[#efe9ff] disabled:opacity-40 rounded-full w-12 h-12 cursor-pointer disabled:cursor-not-allowed"
               >
-                <i className="fa-solid fa-chevron-right"></i>
+                <i className="fa-chevron-right fa-solid"></i>
               </button>
             </nav>
           )}
