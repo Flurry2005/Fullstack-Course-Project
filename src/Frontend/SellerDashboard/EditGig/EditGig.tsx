@@ -31,7 +31,8 @@ function EditGig() {
 
   const getGig = async () => {
     const response = await fetch(
-      `${import.meta.env.VITE_DEV === "true" ? "http://localhost:3000" : "https://fullstackapi.liamjorgensen.dev"}/api${"/gig/"}${gigId}`,
+      `${import.meta.env.VITE_DEV === "true" ? "http://localhost:3000" : "https://fullstackapi.liamjorgensen.dev"}/api${"/gig/edit/"}${gigId}`,
+      { credentials: "include" }
     );
     const data = await response.json();
     console.log(data);
@@ -63,7 +64,7 @@ function EditGig() {
       <div className="flex flex-col bg-white border-b border-[#E2E8F0] p-6">
         <div className="flex items-center">
           {" "}
-          <Link to="..">
+          <Link to="/dashboard">
             <img src={GoBackIcon} className="cursor-pointer w-10 h-14" />
           </Link>
           <h2 className="text-3xl font-semibold p-6">Gig Details</h2>
@@ -91,7 +92,7 @@ function EditGig() {
 
         <main
           onClick={() => setEditState(false)}
-          className={`flex ${editState || confirmConfirm || deleteState ? "opacity-25" : "opacity-100"} flex-col w-full bg-[#f9f5ff] p-6 gap-6`}
+          className={`flex ${editState || confirmConfirm || deleteState ? "opacity-10" : "opacity-100"} flex-col w-full bg-[#f9f5ff] p-6 gap-6`}
         >
           <div className="flex flex-col gap-3">
             <div className="flex gap-3 items-center">
@@ -100,13 +101,7 @@ function EditGig() {
                 ${gig?.pending ? "bg-[#fffd7f]" : "bg-[#7fffd4]"} width: "fit-content" `}
               >
                 <span
-                  className="inline-block mr-2"
-                  style={{
-                    width: "11px",
-                    height: "11px",
-                    background: "#014421",
-                    borderRadius: "50%",
-                  }}
+                  className="inline-block bg-black w-2 h-2 rounded-full border mr-2"
                 />
                 <span
                   className=" text-black text-base"

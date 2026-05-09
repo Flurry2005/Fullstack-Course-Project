@@ -63,7 +63,7 @@ function Overview({ setEditState, gig, setGig, setConfirm }: OverviewProps) {
 
   return (
     <div
-      className={`z-100 md:w-[50vw] w-full h-fit left-1/2 -translate-x-1/2 absolute bg-[#f9f5ff]/50 p-6 rounded-2xl`}
+      className={`z-100 md:w-[50vw] w-full h-fit left-1/2 -translate-x-1/2 absolute border border-[#ACA8D7]/15 bg-[#f9f5ff]/50 p-6 rounded-2xl`}
     >
       <div className="flex flex-col gap-6">
         <div className="flex flex-col gap-6 shadow-md border border-[#ACA8D7]/15 bg-white p-6 rounded-2xl">
