@@ -22,6 +22,15 @@ class GigController {
     }
   }
 
+    async getGigToEdit(req: Request, res: Response) {
+    try {
+      return await gigsModel.findOne({_id: req.params.id, sellerId: res.locals.jwt._id})
+    } catch (error) {
+      console.error(error);
+      return null;
+    }
+  }
+
   async getGigByUser(req: Request) {
     const userId = req.params.userId;
     if (!userId) return false;
@@ -174,8 +183,8 @@ class GigController {
     }
 
     try {
-      await gigsModel.updateOne(
-        { _id: updatedGig._id },
+      const targetGig = await gigsModel.findOneAndUpdate(
+        { _id: updatedGig._id, sellerId: res.locals.jwt._id },
         {
           $set: {
             sellerUsername: res.locals.jwt.username,
@@ -214,6 +223,9 @@ class GigController {
           },
         },
       );
+
+      if (!targetGig) return false;
+
       return true;
     } catch (error) {
       console.error(error);
@@ -230,7 +242,11 @@ class GigController {
     }
 
     try {
-      await gigsModel.findByIdAndDelete(id);
+      const deletedGig = await gigsModel.findOneAndDelete({
+        _id: id,
+        sellerId: res.locals.jwt._id,
+      });
+      if (!deletedGig) return false;
       return true;
     } catch (error) {
       console.error(error);

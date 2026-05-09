@@ -138,7 +138,7 @@ function CreateNewGig() {
       <NavBar />
       <div className="bg-white border-b border-[#E2E8F0] flex items-center p-6">
         {" "}
-        <Link to="..">
+        <Link to="/dashboard">
           <img src={GoBackIcon} className="cursor-pointer w-10 h-14" />
         </Link>
         <h2 className="text-3xl font-semibold p-6">Create New Gig</h2>
