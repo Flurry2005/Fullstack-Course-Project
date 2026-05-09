@@ -42,7 +42,7 @@ export function SocketProvider({ children }: { children: React.ReactNode }) {
     setTimeout(() => {
       popupMessageRef.current!.remove();
       clearInterval(checker);
-    }, 50_000);
+    }, 5_000);
 
     const root = createRoot(popupMessageRef.current);
     const order = ordersRef.current?.find((order) => order._id === orderId);
