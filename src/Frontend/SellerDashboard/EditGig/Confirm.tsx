@@ -8,8 +8,9 @@ type ConfirmProps = {
   setConfirmConfirm: React.Dispatch<React.SetStateAction<boolean>>;
   setConfirm: React.Dispatch<React.SetStateAction<boolean>>;
   gig: Gig;
+  getGig: () => void;
 };
-function Confirm({ setConfirmConfirm, setConfirm, gig }: ConfirmProps) {
+function Confirm({ setConfirmConfirm, setConfirm, getGig, gig }: ConfirmProps) {
   const updateGig = async () => {
     const header = { "Content-type": "Application/json" };
     const body = JSON.stringify(gig);
@@ -19,6 +20,7 @@ function Confirm({ setConfirmConfirm, setConfirm, gig }: ConfirmProps) {
     );
     const data = await response.json();
     console.log(data);
+    getGig();
   };
 
   return (

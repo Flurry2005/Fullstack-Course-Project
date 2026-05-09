@@ -17,6 +17,7 @@ import galleryIcon from "../../assets/image-regular-icon.svg";
 import Overview from "./Overview";
 import Confirm from "./Confirm";
 import Delete from "./Delete";
+import Description from "./Description";
 import { useNavigate } from "react-router-dom";
 
 function EditGig() {
@@ -26,17 +27,16 @@ function EditGig() {
   const [editState, setEditState] = useState(false);
   const [deleteState, setDeleteState] = useState(false);
   const [overView, setOverview] = useState(false);
+  const [desc, setDesc] = useState(false);
   const [confirm, setConfirm] = useState(false);
   const [confirmConfirm, setConfirmConfirm] = useState(false);
 
   const getGig = async () => {
     const response = await fetch(
       `${import.meta.env.VITE_DEV === "true" ? "http://localhost:3000" : "https://fullstackapi.liamjorgensen.dev"}/api${"/gig/edit/"}${gigId}`,
-      { credentials: "include" }
+      { credentials: "include" },
     );
     const data = await response.json();
-    console.log(data);
-
     response.ok ? setGig(data) : navigate("/dashboard");
   };
 
@@ -49,12 +49,11 @@ function EditGig() {
   }, [deleteState]);
 
   useEffect(() => {
-    console.log(gig);
-  }, [gig]);
-
-  useEffect(() => {
     if (!editState) {
       setOverview(false);
+      setDeleteState(false);
+      setConfirmConfirm(false);
+      setDesc(false);
     }
   }, [editState]);
 
@@ -73,6 +72,7 @@ function EditGig() {
       <div className="relative">
         {confirmConfirm && gig && (
           <Confirm
+            getGig={getGig}
             gig={gig}
             setConfirm={setConfirm}
             setConfirmConfirm={setConfirmConfirm}
@@ -86,8 +86,10 @@ function EditGig() {
             setConfirm={setConfirm}
           />
         )}
+
+        {desc && editState && gig && <Description gig={gig} />}
         {deleteState && gig && (
-          <Delete gig={gig} setDeleteState={setDeleteState} />
+          <Delete getGig={getGig} gig={gig} setDeleteState={setDeleteState} />
         )}
 
         <main
@@ -100,9 +102,7 @@ function EditGig() {
                 className={`inline-flex items-center px-5 py-2 rounded-2xl {
                 ${gig?.pending ? "bg-[#fffd7f]" : "bg-[#7fffd4]"} width: "fit-content" `}
               >
-                <span
-                  className="inline-block bg-black w-2 h-2 rounded-full border mr-2"
-                />
+                <span className="inline-block bg-black w-2 h-2 rounded-full border mr-2" />
                 <span
                   className=" text-black text-base"
                   style={{ lineHeight: "1" }}
@@ -161,7 +161,7 @@ function EditGig() {
                     <span
                       className="ml-auto"
                       onClick={() => {
-                        console.log("nigger");
+                      
                       }}
                     >
                       <EditButton />
@@ -182,8 +182,11 @@ function EditGig() {
                     </div>
                     <span
                       className="ml-auto"
-                      onClick={() => {
-                        console.log("nigger");
+                      onClick={(e) => {
+                        (e.stopPropagation(),
+                          e.preventDefault(),
+                          setDesc(true),
+                          setEditState(true));
                       }}
                     >
                       <EditButton />

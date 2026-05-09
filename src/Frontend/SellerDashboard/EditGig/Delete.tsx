@@ -6,19 +6,19 @@ import deleteIcon from "../../assets/delete-icon-white.svg";
 type OverviewProps = {
   gig: Gig;
   setDeleteState: React.Dispatch<React.SetStateAction<boolean>>;
+  getGig: () => void;
 };
 
-function Delete({ gig, setDeleteState }: OverviewProps) {
+function Delete({ gig, setDeleteState, getGig }: OverviewProps) {
   const deleteGig = async () => {
     const header = { "Content-type": "Application/json" };
     const gigId = gig._id;
     const body = JSON.stringify({ id: gigId });
-    const response = await fetch(
+    await fetch(
       `${import.meta.env.VITE_DEV === "true" ? "http://localhost:3000" : "https://fullstackapi.liamjorgensen.dev"}/api${"/gig"}`,
       { method: "DELETE", headers: header, body: body, credentials: "include" },
     );
-    const data = await response.json();
-    console.log(data);
+    getGig();
   };
   return (
     <div
