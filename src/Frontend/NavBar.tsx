@@ -102,7 +102,7 @@ function NavBar() {
                 className="flex justify-center items-center shadow-[0_0_20px_rgba(122,162,255,0.35)] border-2 rounded-full w-15 h-15 font-bold text-black text-2xl hover:scale-105 transition"
                 aria-label="Visit profile"
               >
-                N
+             {user.username.charAt(0)}   
               </Link>
             </div>
           ) : (
