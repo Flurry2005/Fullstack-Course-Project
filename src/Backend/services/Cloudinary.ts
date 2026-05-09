@@ -19,6 +19,7 @@ export function uploadBuffer(buffer: Buffer, publicId: string) {
         public_id: publicId,
         overwrite: true,
         invalidate: true,
+        folder: "profilePictures",
         format: "webp",
 
         transformation: {
@@ -46,7 +47,6 @@ export function getOptimizedImage(publicId: string) {
     quality: "auto",
   });
 }
-
 
 export function getSquareImage(publicId: string, version?: number, size = 500) {
   return cloudinary.url(publicId, {
