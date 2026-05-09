@@ -13,10 +13,14 @@ import type { Category } from "../../types/Gig";
 import type { Package } from "../../types/Gig";
 
 function CreateNewGig() {
-  const [primaryImagePreview, setPrimaryImagePreview] = useState<string>("");
+  const [primaryImagePreview, setPrimaryImagePreview] = useState<File | null>(
+    null,
+  );
   const [secondaryImagePreview, setSecondaryImagePreview] =
-    useState<string>("");
-  const [ternaryImagePreview, setTernaryImagePreview] = useState<string>("");
+    useState<File | null>(null);
+  const [ternaryImagePreview, setTernaryImagePreview] = useState<File | null>(
+    null,
+  );
   const [newGig, setNewGig] = useState<NewGig>({});
   const [currentStep, setCurrentStep] = useState<number>(0);
   const [stepOneComplete, setStepOneComplete] = useState(false);
@@ -136,15 +140,15 @@ function CreateNewGig() {
   return (
     <>
       <NavBar />
-      <div className="bg-white border-b border-[#E2E8F0] flex items-center p-6">
+      <div className="flex items-center bg-white p-6 border-[#E2E8F0] border-b">
         {" "}
         <Link to="/dashboard">
-          <img src={GoBackIcon} className="cursor-pointer w-10 h-14" />
+          <img src={GoBackIcon} className="w-10 h-14 cursor-pointer" />
         </Link>
-        <h2 className="text-3xl font-semibold p-6">Create New Gig</h2>
+        <h2 className="p-6 font-semibold text-3xl">Create New Gig</h2>
       </div>
 
-      <main className="flex flex-col w-full bg-[#f9f5ff] p-6 gap-10">
+      <main className="flex flex-col gap-10 bg-[#f9f5ff] p-6 w-full">
         {!success && <ProgressBar currentStep={currentStep} />}
         <section>
           {currentStep === 0 && (
@@ -206,13 +210,15 @@ function CreateNewGig() {
               setSuccess={setSuccess}
               newGig={newGig}
               primaryImagePreview={primaryImagePreview}
+              secondaryImagePreview={secondaryImagePreview}
+              ternaryImagePreview={ternaryImagePreview}
             />
           )}
         </section>
-        <div className="flex gap-1 justify-between">
+        <div className="flex justify-between gap-1">
           {currentStep > 0 && !success && (
             <button
-              className="mr-auto cursor-pointer py-3 rounded-lg font-semibold text-white bg-linear-to-r from-[#4F46E5] to-[#4e46e5c2] px-6"
+              className="bg-linear-to-r from-[#4F46E5] to-[#4e46e5c2] mr-auto px-6 py-3 rounded-lg font-semibold text-white cursor-pointer"
               onClick={() => setCurrentStep(currentStep - 1)}
             >
               Previous

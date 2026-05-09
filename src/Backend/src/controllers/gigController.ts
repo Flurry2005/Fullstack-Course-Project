@@ -3,6 +3,8 @@ import gigsModel from "../models/gigsModel";
 import { Request, Response, NextFunction } from "express";
 import { categories } from "../../../Frontend/SellerDashboard/CreateNewGig/Categories";
 import orderModel from "../models/orderModel";
+import { Document } from "mongodb";
+import { getSquareImage, uploadBuffer } from "../../services/Cloudinary";
 
 class GigController {
   async getGigs() {
@@ -61,7 +63,7 @@ class GigController {
   }
 
   async createGig(req: Request, res: Response, next: NextFunction) {
-    const newGig: Gig = req.body;
+    const newGig: Gig = JSON.parse(req.body.gig);
 
     console.log(newGig);
     if (
@@ -108,7 +110,7 @@ class GigController {
     }
 
     try {
-      await gigsModel.insertOne({
+      const createdGig = await gigsModel.create({
         sellerUsername: res.locals.jwt.username,
         sellerId: res.locals.jwt._id,
         title: newGig.title,
@@ -143,6 +145,34 @@ class GigController {
         },
         pending: true,
       });
+
+      const files = req.files as Express.Multer.File[];
+
+      const uploadedImages: string[] = [];
+
+      for (const file of files) {
+        const resultUpload: any = await uploadBuffer(
+          file.buffer,
+          `${createdGig._id}-${crypto.randomUUID()}`,
+          "gigPreviewImages",
+        );
+
+        uploadedImages.push(
+          getSquareImage(resultUpload.public_id, resultUpload.version),
+        );
+      }
+
+      await gigsModel.updateOne(
+        { _id: createdGig._id },
+        {
+          $set: {
+            primaryImagePreview: uploadedImages[0] ?? null,
+            secondaryImagePreview: uploadedImages[1] ?? null,
+            ternaryImagePreview: uploadedImages[2] ?? null,
+          },
+        },
+      );
+
       return true;
     } catch (error) {
       console.error(error);

@@ -60,6 +60,7 @@ function Main({ mainCategory, subCategoryOne, subCategoryTwo }: MainProps) {
                   <ServiceHeader
                     title={gig?.title}
                     seller={gig?.sellerUsername}
+                    gig={gig}
                     rating={4.9}
                     reviewsAmount={494}
                   />

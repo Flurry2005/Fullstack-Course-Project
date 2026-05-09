@@ -16,6 +16,9 @@ export type Gig = {
   sellerUsername?: string;
   sellerId?: string;
   title?: string;
+  primaryImagePreview?: string;
+  secondaryImagePreview?: string;
+  ternaryImagePreview?: string;
   category?: Category;
   tags?: string[];
   description?: string;
