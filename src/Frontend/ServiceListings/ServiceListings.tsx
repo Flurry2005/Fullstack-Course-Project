@@ -13,6 +13,9 @@ type Listing = {
   seller: string;
   level: string;
   title: string;
+  primaryImagePreview?: string;
+  secondaryImagePreview?: string;
+  ternaryImagePreview?: string;
   price: string;
   category: string;
   subCategory: string;
@@ -23,7 +26,6 @@ type Listing = {
   rating: string;
   reviews: string;
   tag: string;
-  image: string;
   avatar: string;
 };
 
@@ -77,6 +79,9 @@ function mapGigToListing(gig: Gig): Listing {
     seller: gig.sellerUsername || "Unknown seller",
     level: gig.category?.sub || "New Seller",
     title: gig.title || "Untitled service",
+    primaryImagePreview: gig.primaryImagePreview,
+    secondaryImagePreview: gig.secondaryImagePreview,
+    ternaryImagePreview: gig.ternaryImagePreview,
     price: getStartingPrice(gig),
     category: gig.category?.main || "Other",
     subCategory: gig.category?.sub || "Other",
@@ -87,7 +92,6 @@ function mapGigToListing(gig: Gig): Listing {
     rating: "5.0",
     reviews: "0",
     tag: gig.tags?.[0] || gig.category?.sub || "Service",
-    image: fishImage,
     avatar: `https://res.cloudinary.com/dnpnpkqig/image/upload/c_fill,f_auto,g_auto,h_500,q_auto,w_500/v1778358513/profilePictures/${gig.sellerUsername}-profilePicture?_a=BAMAPqUs0&t=1778358700344`,
   };
 }
@@ -106,9 +110,12 @@ function ServiceListingCard({
     >
       <div className="relative rounded-lg h-56 overflow-hidden">
         <img
-          src={listing.image}
+          src={listing.primaryImagePreview || fishImage}
           alt={listing.title}
           className="w-full h-full object-cover"
+          onError={(e) => {
+            e.currentTarget.src = fishImage;
+          }}
         />
         <span className="top-4 left-4 absolute bg-white px-4 py-1.5 rounded-full font-bold text-[#4f46e5] text-xs uppercase tracking-wide">
           {listing.tag}

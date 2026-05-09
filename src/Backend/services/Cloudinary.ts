@@ -12,14 +12,14 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET!,
 });
 
-export function uploadBuffer(buffer: Buffer, publicId: string) {
+export function uploadBuffer(buffer: Buffer, publicId: string, folder: string) {
   return new Promise((resolve, reject) => {
     const stream = cloudinary.uploader.upload_stream(
       {
         public_id: publicId,
         overwrite: true,
         invalidate: true,
-        folder: "profilePictures",
+        folder: folder,
         format: "webp",
 
         transformation: {

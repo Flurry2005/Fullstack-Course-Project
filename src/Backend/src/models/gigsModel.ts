@@ -5,13 +5,22 @@ const gigsSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-    sellerId: {
-      type: mongoose.Schema.Types.ObjectId,
-      required: true,
-    },
+  sellerId: {
+    type: mongoose.Schema.Types.ObjectId,
+    required: true,
+  },
   title: {
     type: String,
     required: true,
+  },
+  primaryImagePreview: {
+    type: String,
+  },
+  secondaryImagePreview: {
+    type: String,
+  },
+  ternaryImagePreview: {
+    type: String,
   },
   description: {
     type: String,
@@ -30,8 +39,8 @@ const gigsSchema = new mongoose.Schema({
   category: {
     main: { type: String, required: true },
     sub: { type: String, required: true },
-    main_slug: {type: String, required: true},
-    sub_slug: {type: String, required: true}
+    main_slug: { type: String, required: true },
+    sub_slug: { type: String, required: true },
   },
   basic: {
     price: { type: Number, required: true },
@@ -51,5 +60,3 @@ const gigsSchema = new mongoose.Schema({
 });
 
 export default mongoose.model("Gigs", gigsSchema);
-
-
