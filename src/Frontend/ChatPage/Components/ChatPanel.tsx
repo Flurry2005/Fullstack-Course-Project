@@ -71,8 +71,8 @@ function ChatPanel({ activeOrder, onlineList }: Props) {
           <img
             src={
               activeOrder.buyerUsername === user?.username
-                ? `https://res.cloudinary.com/dnpnpkqig/image/upload/c_fill,f_auto,g_auto,h_500,q_auto,w_500/v1778358513/${activeOrder.sellerUsername}-profilePicture?_a=BAMAPqUs0&t=1778358700344`
-                : `https://res.cloudinary.com/dnpnpkqig/image/upload/c_fill,f_auto,g_auto,h_500,q_auto,w_500/v1778358513/${activeOrder.buyerUsername}-profilePicture?_a=BAMAPqUs0&t=1778358700344`
+                ? `https://res.cloudinary.com/dnpnpkqig/image/upload/c_fill,f_auto,g_auto,h_500,q_auto,w_500/v1778358513/profilePictures/${activeOrder.sellerUsername}-profilePicture?_a=BAMAPqUs0&t=1778358700344`
+                : `https://res.cloudinary.com/dnpnpkqig/image/upload/c_fill,f_auto,g_auto,h_500,q_auto,w_500/v1778358513/profilePictures/${activeOrder.buyerUsername}-profilePicture?_a=BAMAPqUs0&t=1778358700344`
             }
             alt=""
             className="rounded-full h-10"
