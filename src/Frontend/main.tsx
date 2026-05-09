@@ -17,6 +17,7 @@ import ServiceListings from "./ServiceListings/ServiceListings.tsx";
 import ServiceDetail from "./ServiceDetail/Main.tsx";
 import Home from "./Home.tsx";
 import ScrollToTop from "./utils/ScrollToTop.tsx";
+import ProfilePage from "./ProfilePage/ProfilePage.tsx";
 
 const router = createBrowserRouter([
   {
@@ -81,6 +82,11 @@ const router = createBrowserRouter([
           />
         ),
       },
+      {
+        path: "/profile/:username",
+        element: <ProfilePage />,
+      },
+
     ],
   },
 ]);

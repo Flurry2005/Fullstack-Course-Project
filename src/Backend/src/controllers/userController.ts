@@ -56,6 +56,7 @@ class UserController {
       email: email,
       passwordHash: await bcrypt.hash(password, 12),
       createdAt: new Date(),
+      profilePictureUrl: "https://res.cloudinary.com/dnpnpkqig/image/upload/c_fill,f_auto,g_auto,h_500,q_auto,w_500/default-profilePicture?_a=BAMAPqUs0",
     });
 
     return res.status(200).json({ success: true, message: "User created!" });
