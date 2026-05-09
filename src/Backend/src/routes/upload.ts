@@ -18,6 +18,7 @@ uploadRouter.post(
       const result: any = await uploadBuffer(
         fileBuffer,
         res.locals.jwt.username + "-profilePicture",
+        "profilePictures",
       );
 
       const url = getSquareImage(result.public_id, result.version);
@@ -52,6 +53,7 @@ uploadRouter.post(
       const result: any = await uploadBuffer(
         fileBuffer,
         res.locals.jwt.username + "-profilePicture",
+        "gigPreviewImages",
       );
 
       const url = getSquareImage(result.public_id, result.version);
