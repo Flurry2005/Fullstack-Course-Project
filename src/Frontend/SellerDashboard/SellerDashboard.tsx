@@ -40,7 +40,7 @@ function SellerDashBoard() {
 
   useEffect(() => {
     getGigs();
-  }, []);
+  }, [user]);
   return (
     <>
       <Navbar />
@@ -86,17 +86,35 @@ function SellerDashBoard() {
             <div className="flex place-items-center">
               <h2 className="px-3 text-[#2C2A51] text-3xl">Active Orders</h2>
               <span className="mr-3 ml-auto text-[#0050D4] text-xl">
-                View All (8)
+                View All (
+                {
+                  orders?.filter(
+                    (order) => order.sellerUsername === user?.username,
+                  ).length
+                }
+                )
               </span>
             </div>
             <div className="gap-6 grid grid-cols-1 md:grid-cols-2">
-              <OrderCard />
-              <OrderCard />
+              {orders
+                ?.filter((order) => order.sellerUsername === user?.username)
+                .slice(0, 2)
+                ?.map((order) => (
+                  <OrderCard
+                    order={order}
+                    gig={gigs?.filter((gig) => gig._id === order.gigId)[0]}
+                  />
+                ))}
+              {orders?.filter(
+                (order) => order.sellerUsername === user?.username,
+              ).length === 0 && (
+                <p className="px-3 font-light">You have no orders</p>
+              )}
             </div>
           </section>
           <section className="flex flex-col gap-6 bg-[#ACA8D7]/10 p-6 border-[#ACA8D7]/15 border-2 rounded-2xl">
             <div className="flex">
-              <h2 className="text-[#2C2A51] text-2xl align-middle">Messages</h2>
+              <h2 className="text-[#060607] text-2xl align-middle">Messages</h2>
               <span className="place-content-center bg-linear-to-br from-[#4F46E5] to-[#6f16ae4f] ml-auto px-3 rounded-2xl w-fit font-semibold text-white text-sm">
                 {
                   orders

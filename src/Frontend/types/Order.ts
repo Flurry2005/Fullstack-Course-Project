@@ -4,6 +4,9 @@ import type { Dispatch, SetStateAction } from "react";
 export type Order = {
   _id: any;
   gigname: string;
+  gigId: string;
+  gigTier: string;
+  dueDate: Date;
   sellerUsername: string;
   buyerUsername: string;
   chathistory: Message[];
