@@ -196,6 +196,7 @@ function SellerDashBoard() {
                 key={gig._id}
               >
                 <GigCard
+                  gig={gig}
                   id={gig?._id}
                   title={gig?.title}
                   views={13}
