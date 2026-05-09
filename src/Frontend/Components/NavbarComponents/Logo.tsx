@@ -1,7 +1,10 @@
 import { useAuth } from "../../Context/useAuth";
+import { Link } from "react-router-dom";
+
+
 
 function Logo() {
-  return <h1 className="font-bold text-2xl! text-indigo-500!">OurStore</h1>;
+  return <Link to={"/"} className="font-bold text-2xl! text-indigo-500!">OurStore</Link>;
 }
 
 export default Logo;

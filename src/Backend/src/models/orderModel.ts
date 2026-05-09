@@ -14,12 +14,25 @@ const messageSchema = new mongoose.Schema(
 
 const orderSchema = new mongoose.Schema(
   {
+    gigId: {
+      type: mongoose.Schema.Types.ObjectId,
+      required: true,
+    },
+    gigTier: {
+      type: String,
+      enum: ["basic", "standard", "premium"],
+      required: true,
+    },
     gigname: {
       type: String,
       required: true,
       trim: true,
       minlength: 3,
       maxlength: 20,
+    },
+    dueDate: {
+      type: Date,
+      required: true,
     },
     buyerId: {
       type: mongoose.Schema.Types.ObjectId,
