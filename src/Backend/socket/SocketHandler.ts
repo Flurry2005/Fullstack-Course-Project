@@ -99,7 +99,7 @@ class SocketHandler {
       BroadcastOnlineStatus(user._id, user.username, this.#io!, "Online");
 
       socket.on("disconnect", () => {
-        console.log(getUsername(socket.id), "disconnected!");
+        console.log("SOCKET: /disconnect -", getUsername(socket.id));
         BroadcastOnlineStatus(user._id, user.username, this.#io!, "Offline");
         unregisterSocket(socket.id);
       });
