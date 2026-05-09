@@ -47,6 +47,19 @@ class GigController {
     }
   }
 
+  async getGigsBySellerUsername(req: Request) {
+    const username = req.params.username;
+    if (!username) return false;
+
+    try {
+      // Used by public profile pages where the route only knows the seller username.
+      return await gigsModel.find({ sellerUsername: username }).lean();
+    } catch (error) {
+      console.error(error);
+      return false;
+    }
+  }
+
   async createGig(req: Request, res: Response, next: NextFunction) {
     const newGig: Gig = req.body;
 

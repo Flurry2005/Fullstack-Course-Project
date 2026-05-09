@@ -12,6 +12,39 @@ const userSchema = new mongoose.Schema(
     profilePictureUrl: {
       type: String,
     },
+    coverImageUrl: {
+      type: String,
+      default: "",
+    },
+    bio: {
+      type: String,
+      trim: true,
+      maxlength: 500,
+      default: "",
+    },
+    location: {
+      type: String,
+      trim: true,
+      maxlength: 80,
+      default: "",
+    },
+    languages: {
+      type: [
+        {
+          name: { type: String, trim: true, maxlength: 40 },
+          level: {
+            type: String,
+            enum: ["Basic", "Conversational", "Fluent", "Native"],
+            default: "Conversational",
+          },
+        },
+      ],
+      default: [],
+    },
+    skills: {
+      type: [String],
+      default: [],
+    },
     username: {
       type: String,
       required: true,

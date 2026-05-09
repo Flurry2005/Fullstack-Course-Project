@@ -12,12 +12,12 @@ gigRouter.get("/", async (_req, res) => {
     : res.status(500).json("Could not fetch gigs");
 });
 
-gigRouter.get("/:id", async (req, res) => {
-  const gig = await gigController.getGigById(req);
+gigRouter.get("/seller/:username", async (req, res) => {
+  const gigs = await gigController.getGigsBySellerUsername(req);
 
-  return gig
-    ? res.status(200).json(gig)
-    : res.status(404).json("Could not find gig");
+  return gigs
+    ? res.status(200).json(gigs)
+    : res.status(404).json({ status: "404", message: "Seller not found" });
 });
 
 gigRouter.get("/user/:userId", async (req, res) => {
@@ -26,6 +26,14 @@ gigRouter.get("/user/:userId", async (req, res) => {
   return gigs
     ? res.status(200).json(gigs)
     : res.status(404).json({ status: "404", message: "User not found" });
+});
+
+gigRouter.get("/:id", async (req, res) => {
+  const gig = await gigController.getGigById(req);
+
+  return gig
+    ? res.status(200).json(gig)
+    : res.status(404).json("Could not find gig");
 });
 
 gigRouter.get("/edit/:id", jwtMiddleware.jwtTokenIsValid, async (req, res) => {

@@ -42,15 +42,16 @@ function NavBar() {
       <nav className="flex flex-wrap  gap-10 py-4">
        {/* Right side */}
        {user ? 
-                <div>
+          <div>
             <Link
                 to={"/profile/" + user.username }
                 type="button"
-                className="flex h-9 w-9 items-center justify-center rounded-full border text-sm font-bold text-black shadow-[0_0_20px_rgba(122,162,255,0.35)] transition hover:scale-105"
+                className="flex h-9 w-9 items-center justify-center rounded-full border text-sm font-bold text-white bg-indigo-500 shadow-[0_0_20px_rgba(122,162,255,0.35)] transition hover:scale-105"
                 aria-label="Visit profile"
               >
-                N
+             {user.username.charAt(0)}   
               </Link>
+              
          </div>
          :
          <div>

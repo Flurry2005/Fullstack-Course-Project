@@ -1,100 +1,253 @@
-import React, { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { useParams } from "react-router-dom";
 import NavBar from "../NavBar";
 import { useAuth } from "../Context/useAuth";
-import me from "../assets/me.jpeg";
+import type { Gig } from "../types/Gig";
 import type { User } from "../types/User";
+import ProfileGigs from "./components/ProfileGigs";
+import ProfileHeader from "./components/ProfileHeader";
+import ProfileDetails from "./components/ProfileDetails";
+import type { PublicProfile } from "./types";
+import {
+  API_BASE,
+  DEFAULT_PROFILE_IMAGE,
+  formatLanguagesInput,
+  formatSkillsInput,
+  parseLanguagesInput,
+  parseSkillsInput,
+} from "./profileUtils";
 
 function ProfilePage() {
+  const { username } = useParams();
   const { user, login } = useAuth();
-  const formData = new FormData();
-
-  const [primaryImagePreview, setPrimaryImagePreview] = useState("");
   const primaryImageRef = useRef<HTMLInputElement | null>(null);
 
+  const [profile, setProfile] = useState<PublicProfile | null>(null);
+  const [gigs, setGigs] = useState<Gig[]>([]);
+  const [isEditing, setIsEditing] = useState(false);
+  const [draftBio, setDraftBio] = useState("");
+  const [draftLocation, setDraftLocation] = useState("");
+  const [draftCoverImageUrl, setDraftCoverImageUrl] = useState("");
+  const [draftLanguages, setDraftLanguages] = useState("");
+  const [draftSkills, setDraftSkills] = useState("");
+  const [isSaving, setIsSaving] = useState(false);
+  const [isLoadingProfile, setIsLoadingProfile] = useState(true);
+  const [isLoadingGigs, setIsLoadingGigs] = useState(true);
+  const [isUploadingImage, setIsUploadingImage] = useState(false);
+  const [imageCacheBust, setImageCacheBust] = useState(Date.now());
+
+  // Checks if the profile URL belongs to the logged-in user.
+  const isOwnProfile = Boolean(user?.username && user.username === username);
+
+  // Shows stored profile data, or falls back to the logged-in user while loading your own profile.
+  const visibleProfile =
+    profile ??
+    (isOwnProfile && user
+      ? {
+          fullname: user.fullname,
+          username: user.username,
+          profilePictureUrl: user.profilePictureUrl,
+          coverImageUrl: user.coverImageUrl,
+          bio: user.bio,
+          location: user.location,
+          languages: user.languages,
+          skills: user.skills,
+          createdAt: user.createdAt,
+        }
+      : null);
+
+  // Loads the public profile for the username in /profile/:username.
+  useEffect(() => {
+    if (!username) return;
+
+    async function fetchProfile() {
+      setIsLoadingProfile(true);
+
+      try {
+        const response = await fetch(`${API_BASE}/api/profile/${username}`);
+
+        if (!response.ok) {
+          setProfile(null);
+          return;
+        }
+
+        const data = (await response.json()) as PublicProfile;
+        setProfile(data);
+        setDraftBio(data.bio ?? "");
+        setDraftLocation(data.location ?? "");
+        setDraftCoverImageUrl(data.coverImageUrl ?? "");
+        setDraftLanguages(formatLanguagesInput(data.languages));
+        setDraftSkills(formatSkillsInput(data.skills));
+      } finally {
+        setIsLoadingProfile(false);
+      }
+    }
+
+    fetchProfile();
+  }, [username]);
+
+  // Loads gigs created by the profile owner.
+  useEffect(() => {
+    if (!username) return;
+
+    async function fetchSellerGigs() {
+      setIsLoadingGigs(true);
+
+      try {
+        const response = await fetch(`${API_BASE}/api/gig/seller/${username}`);
+
+        if (!response.ok) {
+          setGigs([]);
+          return;
+        }
+
+        const data = (await response.json()) as Gig[];
+        setGigs(data);
+      } finally {
+        setIsLoadingGigs(false);
+      }
+    }
+
+    fetchSellerGigs();
+  }, [username]);
+
+  // Resets the edit form when a new profile is loaded.
+  useEffect(() => {
+    if (!visibleProfile || isEditing) return;
+    setDraftBio(visibleProfile.bio ?? "");
+    setDraftLocation(visibleProfile.location ?? "");
+    setDraftCoverImageUrl(visibleProfile.coverImageUrl ?? "");
+    setDraftLanguages(formatLanguagesInput(visibleProfile.languages));
+    setDraftSkills(formatSkillsInput(visibleProfile.skills));
+  }, [visibleProfile, isEditing]);
+
+  // Uploads a new profile image for your own profile.
+  async function handleProfileImageChange(
+    e: React.ChangeEvent<HTMLInputElement>,
+  ) {
+    if (!isOwnProfile || !user) return;
+
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const formData = new FormData();
+    formData.append("file", file);
+    setIsUploadingImage(true);
+
+    try {
+      const response = await fetch(`${API_BASE}/api/upload/profilePicture`, {
+        method: "POST",
+        body: formData,
+        credentials: "include",
+      });
+
+      if (!response.ok) return;
+
+      const url = await response.text();
+      const updatedUser = {
+        ...user,
+        profilePictureUrl: url,
+      };
+
+      login(updatedUser);
+      setImageCacheBust(Date.now());
+      setProfile((current) =>
+        current ? { ...current, profilePictureUrl: url } : current,
+      );
+    } finally {
+      setIsUploadingImage(false);
+    }
+  }
+
+  // Saves editable profile text fields.
+  async function handleSaveProfile() {
+    if (!isOwnProfile || !user) return;
+
+    setIsSaving(true);
+
+    try {
+      const response = await fetch(`${API_BASE}/api/profile`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify({
+          bio: draftBio,
+          location: draftLocation,
+          coverImageUrl: draftCoverImageUrl,
+          languages: parseLanguagesInput(draftLanguages),
+          skills: parseSkillsInput(draftSkills),
+        }),
+      });
+
+      if (!response.ok) return;
+
+      const updatedUser = (await response.json()) as User;
+
+      // Updates useAuth/localStorage with the saved profile values.
+      login(updatedUser);
+      setProfile(updatedUser);
+      setIsEditing(false);
+    } finally {
+      setIsSaving(false);
+    }
+  }
+
+  const profileImageUrl = visibleProfile?.profilePictureUrl
+    ? `${visibleProfile.profilePictureUrl}${
+        visibleProfile.profilePictureUrl.includes("?") ? "&" : "?"
+      }t=${imageCacheBust}`
+    : DEFAULT_PROFILE_IMAGE;
+
   return (
-    <section>
+    <section className="min-h-screen bg-white">
       <NavBar />
 
-      <div className="flex justify-center gap-x-8 mx-auto mt-24 container">
-        <div className="group relative rounded-2xl w-[224px] h-[224px] overflow-hidden">
-          <input
-            type="file"
-            ref={primaryImageRef}
-            id="SetImage"
-            accept="image/*"
-            className="hidden"
-            onChange={async (e) => {
-              const file = e.target.files?.[0];
-              if (!file) return;
+      <ProfileHeader
+        profile={visibleProfile}
+        profileImageUrl={profileImageUrl}
+        isLoading={isLoadingProfile}
+        isOwnProfile={isOwnProfile}
+        isEditing={isEditing}
+          isSaving={isSaving}
+          isUploadingImage={isUploadingImage}
+          draftBio={draftBio}
+          draftLocation={draftLocation}
+        imageInputRef={primaryImageRef}
+        onEdit={() => setIsEditing(true)}
+        onCancelEdit={() => {
+          setDraftBio(visibleProfile?.bio ?? "");
+          setDraftLocation(visibleProfile?.location ?? "");
+          setDraftCoverImageUrl(visibleProfile?.coverImageUrl ?? "");
+          setDraftLanguages(formatLanguagesInput(visibleProfile?.languages));
+          setDraftSkills(formatSkillsInput(visibleProfile?.skills));
+          setIsEditing(false);
+          }}
+          onSave={handleSaveProfile}
+          onBioChange={setDraftBio}
+          onLocationChange={setDraftLocation}
+        onImageChange={handleProfileImageChange}
+      />
 
-              const formData = new FormData();
-              formData.append("file", file);
+      <main className="mx-auto grid max-w-[1184px] gap-6 px-4 py-8 sm:px-6 lg:grid-cols-[320px_1fr]">
+        <ProfileDetails
+          profile={visibleProfile}
+          isEditing={isEditing}
+          draftCoverImageUrl={draftCoverImageUrl}
+          draftLanguages={draftLanguages}
+          draftSkills={draftSkills}
+          onCoverImageUrlChange={setDraftCoverImageUrl}
+          onLanguagesChange={setDraftLanguages}
+          onSkillsChange={setDraftSkills}
+        />
 
-              const response = await fetch(
-                `${
-                  import.meta.env.VITE_DEV === "true"
-                    ? "http://localhost:3000"
-                    : "https://fullstackapi.liamjorgensen.dev"
-                }/api/upload/profilePicture`,
-                {
-                  method: "POST",
-                  body: formData,
-                  credentials: "include",
-                },
-              );
-
-              const url = await response.text();
-
-              if (!user) return;
-
-              login({
-                ...user,
-                profilePictureUrl: url,
-              });
-            }}
-          />
-
-          <img
-            src={
-              user?.profilePictureUrl
-                ? `${user.profilePictureUrl}${
-                    user.profilePictureUrl.includes("?") ? "&" : "?"
-                  }t=${Date.now()}`
-                : "https://res.cloudinary.com/dnpnpkqig/image/upload/c_fill,f_auto,g_auto,h_500,q_auto,w_500/default-profilePicture?_a=BAMAPqUs0"
-            }
-            alt=""
-            onClick={() => primaryImageRef.current?.click()}
-            className="w-full h-full object-cover cursor-pointer"
-          />
-
-          <button
-            type="button"
-            onClick={() => primaryImageRef.current?.click()}
-            className="z-10 absolute inset-0 flex justify-center items-center bg-black/15 opacity-0 group-hover:opacity-100 transition-opacity"
-          >
-            <i className="text-white text-4xl fa-solid fa-upload"></i>
-          </button>
-        </div>
-
-        <div>
-          <div>
-            <h2 className="font-bold text-[#2C2A51] text-5xl">Elena Vance</h2>
-            <span className="font-normal text-[#5A5781] text-sm">
-              {" "}
-              <i className="fa-solid fa-map-pin"></i> London, United Kingdom
-            </span>
-          </div>
-
-          <p className="max-w-[672px] text-base">
-            Founder of the Digital Atelier approach. I specialize in crafting
-            boutique brand identities that resonate with precision and
-            human-centric design. Every project is a curated journey of
-            excellence.
-          </p>
-        </div>
-      </div>
-
-      <div></div>
+        <ProfileGigs
+          gigs={gigs}
+          isLoading={isLoadingGigs}
+          isOwnProfile={isOwnProfile}
+        />
+      </main>
     </section>
   );
 }
