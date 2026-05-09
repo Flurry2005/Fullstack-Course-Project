@@ -87,7 +87,14 @@ function EditGig() {
           />
         )}
 
-        {desc && editState && gig && <Description gig={gig} />}
+        {desc && editState && gig && (
+          <Description
+            gig={gig}
+            setGig={setGig}
+            setEditState={setEditState}
+            setConfirm={setConfirm}
+          />
+        )}
         {deleteState && gig && (
           <Delete getGig={getGig} gig={gig} setDeleteState={setDeleteState} />
         )}
@@ -158,12 +165,7 @@ function EditGig() {
                         3-tier pricing strategy defined
                       </span>
                     </div>
-                    <span
-                      className="ml-auto"
-                      onClick={() => {
-                      
-                      }}
-                    >
+                    <span className="ml-auto" onClick={() => {}}>
                       <EditButton />
                     </span>
                   </div>
