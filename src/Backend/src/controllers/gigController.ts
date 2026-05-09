@@ -2,6 +2,7 @@ import type { Gig } from "../../types/Gig";
 import gigsModel from "../models/gigsModel";
 import { Request, Response, NextFunction } from "express";
 import { categories } from "../../../Frontend/SellerDashboard/CreateNewGig/Categories";
+import orderModel from "../models/orderModel";
 
 class GigController {
   async getGigs() {
@@ -22,9 +23,12 @@ class GigController {
     }
   }
 
-    async getGigToEdit(req: Request, res: Response) {
+  async getGigToEdit(req: Request, res: Response) {
     try {
-      return await gigsModel.findOne({_id: req.params.id, sellerId: res.locals.jwt._id})
+      return await gigsModel.findOne({
+        _id: req.params.id,
+        sellerId: res.locals.jwt._id,
+      });
     } catch (error) {
       console.error(error);
       return null;
@@ -225,6 +229,15 @@ class GigController {
       );
 
       if (!targetGig) return false;
+
+      await orderModel.updateMany(
+        { sellerId: res.locals.jwt._id, gigId: updatedGig._id },
+        {
+          $set: {
+            gigname: updatedGig.title,
+          },
+        },
+      );
 
       return true;
     } catch (error) {
