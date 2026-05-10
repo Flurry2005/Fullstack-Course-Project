@@ -74,7 +74,7 @@ function ProfileHeader({
                   <button
                     type="button"
                     onClick={onCancelEdit}
-                    className="rounded-full border border-white/50 bg-white/80 px-4 py-2 text-xs font-bold text-[#0050D4] transition hover:bg-white"
+                    className="rounded-full border border-white/50 bg-white/80 px-4 py-2 text-xs font-bold text-[#0050D4] transition hover:bg-white  cursor-pointer"
                   >
                     Cancel
                   </button>
@@ -82,7 +82,7 @@ function ProfileHeader({
                     type="button"
                     onClick={onSave}
                     disabled={isSaving}
-                    className="rounded-full bg-[#0050D4] px-4 py-2 text-xs font-bold text-white shadow-[0_10px_18px_rgba(0,80,212,0.22)] transition hover:bg-[#003EAA] disabled:cursor-not-allowed disabled:opacity-60"
+                    className="rounded-full bg-[#0050D4] px-4 py-2 text-xs font-bold text-white shadow-[0_10px_18px_rgba(0,80,212,0.22)] transition hover:bg-[#003EAA] disabled:cursor-not-allowed disabled:opacity-60  cursor-pointer"
                   >
                     {isSaving ? "Saving..." : "Save"}
                   </button>
@@ -91,7 +91,7 @@ function ProfileHeader({
                 <button
                   type="button"
                   onClick={onEdit}
-                  className="rounded-full bg-[#0050D4] px-4 py-2 text-xs font-bold text-white shadow-[0_10px_18px_rgba(0,80,212,0.22)] transition hover:bg-[#003EAA]"
+                  className="cursor-pointer rounded-full bg-[#0050D4] px-4 py-2 text-xs font-bold text-white shadow-[0_10px_18px_rgba(0,80,212,0.22)] transition hover:bg-[#003EAA]"
                 >
                   <i className="fa-regular fa-pen-to-square mr-2"></i>
                   Edit Profile
@@ -102,7 +102,7 @@ function ProfileHeader({
 
           {/* Cover hero. Edit mode swaps the text into form fields below. */}
           <div className="mx-auto flex min-h-[300px] max-w-[1184px] flex-col justify-center gap-7 px-4 py-20 sm:px-6 md:flex-row md:items-center md:justify-start md:pr-40">
-            <div className="group relative h-[132px] w-[132px] shrink-0 overflow-hidden rounded-full bg-white shadow-[0_12px_30px_rgba(17,18,45,0.22)] ring-4 ring-white md:h-[148px] md:w-[148px]">
+            <div className="cursor-pointer group relative h-[132px] w-[132px] shrink-0 overflow-hidden rounded-full bg-white shadow-[0_12px_30px_rgba(17,18,45,0.22)] ring-4 ring-white md:h-[148px] md:w-[148px]">
               <input
                 type="file"
                 ref={imageInputRef}
@@ -124,7 +124,7 @@ function ProfileHeader({
                 <button
                   type="button"
                   onClick={() => imageInputRef.current?.click()}
-                  className="absolute inset-0 z-10 flex items-center justify-center bg-black/30 text-white opacity-0 transition-opacity group-hover:opacity-100"
+                  className="absolute inset-0 z-10 flex items-center justify-center bg-black/30 text-white opacity-0 transition-opacity group-hover:opacity-100  cursor-pointer"
                   disabled={isUploadingImage}
                   aria-label="Upload profile picture"
                 >

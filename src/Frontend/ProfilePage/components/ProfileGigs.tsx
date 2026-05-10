@@ -30,19 +30,18 @@ function ProfileGigs({
           <button
             type="button"
             onClick={() => navigate("/dashboard/create")}
-            className="rounded-full border border-[#DDD9FF] bg-white px-5 py-3 text-sm font-bold text-[#0050D4] transition hover:border-[#0050D4]"
+            className="cursor-pointer rounded-full border border-[#DDD9FF] bg-white px-5 py-3 text-sm font-bold text-[#0050D4] transition hover:border-[#0050D4]"
           >
             Create Gig
           </button>
         ) : (
-          gigs.length > 3 && (
-            <button
-              type="button"
-              className="text-sm font-bold text-[#5F00FF] transition hover:text-[#0050D4]"
-            >
-              See All <i className="fa-solid fa-arrow-right ml-1 text-xs"></i>
-            </button>
-          )
+          <button
+            type="button"
+            onClick={() => navigate("/dashboard/create")}
+            className="hidden cursor-pointer rounded-full border border-[#DDD9FF] bg-white px-5 py-3 text-sm font-bold text-[#0050D4] transition hover:border-[#0050D4]"
+          >
+            Create Gig
+          </button>
         )}
       </div>
 
