@@ -6,6 +6,17 @@ export type User = {
   username: string;
   email: string;
   createdAt: Date;
+  profilePictureUrl: string;
+  coverImageUrl?: string;
+  bio?: string;
+  location?: string;
+  languages?: ProfileLanguage[];
+  skills?: string[];
+};
+
+export type ProfileLanguage = {
+  name: string;
+  level: "Basic" | "Conversational" | "Fluent" | "Native";
 };
 
 export type AuthContextType = {

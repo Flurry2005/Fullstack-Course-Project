@@ -62,7 +62,7 @@ export async function Register(
 
   try {
     const response = await fetch(
-      `https://fullstackapi.liamjorgensen.dev/api${"/register"}`,
+      `${import.meta.env.VITE_DEV === "true" ? "http://localhost:3000" : "https://fullstackapi.liamjorgensen.dev"}/api/register`,
       {
         method: "POST",
         headers: {
