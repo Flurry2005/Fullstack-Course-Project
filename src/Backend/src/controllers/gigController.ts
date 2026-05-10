@@ -9,7 +9,7 @@ import { getSquareImage, uploadBuffer } from "../../services/Cloudinary";
 class GigController {
   async getGigs() {
     try {
-      return await gigsModel.find().lean();
+      return await gigsModel.find().select("-sellerId").lean();
     } catch (error) {
       console.error(error);
       return null;
@@ -18,7 +18,7 @@ class GigController {
 
   async getGigById(req: Request) {
     try {
-      return await gigsModel.findById(req.params.id).lean();
+      return await gigsModel.findById(req.params.id).select("-sellerId").lean();
     } catch (error) {
       console.error(error);
       return null;
@@ -37,25 +37,16 @@ class GigController {
     }
   }
 
-  async getGigByUser(req: Request) {
-    const userId = req.params.userId;
-    if (!userId) return false;
-
-    try {
-      return await gigsModel.find({ sellerId: userId }).lean();
-    } catch (error) {
-      console.error(error);
-      return false;
-    }
-  }
-
   async getGigsBySellerUsername(req: Request) {
     const username = req.params.username;
     if (!username) return false;
 
     try {
       // Used by public profile pages where the route only knows the seller username.
-      return await gigsModel.find({ sellerUsername: username }).lean();
+      return await gigsModel
+        .find({ sellerUsername: username })
+        .select("-sellerId")
+        .lean();
     } catch (error) {
       console.error(error);
       return false;

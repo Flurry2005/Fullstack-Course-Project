@@ -21,14 +21,6 @@ gigRouter.get("/seller/:username", async (req, res) => {
     : res.status(404).json({ status: "404", message: "Seller not found" });
 });
 
-gigRouter.get("/user/:userId", async (req, res) => {
-  const gigs = await gigController.getGigByUser(req);
-
-  return gigs
-    ? res.status(200).json(gigs)
-    : res.status(404).json({ status: "404", message: "User not found" });
-});
-
 gigRouter.get("/:id", async (req, res) => {
   const gig = await gigController.getGigById(req);
 

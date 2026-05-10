@@ -1,4 +1,10 @@
-import { useRef, useState, type Dispatch, type SetStateAction } from "react";
+import {
+  useEffect,
+  useRef,
+  useState,
+  type Dispatch,
+  type SetStateAction,
+} from "react";
 import { useOrders } from "../../Context/useOrders";
 import me from "../../assets/me.jpeg";
 import type { Order } from "../../types/Order";
@@ -11,9 +17,15 @@ interface Props {
   activeOrder: Order | null;
   onlineList: OnlineList;
   setActiveOrder: Dispatch<SetStateAction<Order | null>>;
+  profilePictures: Record<string, string>;
 }
 
-function Conversations({ setActiveOrder, activeOrder, onlineList }: Props) {
+function Conversations({
+  setActiveOrder,
+  activeOrder,
+  onlineList,
+  profilePictures,
+}: Props) {
   const { orders, setOrders } = useOrders();
   const { user } = useAuth();
 
@@ -72,8 +84,8 @@ function Conversations({ setActiveOrder, activeOrder, onlineList }: Props) {
                     <img
                       src={
                         order.buyerUsername === user?.username
-                          ? `https://res.cloudinary.com/dnpnpkqig/image/upload/c_fill,f_auto,g_auto,h_500,q_auto,w_500/v1778358513/profilePictures/${order.sellerUsername}-profilePicture?_a=BAMAPqUs0&t=1778358700344`
-                          : `https://res.cloudinary.com/dnpnpkqig/image/upload/c_fill,f_auto,g_auto,h_500,q_auto,w_500/v1778358513/profilePictures/${order.buyerUsername}-profilePicture?_a=BAMAPqUs0&t=1778358700344`
+                          ? profilePictures[order.sellerUsername]
+                          : profilePictures[order.buyerUsername]
                       }
                       alt=""
                       className="rounded-full w-fit h-8/10 object-contain aspect-square"
@@ -113,7 +125,12 @@ function Conversations({ setActiveOrder, activeOrder, onlineList }: Props) {
           })}
       </div>
 
-      {isModalOpen && <NewMessageModal closeModal={toggleModal} />}
+      {isModalOpen && (
+        <NewMessageModal
+          closeModal={toggleModal}
+          profilePictures={profilePictures}
+        />
+      )}
     </section>
   );
 }

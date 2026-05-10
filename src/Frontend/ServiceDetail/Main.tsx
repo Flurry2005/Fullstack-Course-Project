@@ -8,6 +8,8 @@ import ClientReflections from "./ClientReflections";
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import type { Gig } from "../types/Gig";
+import { fetchProfile } from "../utils/GetProfile";
+import type { PublicProfile } from "../ProfilePage/types";
 
 type MainProps = {
   mainCategory: string | null;
@@ -33,6 +35,15 @@ function Main({ mainCategory, subCategoryOne, subCategoryTwo }: MainProps) {
     setLoaded(true);
     response.ok && setGig(data);
   };
+
+  const [profile, setProfile] = useState<PublicProfile | null>(null);
+
+  useEffect(() => {
+    (async () => {
+      const userProfile = await fetchProfile(gig!.sellerUsername!);
+      setProfile(userProfile!);
+    })();
+  }, [gig]);
 
   useEffect(() => {
     getGig();
@@ -61,6 +72,7 @@ function Main({ mainCategory, subCategoryOne, subCategoryTwo }: MainProps) {
                     title={gig?.title}
                     seller={gig?.sellerUsername}
                     gig={gig}
+                    profile={profile}
                     rating={4.9}
                     reviewsAmount={494}
                   />
@@ -78,7 +90,7 @@ function Main({ mainCategory, subCategoryOne, subCategoryTwo }: MainProps) {
               {/* About service and client reflections */}
               <div className="flex flex-col gap-6 md:w-2/3">
                 <AboutService about={gig?.description} />
-                <AboutSeller id={gig?.sellerId} />
+                <AboutSeller profile={profile} />
                 <ClientReflections />
               </div>
             </div>
