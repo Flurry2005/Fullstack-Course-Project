@@ -65,9 +65,9 @@ function ProfileGigs({
               className="cursor-pointer overflow-hidden rounded-sm border border-[#E5E0F2] bg-white p-3 transition hover:-translate-y-1 hover:shadow-[0_18px_40px_rgba(90,87,129,0.12)]"
             >
               <div className="relative aspect-[1.58] overflow-hidden rounded-md bg-[#F3EEFF]">
-                {/* Replace with real gig cover images when they are saved on the gig model. */}
+               
                 <img
-                  src={fishImage}
+                  src={gig.primaryImagePreview || fishImage}
                   alt={gig.title ?? "Gig cover"}
                   className="h-full w-full object-cover"
                 />

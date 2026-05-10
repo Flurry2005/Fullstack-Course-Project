@@ -54,10 +54,10 @@ function NavBar() {
             <Link
               to={"/profile/" + user.username}
               type="button"
-              className="flex justify-center items-center shadow-[0_0_20px_rgba(122,162,255,0.35)] border rounded-full w-9 h-9 font-bold text-black text-sm hover:scale-105 transition"
+              className="flex justify-center items-center shadow-[0_0_20px_rgba(122,162,255,0.35)] border rounded-full w-9 h-9 font-bold text-white bg-indigo-500 text-sm hover:scale-105 transition"
               aria-label="Visit profile"
             >
-              N
+              {user.username.charAt(0)}
             </Link>
           </div>
         ) : (
