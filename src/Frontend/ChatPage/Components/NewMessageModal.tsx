@@ -6,9 +6,10 @@ import { useAuth } from "../../Context/useAuth";
 
 interface props {
   closeModal: () => void;
+  profilePictures: Record<string, string>;
 }
 
-function NewMessageModal({ closeModal }: props) {
+function NewMessageModal({ closeModal, profilePictures }: props) {
   const { orders } = useOrders();
   const { user } = useAuth();
   const { setActiveOrder, onlineList } = useSocket();
@@ -49,7 +50,15 @@ function NewMessageModal({ closeModal }: props) {
               >
                 <section className="flex flex-col justify-center px-4 py-2 w-fit h-full">
                   <img
-                    src={me}
+                    src={
+                      order.buyerUsername === user?.username
+                        ? profilePictures[order.sellerUsername]
+                        : profilePictures[order.buyerUsername]
+                    }
+                    onError={(e) => {
+                      e.currentTarget.src =
+                        "https://res.cloudinary.com/dnpnpkqig/image/upload/c_fill,f_auto,g_auto,h_500,q_auto,w_500/v1778358513/default-profilePicture?_a=BAMAPqUs0&t=1778358700344";
+                    }}
                     alt=""
                     className="rounded-full w-20 h-fit object-contain aspect-square"
                   />

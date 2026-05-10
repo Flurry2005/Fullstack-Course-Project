@@ -11,6 +11,7 @@ import { useEffect, useState } from "react";
 import type { Gig } from "../types/Gig";
 import { useSocket } from "../Context/useSocket";
 import { useOrders } from "../Context/useOrders";
+import { fetchProfile } from "../utils/GetProfile";
 
 function SellerDashBoard() {
   const { setActiveOrder } = useSocket();
@@ -20,22 +21,46 @@ function SellerDashBoard() {
   const [gigs, setGigs] = useState<Gig[]>();
   const [gigsLoaded, setGigsLoaded] = useState(false);
 
+  const [profilePictures, setProfilePictures] = useState<
+    Record<string, string>
+  >({});
+
+  useEffect(() => {
+    const loadPictures = async () => {
+      if (!orders || !user) return;
+
+      const uniqueUsers = [
+        ...new Set(
+          orders.map((order) =>
+            order.sellerUsername === user.username
+              ? order.buyerUsername
+              : order.sellerUsername,
+          ),
+        ),
+      ];
+
+      const entries = await Promise.all(
+        uniqueUsers.map(async (username) => {
+          const profile = await fetchProfile(username);
+
+          return [username, profile?.profilePictureUrl];
+        }),
+      );
+
+      setProfilePictures(Object.fromEntries(entries));
+    };
+
+    loadPictures();
+  }, [orders, user]);
+
   const getGigs = async () => {
     const response = await fetch(
-      `${import.meta.env.VITE_DEV === "true" ? "http://localhost:3000" : "https://fullstackapi.liamjorgensen.dev"}/api${"/gig/user/"}${user?._id}`,
+      `${import.meta.env.VITE_DEV === "true" ? "http://localhost:3000" : "https://fullstackapi.liamjorgensen.dev"}/api${"/gig/seller/"}${user?.username}`,
     );
     const data = await response.json();
     console.log(data);
     response.ok && setGigs(data);
     setGigsLoaded(true);
-  };
-
-  const getOrders = async () => {
-    const response = await fetch(
-      `${import.meta.env.VITE_DEV === "true" ? "http://localhost:3000" : "https://fullstackapi.liamjorgensen.dev"}/api${"/gig/orders/"}${user?._id}`,
-    );
-    const data = await response.json();
-    console.log(data);
   };
 
   useEffect(() => {
@@ -101,6 +126,7 @@ function SellerDashBoard() {
                 .slice(0, 2)
                 ?.map((order) => (
                   <OrderCard
+                    profilePictures={profilePictures}
                     order={order}
                     gig={gigs?.filter((gig) => gig._id === order.gigId)[0]}
                   />
@@ -146,7 +172,12 @@ function SellerDashBoard() {
               )
               ?.slice(0, 3)
               ?.map((order) => (
-                <MessageCard key={order._id} read={false} order={order} />
+                <MessageCard
+                  profilePictures={profilePictures}
+                  key={order._id}
+                  read={false}
+                  order={order}
+                />
               ))}
 
             {orders

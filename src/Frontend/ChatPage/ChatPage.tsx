@@ -1,14 +1,17 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import NavBar from "../NavBar";
 import Footer from "../Footer";
 import Conversations from "./Components/Conversations";
 import ChatPanel from "./Components/ChatPanel";
 import { useOrders } from "../Context/useOrders";
 import { useSocket } from "../Context/useSocket";
+import { useAuth } from "../Context/useAuth";
+import { fetchProfile } from "../utils/GetProfile";
 
 function ChatPage() {
   const { onlineList, activeOrder, setActiveOrder } = useSocket();
   const { orders } = useOrders();
+  const { user } = useAuth();
 
   useEffect(() => {
     if (!orders || !activeOrder) return;
@@ -21,6 +24,38 @@ function ChatPage() {
 
     return () => setActiveOrder(null);
   }, [orders]);
+
+  const [profilePictures, setProfilePictures] = useState<
+    Record<string, string>
+  >({});
+
+  useEffect(() => {
+    const loadPictures = async () => {
+      if (!orders || !user) return;
+
+      const uniqueUsers = [
+        ...new Set(
+          orders.map((order) =>
+            order.sellerUsername === user.username
+              ? order.buyerUsername
+              : order.sellerUsername,
+          ),
+        ),
+      ];
+
+      const entries = await Promise.all(
+        uniqueUsers.map(async (username) => {
+          const profile = await fetchProfile(username);
+
+          return [username, profile?.profilePictureUrl];
+        }),
+      );
+
+      setProfilePictures(Object.fromEntries(entries));
+    };
+
+    loadPictures();
+  }, [orders, user]);
   return (
     <>
       <NavBar />
@@ -29,8 +64,13 @@ function ChatPage() {
           setActiveOrder={setActiveOrder}
           activeOrder={activeOrder}
           onlineList={onlineList}
+          profilePictures={profilePictures}
         />
-        <ChatPanel activeOrder={activeOrder} onlineList={onlineList} />
+        <ChatPanel
+          activeOrder={activeOrder}
+          onlineList={onlineList}
+          profilePictures={profilePictures}
+        />
       </main>
       <Footer />
     </>
