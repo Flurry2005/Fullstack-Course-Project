@@ -233,7 +233,7 @@ function Review({
                 type="checkbox"
                 name="terms"
                 onClick={() => setTOS((prev) => !prev)}
-                className="bg-white checked:bg-[#3323CC] border border-[#C7C4D8] w-4 h-4 appearance-none shrink-0"
+                className="bg-white rounded-full checked:bg-[#3323CC] border border-[#C7C4D8] w-4 h-4 appearance-none shrink-0"
               />
               <label htmlFor="terms">I agree to the terms of service</label>
             </span>

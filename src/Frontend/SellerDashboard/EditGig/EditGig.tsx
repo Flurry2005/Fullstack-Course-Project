@@ -15,6 +15,7 @@ import shareIcon from "../../assets/share-icon.svg";
 import nextIcon from "../../assets/next-icon.svg";
 import galleryIcon from "../../assets/image-regular-icon.svg";
 import Overview from "./Overview";
+import Pricing from "./Pricing";
 import Confirm from "./Confirm";
 import Delete from "./Delete";
 import Description from "./Description";
@@ -28,6 +29,7 @@ function EditGig() {
   const [deleteState, setDeleteState] = useState(false);
   const [overView, setOverview] = useState(false);
   const [desc, setDesc] = useState(false);
+  const [pricing, setPricing] = useState(false);
   const [confirm, setConfirm] = useState(false);
   const [confirmConfirm, setConfirmConfirm] = useState(false);
 
@@ -54,6 +56,7 @@ function EditGig() {
       setDeleteState(false);
       setConfirmConfirm(false);
       setDesc(false);
+      setPricing(false);
     }
   }, [editState]);
 
@@ -89,6 +92,15 @@ function EditGig() {
 
         {desc && editState && gig && (
           <Description
+            gig={gig}
+            setGig={setGig}
+            setEditState={setEditState}
+            setConfirm={setConfirm}
+          />
+        )}
+
+        {pricing && editState && gig && (
+          <Pricing
             gig={gig}
             setGig={setGig}
             setEditState={setEditState}
@@ -165,7 +177,15 @@ function EditGig() {
                         3-tier pricing strategy defined
                       </span>
                     </div>
-                    <span className="ml-auto" onClick={() => {}}>
+                    <span
+                      className="ml-auto"
+                      onClick={(e) => {
+                        (e.stopPropagation(),
+                          e.preventDefault(),
+                          setPricing(true),
+                          setEditState(true));
+                      }}
+                    >
                       <EditButton />
                     </span>
                   </div>
@@ -246,16 +266,14 @@ function EditGig() {
                 <span className="text-[#131B2E] text-xl">Pricing Snapshot</span>
                 <div className="flex flex-col gap-3">
                   {gig?.basic?.features && (
-                    <PackageBar name="Basic" plan={gig?.basic} />
+                    <PackageBar name="Basic" plan={gig?.basic} editState={false} gig={gig} setGig={setGig} />
                   )}
-                  {Array.isArray(gig?.standard?.features?.length) &&
-                    gig?.standard?.features.length > 0 && (
-                      <PackageBar name="Standard" plan={gig?.standard} />
-                    )}
-                  {Array.isArray(gig?.premium?.features?.length) &&
-                    gig?.premium?.features.length > 0 && (
-                      <PackageBar name="Premium" plan={gig?.premium} />
-                    )}
+                  {gig?.standard?.features && gig.standard.features.length > 0 && (
+                    <PackageBar name="Standard" plan={gig?.standard} editState={false} gig={gig} setGig={setGig} />
+                  )}
+                  {gig?.premium?.features && gig.premium.features.length > 0 && (
+                    <PackageBar name="Premium" plan={gig?.premium} editState={false} gig={gig} setGig={setGig} />
+                  )}
                 </div>
                 <span className="text-[#464555] font-medium">
                   Prices are competetive for your category.
