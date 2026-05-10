@@ -6,6 +6,10 @@ import { getSocket } from "../../socket/Socket";
 import { useOrders } from "../../Context/useOrders";
 import { useAuth } from "../../Context/useAuth";
 import type { OnlineList } from "../../types/Socket";
+import { useNavigate } from "react-router-dom";
+
+
+
 interface Props {
   activeOrder: Order | null;
   onlineList: OnlineList;
@@ -63,6 +67,8 @@ function ChatPanel({ activeOrder, onlineList }: Props) {
     chatRef.current.scrollTop = chatRef.current.scrollHeight;
   }, [activeOrder?.chathistory]);
 
+  const navigate = useNavigate()
+
   if (!activeOrder || !user) return <></>;
   return (
     <main className="flex flex-col bg-[#F9F5FF] w-7/10 h-full">
@@ -86,7 +92,8 @@ function ChatPanel({ activeOrder, onlineList }: Props) {
           />
         </div>
         <div className="flex flex-col justify-center leading-4">
-          <p className="font-semibold text-[#2C2A51]">
+
+          <p className="font-semibold text-[#2C2A51] cursor-pointer" onClick={() => navigate(`/profile/${user?.username === activeOrder.buyerUsername ? activeOrder.sellerUsername : activeOrder.buyerUsername}`)}>
             {user?.username === activeOrder.buyerUsername
               ? activeOrder.sellerUsername
               : activeOrder.buyerUsername}

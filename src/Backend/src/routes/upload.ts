@@ -39,3 +39,42 @@ uploadRouter.post(
     }
   },
 );
+
+
+
+uploadRouter.post(
+  "/upload/profileBanner",
+  upload.single("file"),
+  async (req, res) => {
+    try {
+      
+      const fileBuffer = req.file?.buffer;
+
+      if (!fileBuffer) {
+        return res.status(400).json({ error: "No file uploaded" });
+      }
+
+      const result: any = await uploadBuffer(
+        fileBuffer,
+        res.locals.jwt.username + "-profileBanner",
+        "profileBanners",
+      );
+
+      const url = result.secure_url
+
+      await userModel.updateOne(
+        { _id: res.locals.jwt._id },
+        {
+          $set: {
+            coverImageUrl: url,
+          },
+        },
+      );
+
+      res.send(url);
+    } catch (err) {
+      res.status(500).json(err);
+    }
+  },
+);
+

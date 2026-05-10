@@ -1,3 +1,4 @@
+import type { ChangeEvent, RefObject } from "react";
 import type { PublicProfile } from "../types";
 
 type ProfileDetailsProps = {
@@ -6,7 +7,8 @@ type ProfileDetailsProps = {
   draftCoverImageUrl: string;
   draftLanguages: string;
   draftSkills: string;
-  onCoverImageUrlChange: (value: string) => void;
+  handleBannerImageChange: (event: ChangeEvent<HTMLInputElement>) => void;
+  bannerImageRef: RefObject<HTMLInputElement | null>;
   onLanguagesChange: (value: string) => void;
   onSkillsChange: (value: string) => void;
 };
@@ -17,7 +19,8 @@ function ProfileDetails({
   draftCoverImageUrl,
   draftLanguages,
   draftSkills,
-  onCoverImageUrlChange,
+  handleBannerImageChange,
+  bannerImageRef,
   onLanguagesChange,
   onSkillsChange,
 }: ProfileDetailsProps) {
@@ -41,10 +44,12 @@ function ProfileDetails({
                 Cover Image URL
               </span>
               <input
-                value={draftCoverImageUrl}
-                onChange={(e) => onCoverImageUrlChange(e.target.value)}
-                placeholder="https://example.com/cover.jpg"
-                className="mt-3 w-full rounded-xl border border-[#DDD9FF] bg-white px-4 py-3 text-sm text-[#2C2A51] outline-none transition focus:border-[#0050D4] focus:ring-4 focus:ring-[#0050D4]/10"
+                type="file"
+                ref={bannerImageRef}
+                id="SetImage"
+                accept="image/*"
+                className="hidden"
+                onChange={handleBannerImageChange}
               />
             </label>
           </section>

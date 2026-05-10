@@ -21,6 +21,7 @@ function ProfilePage() {
   const { username } = useParams();
   const { user, login } = useAuth();
   const primaryImageRef = useRef<HTMLInputElement | null>(null);
+  const bannerImageRef = useRef<HTMLInputElement | null>(null);
 
   const [profile, setProfile] = useState<PublicProfile | null>(null);
   const [gigs, setGigs] = useState<Gig[]>([]);
@@ -159,6 +160,53 @@ function ProfilePage() {
     }
   }
 
+
+    // Uploads a new profile image for your own profile.
+  async function handleBannerImageChange(
+    e: React.ChangeEvent<HTMLInputElement>,
+  ) {
+    if (!isOwnProfile || !user) return;
+
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const formData = new FormData();
+    formData.append("file", file);
+    setIsUploadingImage(true);
+
+    console.log(formData)
+
+    try {
+      const response = await fetch(`${API_BASE}/api/upload/profileBanner`, {
+        method: "POST",
+        body: formData,
+        credentials: "include",
+      });
+
+      console.log(response)
+
+      if (!response.ok) return;
+
+      const url = await response.text();
+      setDraftCoverImageUrl(url)
+      const updatedUser = {
+        ...user,
+        coverImageUrl: url,
+      };
+      console.log(url)
+
+      login(updatedUser);
+      setImageCacheBust(Date.now());
+      setProfile((current) =>
+        current ? { ...current, coverImageUrl: url } : current,
+      );
+    } finally {
+      setIsUploadingImage(false);
+    }
+  }
+
+
+  
   // Saves editable profile text fields.
   async function handleSaveProfile() {
     if (!isOwnProfile || !user) return;
@@ -237,8 +285,9 @@ function ProfilePage() {
           draftCoverImageUrl={draftCoverImageUrl}
           draftLanguages={draftLanguages}
           draftSkills={draftSkills}
-          onCoverImageUrlChange={setDraftCoverImageUrl}
+          handleBannerImageChange={handleBannerImageChange}
           onLanguagesChange={setDraftLanguages}
+          bannerImageRef={bannerImageRef}
           onSkillsChange={setDraftSkills}
         />
 
