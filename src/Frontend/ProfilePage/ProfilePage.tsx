@@ -160,8 +160,7 @@ function ProfilePage() {
     }
   }
 
-
-    // Uploads a new profile image for your own profile.
+  // Uploads a new profile image for your own profile.
   async function handleBannerImageChange(
     e: React.ChangeEvent<HTMLInputElement>,
   ) {
@@ -174,7 +173,7 @@ function ProfilePage() {
     formData.append("file", file);
     setIsUploadingImage(true);
 
-    console.log(formData)
+    console.log(formData);
 
     try {
       const response = await fetch(`${API_BASE}/api/upload/profileBanner`, {
@@ -183,17 +182,17 @@ function ProfilePage() {
         credentials: "include",
       });
 
-      console.log(response)
+      console.log(response);
 
       if (!response.ok) return;
 
       const url = await response.text();
-      setDraftCoverImageUrl(url)
+      setDraftCoverImageUrl(url);
       const updatedUser = {
         ...user,
         coverImageUrl: url,
       };
-      console.log(url)
+      console.log(url);
 
       login(updatedUser);
       setImageCacheBust(Date.now());
@@ -205,8 +204,6 @@ function ProfilePage() {
     }
   }
 
-
-  
   // Saves editable profile text fields.
   async function handleSaveProfile() {
     if (!isOwnProfile || !user) return;
@@ -249,7 +246,7 @@ function ProfilePage() {
     : DEFAULT_PROFILE_IMAGE;
 
   return (
-    <section className="min-h-screen bg-white">
+    <section className="bg-white min-h-screen">
       <NavBar />
 
       <ProfileHeader
@@ -258,10 +255,10 @@ function ProfilePage() {
         isLoading={isLoadingProfile}
         isOwnProfile={isOwnProfile}
         isEditing={isEditing}
-          isSaving={isSaving}
-          isUploadingImage={isUploadingImage}
-          draftBio={draftBio}
-          draftLocation={draftLocation}
+        isSaving={isSaving}
+        isUploadingImage={isUploadingImage}
+        draftBio={draftBio}
+        draftLocation={draftLocation}
         imageInputRef={primaryImageRef}
         onEdit={() => setIsEditing(true)}
         onCancelEdit={() => {
@@ -271,14 +268,14 @@ function ProfilePage() {
           setDraftLanguages(formatLanguagesInput(visibleProfile?.languages));
           setDraftSkills(formatSkillsInput(visibleProfile?.skills));
           setIsEditing(false);
-          }}
-          onSave={handleSaveProfile}
-          onBioChange={setDraftBio}
-          onLocationChange={setDraftLocation}
+        }}
+        onSave={handleSaveProfile}
+        onBioChange={setDraftBio}
+        onLocationChange={setDraftLocation}
         onImageChange={handleProfileImageChange}
       />
 
-      <main className="mx-auto grid max-w-[1184px] gap-6 px-4 py-8 sm:px-6 lg:grid-cols-[320px_1fr]">
+      <main className="gap-6 grid lg:grid-cols-[320px_1fr] mx-auto px-4 sm:px-6 py-8 max-w-[1184px]">
         <ProfileDetails
           profile={visibleProfile}
           isEditing={isEditing}

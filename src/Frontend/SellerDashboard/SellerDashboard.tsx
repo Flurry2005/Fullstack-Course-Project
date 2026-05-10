@@ -42,11 +42,11 @@ function SellerDashBoard() {
     getGigs();
   }, [user]);
   return (
-    <>
+    <div className="bg-[#f9f5ff]">
       <Navbar />
 
       {/* Dashboard header */}
-      <main className="flex flex-col gap-10 bg-[#f9f5ff] p-6 w-full">
+      <main className="flex flex-col gap-10 bg-[#f9f5ff] mx-auto p-6 w-full container">
         <section className="flex flex-col gap-3">
           <h2 className="text-[#2C2A51] text-5xl">Seller Dashboard</h2>
           <h3 className="text-[#5A5781] text-2xl">
@@ -212,7 +212,7 @@ function SellerDashBoard() {
       </main>
 
       <Footer />
-    </>
+    </div>
   );
 }
 
