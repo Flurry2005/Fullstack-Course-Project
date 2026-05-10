@@ -37,10 +37,10 @@ function ProfileDetails({
       <div className="space-y-0 rounded-sm border border-[#E5E0F2] bg-white shadow-[0_10px_26px_rgba(90,87,129,0.06)]">
         {/* Cover image is stored as a URL until we add a dedicated upload flow. */}
         {isEditing && (
-          <section className="border-b border-[#E5E0F2] p-5">
-            <h2 className="text-base font-bold text-[#2C2A51]">Cover</h2>
-            <label className="mt-4 block">
-              <span className="text-xs font-bold uppercase text-[#6F6F9A]">
+          <section className="border-b border-[#E5E0F2] p-5  cursor-pointer h-full">
+            <h2 className="text-base font-bold text-[#2C2A51]  cursor-pointer">Cover</h2>
+            <label className="mt-4 block  cursor-pointer">
+              <span className="text-xs font-bold uppercase text-[#6F6F9A]  cursor-pointer">
                 Cover Image URL
               </span>
               <input
@@ -64,7 +64,7 @@ function ProfileDetails({
               value={draftLanguages}
               rows={5}
               onChange={(e) => onLanguagesChange(e.target.value)}
-              placeholder={"English - Fluent\nSwedish - Conversational"}
+              placeholder={"English - Fluent\nSwedish - Conversational\nChinese - Native\n Danish - Basic"}
               className="mt-4 w-full resize-none rounded-xl border border-[#DDD9FF] bg-white px-4 py-3 text-sm leading-6 text-[#2C2A51] outline-none transition focus:border-[#0050D4] focus:ring-4 focus:ring-[#0050D4]/10"
             />
           ) : profile.languages && profile.languages.length > 0 ? (
