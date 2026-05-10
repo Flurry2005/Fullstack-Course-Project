@@ -3,6 +3,9 @@ import Stripe from "stripe";
 import CheckoutController from "../controllers/checkoutController.js";
 import gigsModel from "../models/gigsModel.js";
 import ordersModel from "../models/orderModel.js";
+import userModel from "../models/userModel.js";
+import JWTModel from "../models/JWT.js";
+import express from "express";
 
 export const checkoutRouter = Router();
 
@@ -63,6 +66,43 @@ checkoutRouter.post("/create-checkout-session", async (req, res) => {
       }
     }
 
+    if (!user.stripe_customer_id) {
+      const customer = await stripe.customers.create({
+        email: user.email,
+        name: `${billing.firstName} ${billing.lastName}`,
+        phone: billing.phoneNumber,
+        address: {
+          line1: billing.addressLine1,
+          line2: billing.addressLine2 || undefined,
+          city: billing.city,
+          state: billing.state,
+          postal_code: billing.zipCode,
+          country: billing.country,
+        },
+      });
+      res.locals.jwt.stripe_customer_id = customer.id;
+      await userModel.findByIdAndUpdate(user._id, {
+        $set: {
+          stripe_customer_id: customer.id,
+        },
+      });
+      const token = JWTModel.createJwtToken(
+        user.username,
+        user.email,
+        user._id,
+        customer.id ?? null,
+      );
+      const expiry = new Date(Date.now() + 1000 * 60 * 60);
+      res.cookie("token", token, {
+        httpOnly: true,
+        secure: process.env.VITE_DEV ? false : true,
+        sameSite: process.env.VITE_DEV ? "lax" : "none",
+        path: "/",
+        domain: process.env.VITE_DEV ? undefined : ".liamjorgensen.dev",
+        expires: expiry,
+      });
+    }
+
     // our 10% service fee
     const serviceFee = Math.round(price * 0.1);
     // total price with service fee
@@ -72,27 +112,17 @@ checkoutRouter.post("/create-checkout-session", async (req, res) => {
     const session = await stripe.checkout.sessions.create({
       mode: "payment",
 
-      customer_email: billing.email,
+      customer: res.locals.jwt.stripe_customer_id,
+
+      customer_update: {
+        address: "auto",
+        name: "auto",
+        shipping: "auto",
+      },
 
       billing_address_collection: "required",
       phone_number_collection: {
         enabled: true,
-      },
-
-      payment_intent_data: {
-        receipt_email: billing.email,
-        shipping: {
-          name: `${billing.firstName} ${billing.lastName}`,
-          phone: billing.phoneNumber,
-          address: {
-            line1: billing.addressLine1,
-            line2: billing.addressLine2,
-            city: billing.city,
-            state: billing.state,
-            postal_code: billing.zipCode,
-            country: billing.country,
-          },
-        },
       },
 
       line_items: [
@@ -101,7 +131,7 @@ checkoutRouter.post("/create-checkout-session", async (req, res) => {
             currency: "usd",
             product_data: {
               name: gig.title,
-              description: gig.description,
+              description: gig.description + "\n GigId: " + gig._id,
               images: gig.primaryImagePreview ? [gig.primaryImagePreview] : [],
             },
             unit_amount: totalPrice * 100,
@@ -113,7 +143,11 @@ checkoutRouter.post("/create-checkout-session", async (req, res) => {
       metadata: {
         gigId: gig._id.toString(),
         sellerId: gig.sellerId.toString(),
+        buyerId: user._id,
+        buyerUsername: user.username,
         sellerUsername: gig.sellerUsername,
+        gigname: gig.title,
+        deliveryTime: deliveryTime,
         tier,
         gigPrice: price.toString(),
         serviceFee: serviceFee.toString(),
@@ -157,3 +191,63 @@ checkoutRouter.get("/session/:sessionId", async (req, res) => {
     return res.status(500).json({ error: error.message });
   }
 });
+
+export const webHookRouter = Router();
+webHookRouter.post(
+  "/webhook-checkout",
+  express.raw({ type: "application/json" }),
+  async (req, res) => {
+    const sig = req.headers["stripe-signature"] as string;
+
+    let event;
+
+    try {
+      event = stripe.webhooks.constructEvent(
+        req.body,
+        sig,
+        process.env.STRIPE_WEBHOOK_SECRET!,
+      );
+    } catch (err: any) {
+      return res.status(400).send(`Webhook Error: ${err.message}`);
+    }
+
+    // ✅ PAYMENT SUCCESS EVENT
+    if (event.type === "checkout.session.completed") {
+      const session = event.data.object as Stripe.Checkout.Session;
+
+      type Tier = "basic" | "standard" | "premium";
+
+      const gigId = session.metadata?.gigId;
+      const sellerId = session.metadata?.sellerId;
+      const sellerUsername = session.metadata?.sellerUsername;
+      const buyerUsername = session.metadata?.buyerUsername;
+      const buyerId = session.metadata?.buyerId;
+      const tier: Tier = session.metadata?.tier.toLowerCase() as Tier;
+      const gigname = session.metadata?.gigname;
+      const deliveryTime = session.metadata?.deliveryTime ?? "1 Day";
+
+      const match = deliveryTime.match(/\d+/);
+      const days = match ? Number(match[0]) : 1;
+
+      const adjustedDays = Math.max(days - 1, 0);
+
+      const dueDate = new Date();
+      dueDate.setHours(0, 0, 0, 0);
+      dueDate.setDate(dueDate.getDate() + adjustedDays);
+
+      await ordersModel.create({
+        gigId: gigId,
+        stripeSessionId: session.id,
+        gigTier: tier,
+        gigname: gigname,
+        dueDate: dueDate,
+        buyerId: buyerId,
+        buyerUsername: buyerUsername,
+        sellerId: sellerId,
+        sellerUsername: sellerUsername,
+      });
+    }
+
+    res.json({ received: true });
+  },
+);

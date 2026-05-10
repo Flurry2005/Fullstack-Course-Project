@@ -70,6 +70,7 @@ web_modules/
 .env.*
 !.env.local
 !.env.example
+stripe.exe
 
 
 # parcel-bundler cache (https://parceljs.org/)

@@ -18,6 +18,11 @@ const orderSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       required: true,
     },
+    stripeSessionId: {
+      type: String,
+      required: true,
+      unique: true,
+    },
     gigTier: {
       type: String,
       enum: ["basic", "standard", "premium"],
