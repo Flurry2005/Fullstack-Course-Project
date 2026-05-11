@@ -1,6 +1,8 @@
 import mongoose, { Mongoose } from "mongoose";
 import dotenv from "dotenv";
-dotenv.config();
+dotenv.config({
+  path: ".env",
+});
 class DatabaseConnection {
   #client!: Mongoose;
 
