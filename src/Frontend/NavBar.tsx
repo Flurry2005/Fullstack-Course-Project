@@ -34,7 +34,7 @@ function NavBar() {
         />
         <Navlink
           to={`${user ? "/dashboard" : "/"}`}
-          text={`${user ? "Seller Dashboard" : "Become a Seller"}`}
+          text={`${user ? "Dashboard" : "Become a Seller"}`}
         />
         {user && (
           <div className="relative flex">
@@ -120,7 +120,7 @@ function NavBar() {
           />
           <Navlink
             to={`${user ? "/dashboard" : "/"}`}
-            text={`${user ? "Seller Dashboard" : "Become a Seller"}`}
+            text={`${user ? "Dashboard" : "Become a Seller"}`}
           />
           {user && (
             <div className="relative flex">
