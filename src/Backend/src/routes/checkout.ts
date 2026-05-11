@@ -9,10 +9,10 @@ import express from "express";
 
 export const checkoutRouter = Router();
 
-const API_BASE = process.env.VITE_DEV
-  ? "http://localhost:5173/"
-  : "https://fullstack.liamjorgensen.dev/";
-
+const API_BASE =
+  process.env.VITE_DEV === "true"
+    ? "http://localhost:5173/"
+    : "https://fullstack.liamjorgensen.dev/";
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
 //  checkout
