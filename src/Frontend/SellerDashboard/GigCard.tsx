@@ -1,7 +1,7 @@
 import thumbnail from "../assets/fish.jpg";
 import viewsIcon from "../assets/views-icon.svg";
 import checkoutsIcon from "../assets/checkouts-icon.svg";
-import ratingsIcon from "../assets/gig-ratings-icon.svg";
+import ratingsIcon from "../assets/profile-ratings-icon.svg";
 import editIcon from "../assets/edit-icon.svg";
 import { Link } from "react-router-dom";
 import type { Gig } from "../types/Gig";

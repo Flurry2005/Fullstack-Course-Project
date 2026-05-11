@@ -101,6 +101,12 @@ class GigController {
     }
 
     try {
+      const parsePrice = (val: any) => {
+        const n = Number(val);
+        return isNaN(n) ? 0 : n;
+      };
+      const stdFeatures = newGig.standard?.features ?? [];
+      const premFeatures = newGig.premium?.features ?? [];
       const createdGig = await gigsModel.create({
         sellerUsername: res.locals.jwt.username,
         sellerId: res.locals.jwt._id,
@@ -114,25 +120,19 @@ class GigController {
         tags: newGig.tags,
         description: newGig.description,
         basic: {
-          price: isNaN(parseInt(newGig.basic?.price ?? ""))
-            ? 0
-            : parseInt(newGig.basic?.price ?? ""),
+          price: parsePrice(newGig.basic?.price),
           delivery: newGig.basic?.delivery ?? "",
           features: newGig.basic?.features ?? [],
         },
         standard: {
-          price: isNaN(parseInt(newGig.standard?.price ?? ""))
-            ? 0
-            : parseInt(newGig.standard?.price ?? ""),
+          price: stdFeatures.length === 0 ? 0 : parsePrice(newGig.standard?.price),
           delivery: newGig.standard?.delivery ?? "",
-          features: newGig.standard?.features ?? [],
+          features: stdFeatures,
         },
         premium: {
-          price: isNaN(parseInt(newGig.premium?.price ?? ""))
-            ? 0
-            : parseInt(newGig.premium?.price ?? ""),
+          price: premFeatures.length === 0 ? 0 : parsePrice(newGig.premium?.price),
           delivery: newGig.premium?.delivery ?? "",
-          features: newGig.premium?.features ?? [],
+          features: premFeatures,
         },
         pending: true,
       });
@@ -221,6 +221,12 @@ class GigController {
     }
 
     try {
+      const parsePrice = (val: any) => {
+        const n = Number(val);
+        return isNaN(n) ? 0 : n;
+      };
+      const stdFeatures = updatedGig.standard?.features ?? [];
+      const premFeatures = updatedGig.premium?.features ?? [];
       const targetGig = await gigsModel.findOneAndUpdate(
         { _id: updatedGig._id, sellerId: res.locals.jwt._id },
         {
@@ -237,25 +243,19 @@ class GigController {
             tags: updatedGig.tags,
             description: updatedGig.description,
             basic: {
-              price: isNaN(parseInt(updatedGig.basic?.price ?? ""))
-                ? 0
-                : parseInt(updatedGig.basic?.price ?? ""),
+              price: parsePrice(updatedGig.basic?.price),
               delivery: updatedGig.basic?.delivery ?? "",
               features: updatedGig.basic?.features ?? [],
             },
             standard: {
-              price: isNaN(parseInt(updatedGig.standard?.price ?? ""))
-                ? 0
-                : parseInt(updatedGig.standard?.price ?? ""),
+              price: stdFeatures.length === 0 ? 0 : parsePrice(updatedGig.standard?.price),
               delivery: updatedGig.standard?.delivery ?? "",
-              features: updatedGig.standard?.features ?? [],
+              features: stdFeatures,
             },
             premium: {
-              price: isNaN(parseInt(updatedGig.premium?.price ?? ""))
-                ? 0
-                : parseInt(updatedGig.premium?.price ?? ""),
+              price: premFeatures.length === 0 ? 0 : parsePrice(updatedGig.premium?.price),
               delivery: updatedGig.premium?.delivery ?? "",
-              features: updatedGig.premium?.features ?? [],
+              features: premFeatures,
             },
             pending: true,
           },

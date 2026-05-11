@@ -15,12 +15,13 @@ import { fetchProfile } from "../utils/GetProfile";
 
 function SellerDashBoard() {
   const { setActiveOrder } = useSocket();
+  const [active, setActive] = useState(false);
   const navigate = useNavigate();
   const { orders } = useOrders();
   const { user } = useAuth();
   const [gigs, setGigs] = useState<Gig[]>();
   const [gigsLoaded, setGigsLoaded] = useState(false);
-
+  const timeOfDay = new Date().getHours();
   const [profilePictures, setProfilePictures] = useState<
     Record<string, string>
   >({});
@@ -65,17 +66,32 @@ function SellerDashBoard() {
 
   useEffect(() => {
     getGigs();
+    setActive(true);
   }, [user]);
+
   return (
     <div className="bg-[#f9f5ff]">
       <Navbar />
 
       {/* Dashboard header */}
       <main className="flex flex-col gap-10 bg-[#f9f5ff] mx-auto p-6 w-full container">
-        <section className="flex flex-col gap-3">
-          <h2 className="text-[#2C2A51] text-5xl">Seller Dashboard</h2>
-          <h3 className="text-[#5A5781] text-2xl">
-            Good morning Johan. Here's your craft at a glance.
+        <section
+          className={` flex flex-col gap-3 
+          
+          `}
+        >
+          <h2 className="text-[#2C2A51] text-4xl">Dashboard</h2>
+          <h3
+            className={` text-[#5A5781] text-2xl transform transition-transform duration-500 ease-in flex flex-col gap-3 ${
+              active ? "translate-x-0" : "-translate-x-full "
+            }`}
+          >
+            {timeOfDay < 12
+              ? "Good morning"
+              : timeOfDay < 18
+                ? "Good afternoon"
+                : "Good evening"}{" "}
+            {user?.fullname}. Here's your craft at a glance.
           </h3>
         </section>
 
@@ -141,18 +157,21 @@ function SellerDashBoard() {
           <section className="flex flex-col gap-6 bg-[#ACA8D7]/10 p-6 border-[#ACA8D7]/15 border-2 rounded-2xl">
             <div className="flex">
               <h2 className="text-[#060607] text-2xl align-middle">Messages</h2>
-              <span className="place-content-center bg-linear-to-br from-[#4F46E5] to-[#6f16ae4f] ml-auto px-3 rounded-2xl w-fit font-semibold text-white text-sm">
-                {
-                  orders
-                    ?.filter((order) => order.chathistory.length > 0)
-                    ?.filter((order) =>
-                      order.chathistory.some(
-                        (message) => !message.readBy.includes(user!._id),
-                      ),
-                    ).length
-                }{" "}
-                New
-              </span>
+
+              {(() => {
+                const unreadCount = orders
+                  ?.filter((order) => order.chathistory.length > 0)
+                  ?.filter((order) =>
+                    order.chathistory.some(
+                      (message) => !message.readBy.includes(user!._id),
+                    ),
+                  ).length;
+                return unreadCount && unreadCount > 0 ? (
+                  <span className="place-content-center bg-linear-to-br from-[#4F46E5] to-[#6f16ae4f] ml-auto px-3 rounded-2xl w-fit font-semibold text-white text-sm">
+                    {unreadCount} New
+                  </span>
+                ) : null;
+              })()}
             </div>
             {orders
               ?.filter((order) => order.chathistory.length > 0)
@@ -186,7 +205,7 @@ function SellerDashBoard() {
                 order.chathistory.some(
                   (message) => !message.readBy.includes(user!._id),
                 ),
-              )?.length === 0 && <p>No new messages</p>}
+              )?.length === 0 && <p>No new messages.</p>}
 
             <button
               className="p-3 border border-[#0050D4]/20 rounded-xl font-bold text-[#0050D4] cursor-pointer"
