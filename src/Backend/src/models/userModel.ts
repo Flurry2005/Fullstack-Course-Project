@@ -18,7 +18,6 @@ const userSchema = new mongoose.Schema(
     },
     stripe_customer_id: {
       type: String,
-      required: true,
       default: null,
     },
     bio: {
