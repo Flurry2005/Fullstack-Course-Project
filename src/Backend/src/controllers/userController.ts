@@ -56,7 +56,8 @@ class UserController {
       email: email,
       passwordHash: await bcrypt.hash(password, 12),
       createdAt: new Date(),
-      profilePictureUrl: "https://res.cloudinary.com/dnpnpkqig/image/upload/c_fill,f_auto,g_auto,h_500,q_auto,w_500/default-profilePicture?_a=BAMAPqUs0",
+      profilePictureUrl:
+        "https://res.cloudinary.com/dnpnpkqig/image/upload/c_fill,f_auto,g_auto,h_500,q_auto,w_500/default-profilePicture?_a=BAMAPqUs0",
       coverImageUrl: "",
       bio: "",
       location: "",
@@ -79,7 +80,7 @@ class UserController {
     // Public profile excludes private fields like email and password.
     const result = await Users.findOne({ username })
       .select(
-        "fullname username profilePictureUrl coverImageUrl bio location languages skills createdAt",
+        "fullname username profilePictureUrl coverImageUrl bio location languages skills createdAt -_id",
       )
       .lean();
 

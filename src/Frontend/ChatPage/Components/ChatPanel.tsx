@@ -8,14 +8,13 @@ import { useAuth } from "../../Context/useAuth";
 import type { OnlineList } from "../../types/Socket";
 import { useNavigate } from "react-router-dom";
 
-
-
 interface Props {
   activeOrder: Order | null;
   onlineList: OnlineList;
+  profilePictures: Record<string, string>;
 }
 
-function ChatPanel({ activeOrder, onlineList }: Props) {
+function ChatPanel({ activeOrder, onlineList, profilePictures }: Props) {
   const [message, setMessage] = useState<string>("");
   const { user } = useAuth();
 
@@ -67,7 +66,7 @@ function ChatPanel({ activeOrder, onlineList }: Props) {
     chatRef.current.scrollTop = chatRef.current.scrollHeight;
   }, [activeOrder?.chathistory]);
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   if (!activeOrder || !user) return <></>;
   return (
@@ -77,8 +76,8 @@ function ChatPanel({ activeOrder, onlineList }: Props) {
           <img
             src={
               activeOrder.buyerUsername === user?.username
-                ? `https://res.cloudinary.com/dnpnpkqig/image/upload/c_fill,f_auto,g_auto,h_500,q_auto,w_500/v1778358513/profilePictures/${activeOrder.sellerUsername}-profilePicture?_a=BAMAPqUs0&t=1778358700344`
-                : `https://res.cloudinary.com/dnpnpkqig/image/upload/c_fill,f_auto,g_auto,h_500,q_auto,w_500/v1778358513/profilePictures/${activeOrder.buyerUsername}-profilePicture?_a=BAMAPqUs0&t=1778358700344`
+                ? profilePictures[activeOrder.sellerUsername]
+                : profilePictures[activeOrder.buyerUsername]
             }
             alt=""
             className="rounded-full h-10"
@@ -92,8 +91,14 @@ function ChatPanel({ activeOrder, onlineList }: Props) {
           />
         </div>
         <div className="flex flex-col justify-center leading-4">
-
-          <p className="font-semibold text-[#2C2A51] cursor-pointer" onClick={() => navigate(`/profile/${user?.username === activeOrder.buyerUsername ? activeOrder.sellerUsername : activeOrder.buyerUsername}`)}>
+          <p
+            className="font-semibold text-[#2C2A51] cursor-pointer"
+            onClick={() =>
+              navigate(
+                `/profile/${user?.username === activeOrder.buyerUsername ? activeOrder.sellerUsername : activeOrder.buyerUsername}`,
+              )
+            }
+          >
             {user?.username === activeOrder.buyerUsername
               ? activeOrder.sellerUsername
               : activeOrder.buyerUsername}

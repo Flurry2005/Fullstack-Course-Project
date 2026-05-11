@@ -7,6 +7,8 @@ import meImage from "../assets/me.jpeg";
 import type { Gig } from "../types/Gig";
 import ListingsHeader from "./components/ListingsHeader";
 import Sidebar from "./components/Sidebar";
+import { useAuth } from "../Context/useAuth";
+import { fetchProfile } from "../utils/GetProfile";
 
 type Listing = {
   id: string;
@@ -26,7 +28,6 @@ type Listing = {
   rating: string;
   reviews: string;
   tag: string;
-  avatar: string;
 };
 
 const itemsPerPage = 6;
@@ -92,16 +93,17 @@ function mapGigToListing(gig: Gig): Listing {
     rating: "5.0",
     reviews: "0",
     tag: gig.tags?.[0] || gig.category?.sub || "Service",
-    avatar: `https://res.cloudinary.com/dnpnpkqig/image/upload/c_fill,f_auto,g_auto,h_500,q_auto,w_500/v1778358513/profilePictures/${gig.sellerUsername}-profilePicture?_a=BAMAPqUs0&t=1778358700344`,
   };
 }
 
 function ServiceListingCard({
   listing,
   onClick,
+  profilePictures,
 }: {
   listing: Listing;
   onClick: () => void;
+  profilePictures: Record<string, string>;
 }) {
   return (
     <article
@@ -125,7 +127,7 @@ function ServiceListingCard({
       <div className="px-1 pt-5">
         <div className="flex items-center gap-3 mb-4">
           <img
-            src={listing.avatar}
+            src={profilePictures[listing.seller]}
             onError={(e) => {
               e.currentTarget.src =
                 "https://res.cloudinary.com/dnpnpkqig/image/upload/c_fill,f_auto,g_auto,h_500,q_auto,w_500/v1778358513/default-profilePicture?_a=BAMAPqUs0&t=1778358700344";
@@ -202,6 +204,30 @@ function ServiceListings() {
 
     fetchGigs();
   }, []);
+
+  const [profilePictures, setProfilePictures] = useState<
+    Record<string, string>
+  >({});
+
+  useEffect(() => {
+    const loadPictures = async () => {
+      if (!listings) return;
+
+      const uniqueUsers = [...new Set(listings.map((l) => l.seller))];
+
+      const entries = await Promise.all(
+        uniqueUsers.map(async (username) => {
+          const profile = await fetchProfile(username);
+
+          return [username, profile?.profilePictureUrl];
+        }),
+      );
+
+      setProfilePictures(Object.fromEntries(entries));
+    };
+
+    loadPictures();
+  }, [listings]);
 
   const toggleCategory = (category: string) => {
     setSelectedCategories((currentCategories) =>
@@ -372,6 +398,7 @@ function ServiceListings() {
                 <ServiceListingCard
                   key={listing.id}
                   listing={listing}
+                  profilePictures={profilePictures}
                   onClick={() =>
                     navigate(
                       `/services/${listing.main_slug}/${listing.sub_slug}/${listing.id}`,

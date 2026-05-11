@@ -3,8 +3,7 @@ import fish from "../assets/fish.jpg";
 import profileRatingsIcon from "../assets/profile-ratings-icon.svg";
 import type { Gig } from "../types/Gig";
 import { useNavigate } from "react-router-dom";
-
-
+import type { PublicProfile } from "../ProfilePage/types";
 
 type ServiceProps = {
   title: string | any;
@@ -12,6 +11,7 @@ type ServiceProps = {
   rating: number;
   reviewsAmount: number;
   gig: Gig;
+  profile: PublicProfile | null;
 };
 
 function ServiceHeader({
@@ -20,19 +20,20 @@ function ServiceHeader({
   rating,
   reviewsAmount,
   gig,
+  profile,
 }: ServiceProps) {
-
   const navigate = useNavigate();
-
 
   return (
     <div className="flex flex-col gap-6">
       <h2 className="text-[#2C2A51] text-4xl">{title}</h2>
 
-
-      <div className="flex items-center gap-3 cursor-pointer w-fit" onClick={() => navigate(`/profile/${gig.sellerUsername}`)}>
+      <div
+        className="flex items-center gap-3 w-fit cursor-pointer"
+        onClick={() => navigate(`/profile/${gig.sellerUsername}`)}
+      >
         <img
-          src={`https://res.cloudinary.com/dnpnpkqig/image/upload/c_fill,f_auto,g_auto,h_500,q_auto,w_500/v1778358513/profilePictures/${seller}-profilePicture?_a=BAMAPqUs0&t=1778358700344`}
+          src={profile ? profile?.profilePictureUrl : ""}
           onError={(e) => {
             e.currentTarget.src =
               "https://res.cloudinary.com/dnpnpkqig/image/upload/c_fill,f_auto,g_auto,h_500,q_auto,w_500/v1778358513/default-profilePicture?_a=BAMAPqUs0&t=1778358700344";
@@ -48,7 +49,6 @@ function ServiceHeader({
             <span className="text-[#5A5781]">({reviewsAmount} reviews)</span>
           </div>
         </div>
-
       </div>
 
       <div className="gap-3 grid grid-cols-1 md:grid-cols-2">
