@@ -86,10 +86,12 @@ function SellerDashBoard() {
               active ? "translate-x-0" : "-translate-x-full "
             }`}
           >
-            {timeOfDay < 12 && "Good morning"}
-            {timeOfDay > 12 && timeOfDay < 18 && "Good afternoon"}
-            {timeOfDay > 18 && "Good evening"} {user?.fullname}. Here's your
-            craft at a glance.
+            {timeOfDay < 12
+              ? "Good morning"
+              : timeOfDay < 18
+                ? "Good afternoon"
+                : "Good evening"}{" "}
+            {user?.fullname}. Here's your craft at a glance.
           </h3>
         </section>
 

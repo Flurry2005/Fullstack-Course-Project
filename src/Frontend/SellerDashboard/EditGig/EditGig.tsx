@@ -121,7 +121,7 @@ function EditGig() {
                 className={`inline-flex items-center px-5 py-2 rounded-2xl {
                 ${gig?.pending ? "bg-[#fffd7f]" : "bg-[#7fffd4]"} width: "fit-content" `}
               >
-                <span className="inline-block bg-black w-2 h-2 rounded-full border mr-2" />
+                <span className="inline-block animate-pulse bg-black w-2 h-2 rounded-full border mr-2" />
                 <span
                   className=" text-black text-base"
                   style={{ lineHeight: "1" }}
@@ -266,14 +266,53 @@ function EditGig() {
                 <span className="text-[#131B2E] text-xl">Pricing Snapshot</span>
                 <div className="flex flex-col gap-3">
                   {gig?.basic?.features && (
-                    <PackageBar name="Basic" plan={gig?.basic} editState={false} gig={gig} setGig={setGig} />
+                    /* These serve no functional purpose just using them for looks :)*/
+                    <PackageBar
+                      setDelivery={() => {}}
+                      setPrice={() => {}}
+                      setFeatures={() => {}}
+                      features={gig?.basic.features}
+                      price={gig?.basic.price}
+                      delivery={gig.basic.delivery}
+                      name="Basic"
+                      plan={gig?.basic}
+                      editState={false}
+                      gig={gig}
+                      setGig={setGig}
+                    />
                   )}
-                  {gig?.standard?.features && gig.standard.features.length > 0 && (
-                    <PackageBar name="Standard" plan={gig?.standard} editState={false} gig={gig} setGig={setGig} />
-                  )}
-                  {gig?.premium?.features && gig.premium.features.length > 0 && (
-                    <PackageBar name="Premium" plan={gig?.premium} editState={false} gig={gig} setGig={setGig} />
-                  )}
+                  {gig?.standard?.features &&
+                    gig.standard.features.length > 0 && (
+                      <PackageBar
+                        price={gig?.standard.price}
+                        setDelivery={() => {}}
+                        setFeatures={() => {}}
+                        setPrice={() => {}}
+                        features={gig?.standard?.features}
+                        name="Standard"
+                        delivery={gig.standard?.delivery}
+                        plan={gig?.standard}
+                        editState={false}
+                        gig={gig}
+                        setGig={setGig}
+                      />
+                    )}
+                  {gig?.premium?.features &&
+                    gig.premium.features.length > 0 && (
+                      <PackageBar
+                        setPrice={() => {}}
+                        price={gig?.premium.price}
+                        setDelivery={() => {}}
+                        setFeatures={() => {}}
+                        features={gig?.premium?.features}
+                        delivery={gig?.premium?.delivery}
+                        name="Premium"
+                        plan={gig?.premium}
+                        editState={false}
+                        gig={gig}
+                        setGig={setGig}
+                      />
+                    )}
                 </div>
                 <span className="text-[#464555] font-medium">
                   Prices are competetive for your category.

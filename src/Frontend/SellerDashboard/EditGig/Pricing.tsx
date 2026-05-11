@@ -2,6 +2,7 @@ import type { Gig } from "../../types/Gig";
 import CancelButton from "./CancelButton";
 import PackageBar from "./PackageBar";
 import UpdateButton from "./UpdateButton";
+import { useState } from "react";
 
 type Pricing = {
   gig: Gig;
@@ -11,11 +12,45 @@ type Pricing = {
 };
 
 function Pricing({ gig, setGig, setEditState, setConfirm }: Pricing) {
+  const [basicDelivery, setBasicDelivery] = useState(gig.basic?.delivery);
+  const [standardDelivery, setStandardDelivery] = useState(
+    gig.standard?.delivery,
+  );
+  const [premiumDelivery, setPremiumDelivery] = useState(gig.premium?.delivery);
+  const [basicPrice, setBasicPrice] = useState(gig?.basic?.price);
+  const [standardPrice, setStandardPrice] = useState(gig?.standard?.price);
+  const [premiumPrice, setPremiumPrice] = useState(gig?.premium?.price);
+  const [basicFeatures, setBasicFeatures] = useState(gig?.basic?.features);
+  const [standardFeatures, setStandardFeatures] = useState(
+    gig?.standard?.features,
+  );
+  const [premiumFeatures, setPremiumFeatures] = useState(
+    gig?.premium?.features,
+  );
+
   const handleUpdate = () => {
     setGig((prev) => {
       if (!prev) return prev;
       return {
         ...prev,
+        basic: {
+          ...prev.basic,
+          price: basicPrice,
+          delivery: basicDelivery,
+          features: basicFeatures,
+        },
+        standard: {
+          ...prev.standard,
+          price: standardPrice,
+          delivery: standardDelivery,
+          features: standardFeatures,
+        },
+        premium: {
+          ...prev.premium,
+          price: premiumPrice,
+          delivery: premiumDelivery,
+          features: premiumFeatures,
+        },
       };
     });
     setEditState(false);
@@ -33,31 +68,49 @@ function Pricing({ gig, setGig, setEditState, setConfirm }: Pricing) {
           </div>
 
           <div className="flex flex-col gap-3">
-            {gig?.basic && (
+            {gig?.basic?.features && (
               <PackageBar
-                editState={true}
                 name="Basic"
-                plan={gig.basic}
-                setGig={setGig}
+                plan={gig?.basic}
+                setDelivery={setBasicDelivery}
+                setPrice={setBasicPrice}
+                price={basicPrice}
+                setFeatures={setBasicFeatures}
+                features={basicFeatures}
+                delivery={basicDelivery}
+                editState={true}
                 gig={gig}
+                setGig={setGig}
               />
             )}
-            {gig?.standard && (
+            {gig?.standard?.features && gig.standard.features.length > 0 && (
               <PackageBar
-                editState={true}
                 name="Standard"
-                plan={gig.standard}
-                setGig={setGig}
+                plan={gig?.standard}
+                setDelivery={setStandardDelivery}
+                setPrice={setStandardPrice}
+                setFeatures={setStandardFeatures}
+                features={standardFeatures}
+                price={standardPrice}
+                delivery={standardDelivery}
+                editState={true}
                 gig={gig}
+                setGig={setGig}
               />
             )}
-            {gig?.premium && (
+            {gig?.premium?.features && gig.premium.features.length > 0 && (
               <PackageBar
-                editState={true}
                 name="Premium"
-                plan={gig.premium}
-                setGig={setGig}
+                plan={gig?.premium}
+                setDelivery={setPremiumDelivery}
+                setPrice={setPremiumPrice}
+                price={premiumPrice}
+                setFeatures={setPremiumFeatures}
+                features={premiumFeatures}
+                delivery={premiumDelivery}
+                editState={true}
                 gig={gig}
+                setGig={setGig}
               />
             )}
           </div>
@@ -75,5 +128,4 @@ function Pricing({ gig, setGig, setEditState, setConfirm }: Pricing) {
     </div>
   );
 }
-
 export default Pricing;
