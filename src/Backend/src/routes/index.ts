@@ -5,6 +5,7 @@ import { orderRouter as orderRouter } from "./order.js";
 import { gigRouter as gigRouter } from "./gig.ts";
 import { uploadRouter } from "./upload.ts";
 import { jwtMiddleware } from "../middleware/jwtMiddleware.js";
+import { checkoutRouter } from "../routes/checkout.ts";
 
 export const routerr = router();
 
@@ -15,3 +16,5 @@ routerr.use("/api/gig", gigRouter);
 routerr.use("/api", jwtMiddleware.jwtTokenIsValid, orderRouter);
 
 routerr.use("/api", jwtMiddleware.jwtTokenIsValid, uploadRouter);
+
+routerr.use("/api", jwtMiddleware.jwtTokenIsValid, checkoutRouter);

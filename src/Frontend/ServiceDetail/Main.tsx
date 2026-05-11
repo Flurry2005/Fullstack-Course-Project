@@ -84,6 +84,7 @@ function Main({ mainCategory, subCategoryOne, subCategoryTwo }: MainProps) {
                       Standard: gig.standard,
                       Premium: gig.premium,
                     }}
+                    gigId={gigId!}
                   />
                 </div>
               </div>

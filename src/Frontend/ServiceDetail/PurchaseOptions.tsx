@@ -12,9 +12,10 @@ type PurchaseOptionsProps = {
     Standard?: Package;
     Premium?: Package;
   };
+  gigId: string;
 };
 
-function PurchaseOptions({ options = {} }: PurchaseOptionsProps) {
+function PurchaseOptions({ options = {}, gigId }: PurchaseOptionsProps) {
   const [selectedPlan, setSelectedPlan] = useState<string | null>(
     Object.keys(options)[0] ?? null,
   );
@@ -80,7 +81,11 @@ function PurchaseOptions({ options = {} }: PurchaseOptionsProps) {
           </div>
 
           <div className="flex flex-col items-center gap-3">
-            <ContinueButton price={currentPlan?.price} />
+            <ContinueButton
+              gigId={gigId}
+              tier={selectedPlan!}
+              price={currentPlan?.price}
+            />
             <ContactSellerButton />
             <p className="text-sm text-[#5A5781]">
               Secure checkout and satisfaction

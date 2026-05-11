@@ -7,6 +7,7 @@
     "dev": "vite",
     "backend": "nodemon --watch src --ext ts --exec tsx ./src/Backend/server.ts",
     "production": "tsx ./src/Backend/server.ts",
+    "stripe": "stripe.exe listen --forward-to localhost:3000/api/webhook-checkout",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview"
@@ -31,6 +32,7 @@
     "socket.io": "^4.8.3",
     "socket.io-client": "^4.8.3",
     "streamifier": "^0.1.1",
+    "stripe": "^22.1.1",
     "tailwindcss": "^4.2.2"
   },
   "devDependencies": {

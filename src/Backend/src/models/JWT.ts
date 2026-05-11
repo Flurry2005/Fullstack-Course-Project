@@ -6,6 +6,7 @@ type ModelType = {
     username: string,
     email: string,
     _id: mongoose.Types.ObjectId,
+    stripe_customer_id: string | null,
   ) => void;
   decode: (token: string) => any;
   verify: (token: string) => JWTPayload;
@@ -15,6 +16,7 @@ export type JWTPayload = {
   username: string;
   email: string;
   _id: mongoose.Types.ObjectId;
+  stripe_customer_id: string | null;
 };
 
 const JWTModel = {} as ModelType;
@@ -24,11 +26,13 @@ JWTModel.createJwtToken = (
   username: string,
   email: string,
   _id: mongoose.Types.ObjectId,
+  stripe_customer_id: string | null,
 ) => {
   const payload: JWTPayload = {
     username: username,
     email: email,
     _id: _id,
+    stripe_customer_id: stripe_customer_id,
   };
 
   const option: jwt.SignOptions = {
