@@ -15,6 +15,7 @@ import shareIcon from "../../assets/share-icon.svg";
 import nextIcon from "../../assets/next-icon.svg";
 import galleryIcon from "../../assets/image-regular-icon.svg";
 import Overview from "./Overview";
+import Pricing from "./Pricing";
 import Confirm from "./Confirm";
 import Delete from "./Delete";
 import Description from "./Description";
@@ -28,6 +29,7 @@ function EditGig() {
   const [deleteState, setDeleteState] = useState(false);
   const [overView, setOverview] = useState(false);
   const [desc, setDesc] = useState(false);
+  const [pricing, setPricing] = useState(false);
   const [confirm, setConfirm] = useState(false);
   const [confirmConfirm, setConfirmConfirm] = useState(false);
 
@@ -54,6 +56,7 @@ function EditGig() {
       setDeleteState(false);
       setConfirmConfirm(false);
       setDesc(false);
+      setPricing(false);
     }
   }, [editState]);
 
@@ -95,6 +98,15 @@ function EditGig() {
             setConfirm={setConfirm}
           />
         )}
+
+        {pricing && editState && gig && (
+          <Pricing
+            gig={gig}
+            setGig={setGig}
+            setEditState={setEditState}
+            setConfirm={setConfirm}
+          />
+        )}
         {deleteState && gig && (
           <Delete getGig={getGig} gig={gig} setDeleteState={setDeleteState} />
         )}
@@ -109,7 +121,7 @@ function EditGig() {
                 className={`inline-flex items-center px-5 py-2 rounded-2xl {
                 ${gig?.pending ? "bg-[#fffd7f]" : "bg-[#7fffd4]"} width: "fit-content" `}
               >
-                <span className="inline-block bg-black w-2 h-2 rounded-full border mr-2" />
+                <span className="inline-block animate-pulse bg-black w-2 h-2 rounded-full border mr-2" />
                 <span
                   className=" text-black text-base"
                   style={{ lineHeight: "1" }}
@@ -165,7 +177,15 @@ function EditGig() {
                         3-tier pricing strategy defined
                       </span>
                     </div>
-                    <span className="ml-auto" onClick={() => {}}>
+                    <span
+                      className="ml-auto"
+                      onClick={(e) => {
+                        (e.stopPropagation(),
+                          e.preventDefault(),
+                          setPricing(true),
+                          setEditState(true));
+                      }}
+                    >
                       <EditButton />
                     </span>
                   </div>
@@ -246,15 +266,52 @@ function EditGig() {
                 <span className="text-[#131B2E] text-xl">Pricing Snapshot</span>
                 <div className="flex flex-col gap-3">
                   {gig?.basic?.features && (
-                    <PackageBar name="Basic" plan={gig?.basic} />
+                    /* These serve no functional purpose just using them for looks :)*/
+                    <PackageBar
+                      setDelivery={() => {}}
+                      setPrice={() => {}}
+                      setFeatures={() => {}}
+                      features={gig?.basic.features}
+                      price={gig?.basic.price}
+                      delivery={gig.basic.delivery}
+                      name="Basic"
+                      plan={gig?.basic}
+                      editState={false}
+                      gig={gig}
+                      setGig={setGig}
+                    />
                   )}
-                  {Array.isArray(gig?.standard?.features?.length) &&
-                    gig?.standard?.features.length > 0 && (
-                      <PackageBar name="Standard" plan={gig?.standard} />
+                  {gig?.standard?.features &&
+                    gig.standard.features.length > 0 && (
+                      <PackageBar
+                        price={gig?.standard.price}
+                        setDelivery={() => {}}
+                        setFeatures={() => {}}
+                        setPrice={() => {}}
+                        features={gig?.standard?.features}
+                        name="Standard"
+                        delivery={gig.standard?.delivery}
+                        plan={gig?.standard}
+                        editState={false}
+                        gig={gig}
+                        setGig={setGig}
+                      />
                     )}
-                  {Array.isArray(gig?.premium?.features?.length) &&
-                    gig?.premium?.features.length > 0 && (
-                      <PackageBar name="Premium" plan={gig?.premium} />
+                  {gig?.premium?.features &&
+                    gig.premium.features.length > 0 && (
+                      <PackageBar
+                        setPrice={() => {}}
+                        price={gig?.premium.price}
+                        setDelivery={() => {}}
+                        setFeatures={() => {}}
+                        features={gig?.premium?.features}
+                        delivery={gig?.premium?.delivery}
+                        name="Premium"
+                        plan={gig?.premium}
+                        editState={false}
+                        gig={gig}
+                        setGig={setGig}
+                      />
                     )}
                 </div>
                 <span className="text-[#464555] font-medium">
