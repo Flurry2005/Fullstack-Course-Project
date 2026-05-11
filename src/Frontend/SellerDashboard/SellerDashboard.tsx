@@ -5,74 +5,195 @@ import MessageCard from "./MessageCard";
 import GigCard from "./GigCard";
 import profileRatingsIcon from "../assets/profile-ratings-icon.svg";
 import createNewIcon from "../assets/create-plus-icon.svg";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../Context/useAuth";
+import { useEffect, useState } from "react";
+import type { Gig } from "../types/Gig";
+import { useSocket } from "../Context/useSocket";
+import { useOrders } from "../Context/useOrders";
+import { fetchProfile } from "../utils/GetProfile";
 
 function SellerDashBoard() {
+  const { setActiveOrder } = useSocket();
+  const navigate = useNavigate();
+  const { orders } = useOrders();
+  const { user } = useAuth();
+  const [gigs, setGigs] = useState<Gig[]>();
+  const [gigsLoaded, setGigsLoaded] = useState(false);
+
+  const [profilePictures, setProfilePictures] = useState<
+    Record<string, string>
+  >({});
+
+  useEffect(() => {
+    const loadPictures = async () => {
+      if (!orders || !user) return;
+
+      const uniqueUsers = [
+        ...new Set(
+          orders.map((order) =>
+            order.sellerUsername === user.username
+              ? order.buyerUsername
+              : order.sellerUsername,
+          ),
+        ),
+      ];
+
+      const entries = await Promise.all(
+        uniqueUsers.map(async (username) => {
+          const profile = await fetchProfile(username);
+
+          return [username, profile?.profilePictureUrl];
+        }),
+      );
+
+      setProfilePictures(Object.fromEntries(entries));
+    };
+
+    loadPictures();
+  }, [orders, user]);
+
+  const getGigs = async () => {
+    const response = await fetch(
+      `${import.meta.env.VITE_DEV === "true" ? "http://localhost:3000" : "https://fullstackapi.liamjorgensen.dev"}/api${"/gig/seller/"}${user?.username}`,
+    );
+    const data = await response.json();
+    console.log(data);
+    response.ok && setGigs(data);
+    setGigsLoaded(true);
+  };
+
+  useEffect(() => {
+    getGigs();
+  }, [user]);
   return (
-    <>
+    <div className="bg-[#f9f5ff]">
       <Navbar />
 
       {/* Dashboard header */}
-      <main className="flex flex-col w-full bg-[#f9f5ff] p-6 gap-10">
+      <main className="flex flex-col gap-10 bg-[#f9f5ff] mx-auto p-6 w-full container">
         <section className="flex flex-col gap-3">
-          <h2 className="text-5xl text-[#2C2A51]">Seller Dashboard</h2>
-          <h3 className="text-2xl text-[#5A5781]">
+          <h2 className="text-[#2C2A51] text-5xl">Seller Dashboard</h2>
+          <h3 className="text-[#5A5781] text-2xl">
             Good morning Johan. Here's your craft at a glance.
           </h3>
         </section>
 
         {/* Statistics */}
-        <section className="grid grid-cols-1 md:grid-cols-4 gap-6">
-          <div className=" w-full flex flex-col bg-white p-6 border-2 border-[#ACA8D7]/15 rounded-2xl">
+        <section className="gap-6 grid grid-cols-1 md:grid-cols-4">
+          <div className="flex flex-col bg-white p-6 border-[#ACA8D7]/15 border-2 rounded-2xl w-full">
             <span className="text-[#5A5781]">Total Earnings</span>
             <span className="text-3xl">$12,840</span>
           </div>
-          <div className="w-full flex flex-col bg-white p-6 border-2 border-[#ACA8D7]/15 rounded-2xl">
+          <div className="flex flex-col bg-white p-6 border-[#ACA8D7]/15 border-2 rounded-2xl w-full">
             <span className="text-[#5A5781]">Pending Clearance</span>
-            <span className="text-3xl text-[#0050D4]">$1,250</span>
+            <span className="text-[#0050D4] text-3xl">$1,250</span>
           </div>
-          <div className=" w-full flex flex-col bg-white p-6 border-2 border-[#ACA8D7]/15 rounded-2xl">
+          <div className="flex flex-col bg-white p-6 border-[#ACA8D7]/15 border-2 rounded-2xl w-full">
             <span className="text-[#5A5781]">Profile Rating</span>
-            <span className="text-3xl flex gap-1">
+            <span className="flex gap-1 text-3xl">
               4.9{" "}
               <img
                 src={profileRatingsIcon}
-                className="w-5 h-5 place-self-center"
+                className="place-self-center w-5 h-5"
               />
             </span>
           </div>
-          <div className="w-full flex flex-col bg-white p-6 border-2 border-[#ACA8D7]/15 rounded-2xl">
+          <div className="flex flex-col bg-white p-6 border-[#ACA8D7]/15 border-2 rounded-2xl w-full">
             <span className="text-[#5A5781]">Response Time</span>
             <span className="text-3xl">1 hour</span>
           </div>
         </section>
 
         {/*Active orders and messages*/}
-        <div className="grid grid-cols-1 gap-12 md:grid-cols-[2fr_1fr]">
+        <div className="gap-12 grid grid-cols-1 md:grid-cols-[2fr_1fr]">
           <section className="flex flex-col gap-3">
             <div className="flex place-items-center">
-              <h2 className="text-3xl px-3 text-[#2C2A51]">Active Orders</h2>
-              <span className="ml-auto text-[#0050D4] text-xl mr-3">
-                View All (8)
+              <h2 className="px-3 text-[#2C2A51] text-3xl">Active Orders</h2>
+              <span className="mr-3 ml-auto text-[#0050D4] text-xl">
+                View All (
+                {
+                  orders?.filter(
+                    (order) => order.sellerUsername === user?.username,
+                  ).length
+                }
+                )
               </span>
             </div>
-            <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-              <OrderCard />
-              <OrderCard />
+            <div className="gap-6 grid grid-cols-1 md:grid-cols-2">
+              {orders
+                ?.filter((order) => order.sellerUsername === user?.username)
+                .slice(0, 2)
+                ?.map((order) => (
+                  <OrderCard
+                    profilePictures={profilePictures}
+                    order={order}
+                    gig={gigs?.filter((gig) => gig._id === order.gigId)[0]}
+                  />
+                ))}
+              {orders?.filter(
+                (order) => order.sellerUsername === user?.username,
+              ).length === 0 && (
+                <p className="px-3 font-light">You have no orders</p>
+              )}
             </div>
           </section>
-          <section className="bg-[#ACA8D7]/10 p-6 rounded-2xl gap-6 flex flex-col border-2 border-[#ACA8D7]/15">
+          <section className="flex flex-col gap-6 bg-[#ACA8D7]/10 p-6 border-[#ACA8D7]/15 border-2 rounded-2xl">
             <div className="flex">
-              <h2 className="text-2xl text-[#2C2A51] align-middle">Messages</h2>
-              <span className="w-fit ml-auto px-3 place-content-center rounded-2xl text-sm text-white font-semibold bg-linear-to-br from-[#4F46E5] to-[#6f16ae4f]">
-                3 New
+              <h2 className="text-[#060607] text-2xl align-middle">Messages</h2>
+              <span className="place-content-center bg-linear-to-br from-[#4F46E5] to-[#6f16ae4f] ml-auto px-3 rounded-2xl w-fit font-semibold text-white text-sm">
+                {
+                  orders
+                    ?.filter((order) => order.chathistory.length > 0)
+                    ?.filter((order) =>
+                      order.chathistory.some(
+                        (message) => !message.readBy.includes(user!._id),
+                      ),
+                    ).length
+                }{" "}
+                New
               </span>
             </div>
-            <MessageCard read={false} />
-            <MessageCard read={true} />
-            <MessageCard read={true} />
+            {orders
+              ?.filter((order) => order.chathistory.length > 0)
+              ?.filter((order) =>
+                order.chathistory.some(
+                  (message) => !message.readBy.includes(user!._id),
+                ),
+              )
+              ?.sort(
+                (a, b) =>
+                  new Date(
+                    b.chathistory[b.chathistory.length - 1].time,
+                  ).getTime() -
+                  new Date(
+                    a.chathistory[a.chathistory.length - 1].time,
+                  ).getTime(),
+              )
+              ?.slice(0, 3)
+              ?.map((order) => (
+                <MessageCard
+                  profilePictures={profilePictures}
+                  key={order._id}
+                  read={false}
+                  order={order}
+                />
+              ))}
 
-            <button className="border rounded-xl p-3 border-[#0050D4]/20 text-[#0050D4] font-bold">
+            {orders
+              ?.filter((order) => order.chathistory.length > 0)
+              ?.filter((order) =>
+                order.chathistory.some(
+                  (message) => !message.readBy.includes(user!._id),
+                ),
+              )?.length === 0 && <p>No new messages</p>}
+
+            <button
+              className="p-3 border border-[#0050D4]/20 rounded-xl font-bold text-[#0050D4] cursor-pointer"
+              onClick={() => {
+                navigate("/messages");
+              }}
+            >
               Go to Inbox
             </button>
           </section>
@@ -89,46 +210,40 @@ function SellerDashBoard() {
             </div>
             <Link
               to="/dashboard/create"
-              className="flex w-fit sm:ml-auto place-self-end font-semibold items-center gap-1 md:text-xl text-white bg-linear-to-r from-[#4F46E5] to-[#4e46e5c2] rounded-xl md:px-9 px-3 py-3"
+              className="flex items-center place-self-end gap-1 bg-linear-to-r from-[#4F46E5] to-[#4e46e5c2] sm:ml-auto px-3 md:px-9 py-3 rounded-xl w-fit font-semibold text-white md:text-xl"
             >
               <img
                 src={createNewIcon}
-                className="h-6 w-6 brightness-0 invert"
+                className="brightness-0 invert w-6 h-6"
               />
               Create New Gig
             </Link>
           </div>
-          <div className="grid md:grid-cols-3 grid-cols-1 gap-6">
-            <GigCard
-              title={"I will teach you how to fish and master bait"}
-              views={13}
-              checkouts={10}
-              price={1000}
-              rating={5.3}
-              reviewerAmount={120}
-            />
-            <GigCard
-              title={"I will teach you fishing"}
-              views={15}
-              checkouts={11}
-              price={599}
-              rating={3.2}
-              reviewerAmount={9}
-            />
-            <GigCard
-              title={"I will teach you about bait"}
-              views={78}
-              checkouts={9}
-              price={299}
-              rating={2.1}
-              reviewerAmount={12}
-            />
+          <div className="gap-6 grid grid-cols-1 md:grid-cols-3">
+            {!gigsLoaded && <span>Loading gigs..</span>}
+            {gigs?.map((gig) => (
+              <Link
+                to={`/services/${gig.category?.main_slug}/${gig.category?.sub_slug}/${gig._id}`}
+                key={gig._id}
+              >
+                <GigCard
+                  gig={gig}
+                  id={gig?._id}
+                  title={gig?.title}
+                  views={13}
+                  checkouts={10}
+                  price={gig?.basic?.price}
+                  rating={5.3}
+                  reviewerAmount={120}
+                />
+              </Link>
+            ))}
           </div>
         </section>
       </main>
 
       <Footer />
-    </>
+    </div>
   );
 }
 

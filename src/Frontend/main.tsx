@@ -4,23 +4,38 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import "./index.css";
 import LoginPage from "./LoginPage/LoginPage.tsx";
 import CheckoutPage from "./checkoutPage/checkoutPage.tsx";
-import Home from "./Home.tsx";
+import { Outlet } from "react-router-dom";
 import RecoverPassword from "./LoginPage/RecoverPassword.tsx";
 import { AuthProvider } from "./Context/useAuth.tsx";
 import SellerDashBoard from "./SellerDashboard/SellerDashboard.tsx";
+import EditGig from "./SellerDashboard/EditGig/EditGig.tsx";
 import CreateNewGig from "./SellerDashboard/CreateNewGig/CreateNewGig.tsx";
 import ChatPage from "./ChatPage/ChatPage.tsx";
 import { OrderProvider } from "./Context/useOrders.tsx";
 import { SocketProvider } from "./Context/useSocket.tsx";
 import ServiceListings from "./ServiceListings/ServiceListings.tsx";
 import ServiceDetail from "./ServiceDetail/Main.tsx";
+import Home from "./Home.tsx";
+import ScrollToTop from "./utils/ScrollToTop.tsx";
+import ProfilePage from "./ProfilePage/ProfilePage.tsx";
+import SuccessPage from "./checkoutPage/sucessPage.tsx";
 
 const router = createBrowserRouter([
   {
+    element: (
+      <AuthProvider>
+        <OrderProvider>
+          <SocketProvider>
+            <ScrollToTop />
+            <Outlet />
+          </SocketProvider>
+        </OrderProvider>
+      </AuthProvider>
+    ),
     children: [
       {
         path: "/",
-        element: <SellerDashBoard />,
+        element: <Home />,
       },
       {
         path: "/login",
@@ -47,6 +62,10 @@ const router = createBrowserRouter([
         element: <CreateNewGig />,
       },
       {
+        path: "/dashboard/edit/:gigId",
+        element: <EditGig />,
+      },
+      {
         path: "/messages",
         element: <ChatPage />,
       },
@@ -55,7 +74,7 @@ const router = createBrowserRouter([
         element: <ServiceListings />,
       },
       {
-        path: "/services/:gigId",
+        path: "/services/:slug/:sub_slug/:gigId",
         element: (
           <ServiceDetail
             mainCategory={null}
@@ -64,18 +83,20 @@ const router = createBrowserRouter([
           />
         ),
       },
+      {
+        path: "/profile/:username",
+        element: <ProfilePage />,
+      },
+      {
+        path: "/success",
+        element: <SuccessPage />,
+      },
     ],
   },
 ]);
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <AuthProvider>
-      <OrderProvider>
-        <SocketProvider>
-          <RouterProvider router={router} />
-        </SocketProvider>
-      </OrderProvider>
-    </AuthProvider>
+    <RouterProvider router={router} />
   </StrictMode>,
 );

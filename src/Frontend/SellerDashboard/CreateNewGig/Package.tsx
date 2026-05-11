@@ -74,7 +74,7 @@ function Package({
 
   return (
     <div
-      className={`${active ? "opacity-100" : "opacity-25"} flex flex-col shadow-md rounded-2xl hover:border-[#4e46e58c] h-fit border border-[#C7C4D8]`}
+      className={`${active ? "opacity-100" : "opacity-25"} flex flex-col shadow-md rounded-2xl hover:border-[#4e46e58c] h-fit border border-[#C7C4D8]/15`}
     >
       <div
         onClick={setActive ? () => setActive(!active) : undefined}
@@ -141,7 +141,7 @@ function Package({
           <div className="flex flex-col gap-1">
             <span className="font-semibold text-sm">{tierLabels[tier].label} Features</span>
             {features.map((feature, id) => (
-              <span key={id} className="flex min-w-0 items-start gap-2">
+              <span key={id} className="flex min-w-0 items-center gap-2">
                 <img src={checkIcon} className="w-5 h-5" />
                 <span className="wrap-break-word break-all leading-tight">{feature}</span>
                     <img src={removeIcon} onClick={() =>removeFeature(id)} className="cursor-pointer contrast-100 invert-50 w-3 h-3" />

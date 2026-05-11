@@ -1,6 +1,8 @@
 export type Category = {
   main?: string;
   sub?: string;
+  main_slug?: string;
+  sub_slug?: string;
 };
 
 export type Package = {
@@ -14,10 +16,14 @@ export type Gig = {
   sellerUsername?: string;
   sellerId?: string;
   title?: string;
+  primaryImagePreview?: string;
+  secondaryImagePreview?: string;
+  ternaryImagePreview?: string;
   category?: Category;
   tags?: string[];
   description?: string;
   basic?: Package;
   standard?: Package;
   premium?: Package;
+  pending?: boolean;
 };

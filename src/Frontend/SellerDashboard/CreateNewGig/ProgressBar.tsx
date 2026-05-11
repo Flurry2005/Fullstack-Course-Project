@@ -3,7 +3,7 @@ type ProgressBarProps = {
 };
 function ProgressBar({ currentStep }: ProgressBarProps) {
   return (
-    <div className="flex justify-center flex-wrap gap-6 items-center md:w-[50vw] place-self-center">
+    <div className="flex justify-center flex-wrap gap-6 items-center sd:w-[50vw] place-self-center">
       <div className="flex gap-3 w-fit">
         <span className="items-center flex gap-3">
           <span
@@ -17,7 +17,7 @@ function ProgressBar({ currentStep }: ProgressBarProps) {
             Overview
           </span>
         </span>
-        <hr className="flex-1 md:block w-f hidden w-25 self-center border-0 border-t border-[#C7C4D8]" />
+        <hr className="flex-1 md:block w-f  w-25 self-center border-0 border-t border-[#C7C4D8]" />
         <span className="items-center flex gap-3">
           <span
             className={`rounded-full inline-flex ${currentStep < 1 ? "bg-[#EAEDFF] text" : "bg-[#4F46E5] "}p-3 h-8 w-8 items-center text-sm justify-center text-white`}
@@ -45,7 +45,7 @@ function ProgressBar({ currentStep }: ProgressBarProps) {
             Pricing
           </span>
         </span>
-        <hr className="flex-1 md:block hidden w-25 self-center border-0 border-t border-[#C7C4D8]" />
+        <hr className="flex-1 md:block  w-25 self-center border-0 border-t border-[#C7C4D8]" />
         <span className="items-center flex gap-3">
           <span
             className={`rounded-full inline-flex ${currentStep < 3 ? "bg-[#EAEDFF] text" : "bg-[#4F46E5] "}p-3 h-8 w-8 items-center text-sm justify-center text-white`}

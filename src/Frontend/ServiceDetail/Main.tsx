@@ -8,6 +8,8 @@ import ClientReflections from "./ClientReflections";
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import type { Gig } from "../types/Gig";
+import { fetchProfile } from "../utils/GetProfile";
+import type { PublicProfile } from "../ProfilePage/types";
 
 type MainProps = {
   mainCategory: string | null;
@@ -34,6 +36,15 @@ function Main({ mainCategory, subCategoryOne, subCategoryTwo }: MainProps) {
     response.ok && setGig(data);
   };
 
+  const [profile, setProfile] = useState<PublicProfile | null>(null);
+
+  useEffect(() => {
+    (async () => {
+      const userProfile = await fetchProfile(gig!.sellerUsername!);
+      setProfile(userProfile!);
+    })();
+  }, [gig]);
+
   useEffect(() => {
     getGig();
   }, []);
@@ -46,20 +57,22 @@ function Main({ mainCategory, subCategoryOne, subCategoryTwo }: MainProps) {
       {loaded && !gig && "Not found!"}
 
       {loaded && gig && (
-        <>
+        <div className="bg-[#f9f5ff]">
           {/* Service category section */}
-          <main className="flex flex-col gap-3  bg-[#f9f5ff] p-6">
-            <div className="flex place-self-center gap-6 flex-col ld:w-[75vw]">
+          <main className="flex flex-col gap-3 bg-[#f9f5ff] mx-auto px-6 lg:px-24 py-6 container">
+            <div className="flex flex-col place-self-center gap-6 ld:w-[75vw]">
               <span className="flex gap-1">
                 {gig.category?.main} {">"} {gig.category?.sub}
               </span>
 
               {/*  ServiceHeader and PurchaseOptions */}
-              <div className="flex flex-col md:flex-row w-full gap-6">
+              <div className="flex md:flex-row flex-col gap-6 w-full">
                 <div className="w-full md:w-2/3">
                   <ServiceHeader
                     title={gig?.title}
                     seller={gig?.sellerUsername}
+                    gig={gig}
+                    profile={profile}
                     rating={4.9}
                     reviewsAmount={494}
                   />
@@ -71,18 +84,19 @@ function Main({ mainCategory, subCategoryOne, subCategoryTwo }: MainProps) {
                       Standard: gig.standard,
                       Premium: gig.premium,
                     }}
+                    gigId={gigId!}
                   />
                 </div>
               </div>
               {/* About service and client reflections */}
               <div className="flex flex-col gap-6 md:w-2/3">
                 <AboutService about={gig?.description} />
-                <AboutSeller id={gig?.sellerId} />
+                <AboutSeller profile={profile} />
                 <ClientReflections />
               </div>
             </div>
           </main>
-        </>
+        </div>
       )}
 
       <Footer />

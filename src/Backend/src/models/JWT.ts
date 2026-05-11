@@ -1,10 +1,13 @@
 import jwt from "jsonwebtoken";
-import mongoose from 'mongoose'
-
-
+import mongoose from "mongoose";
 
 type ModelType = {
-  createJwtToken: (username: string, email: string, _id: mongoose.Types.ObjectId) => void;
+  createJwtToken: (
+    username: string,
+    email: string,
+    _id: mongoose.Types.ObjectId,
+    stripe_customer_id: string | null,
+  ) => void;
   decode: (token: string) => any;
   verify: (token: string) => JWTPayload;
 };
@@ -12,17 +15,24 @@ type ModelType = {
 export type JWTPayload = {
   username: string;
   email: string;
-  _id: mongoose.Types.ObjectId
+  _id: mongoose.Types.ObjectId;
+  stripe_customer_id: string | null;
 };
 
 const JWTModel = {} as ModelType;
 export default JWTModel;
 
-JWTModel.createJwtToken = (username: string, email: string, _id: mongoose.Types.ObjectId) => {
+JWTModel.createJwtToken = (
+  username: string,
+  email: string,
+  _id: mongoose.Types.ObjectId,
+  stripe_customer_id: string | null,
+) => {
   const payload: JWTPayload = {
     username: username,
     email: email,
-    _id: _id
+    _id: _id,
+    stripe_customer_id: stripe_customer_id,
   };
 
   const option: jwt.SignOptions = {

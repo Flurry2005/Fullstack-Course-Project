@@ -21,12 +21,13 @@ function Overview({
   setFinalTags,
   newGig,
 }: overviewProps) {
-  const [mainCategory, setMainCategory] = useState(categories[0].main);
-  const [subCategory, setSubCategory] = useState(categories[0].subs[0]);
+  const [mainCategory, setMainCategory] = useState(categories[0].main.name);
+  const [subCategory, setSubCategory] = useState(categories[0].subs[0].sub);
 
   useEffect(() => {
     if (!newGig.category?.main || !newGig.category?.sub) {
-      setCategory({ main: categories[0].main, sub: categories[0].subs[0] });
+      setCategory({ main: categories[0].main.name, sub: categories[0].subs[0].sub });
+      
     }
   }, []);
   const tagRef = useRef<HTMLInputElement>(null);
@@ -43,17 +44,21 @@ function Overview({
     setFinalTags([...(newGig.tags || []).filter((_, i) => i !== index)]);
   };
 
-  const handleMainCategoryChange = (value: string) => {
-    setMainCategory(value);
-    // Find the first subcategory for the new main category
-    const found = categories.find((cat) => cat.main === value);
-    const firstSub = found && found.subs.length > 0 ? found.subs[0] : "";
-    setSubCategory(firstSub);
-    setCategory({ main: value, sub: firstSub });
-  };
+    const handleMainCategoryChange = (value: string) => {
+      setMainCategory(value);
+
+      const found = categories.find((cat) => cat.main.name === value);
+      const firstSub = found?.subs[0];
+
+      if (!firstSub) return;
+
+      setSubCategory(firstSub.sub);
+      setCategory({ main: value, sub: firstSub.sub });
+    };
 
   const handleSubCategoryChange = (value: string) => {
     setSubCategory(value);
+    
     setCategory({ main: mainCategory, sub: value });
   };
 
@@ -67,7 +72,7 @@ function Overview({
       </div>
       <div className="md:flex grid grid-cols-1 md:w-screen gap-6 justify-center">
         <div className="flex flex-col gap-6 md:w-[50vw]">
-          <div className="flex flex-col gap-6 shadow-md border border-[#C7C4D8] bg-white p-6 rounded-2xl">
+          <div className="flex flex-col gap-6 shadow-md border border-[#ACA8D7]/15 bg-white p-6 rounded-2xl">
             <div className="flex flex-col gap-3">
               <h3 className="text-xl font-bold">Gig Title</h3>
               <p>
@@ -82,22 +87,22 @@ function Overview({
               value={newGig?.title || ""}
             />
           </div>
-          <div className="flex flex-col gap-6 shadow-md border border-[#C7C4D8] bg-white p-6 rounded-2xl">
+          <div className="flex flex-col gap-6 shadow-md border border-[#ACA8D7]/15 bg-white p-6 rounded-2xl">
             <div className="flex flex-col gap-3">
               <h3 className="text-xl font-bold">Category</h3>
               <p>
                 Select the industry and specialty that best fits your services.
               </p>
             </div>
-            <div className="grid gap-6 grid-cols-2">
+            <div className="flex flex-col md:grid gap-6 md:grid-cols-2">
               <select
                 className="text-[#6B7280] p-3 rounded-lg border border-[#C7C4D8]"
                 onChange={(e) => handleMainCategoryChange(e.target.value)}
                 value={newGig.category?.main || mainCategory}
               >
                 {categories.map((cat) => (
-                  <option key={cat.main} value={cat.main}>
-                    {cat.main}
+                  <option key={cat.main.name} value={cat.main.name}>
+                    {cat.main.name}
                   </option>
                 ))}
               </select>
@@ -109,18 +114,18 @@ function Overview({
                 {(
                   categories.find(
                     (cat) =>
-                      cat.main === (newGig.category?.main || mainCategory),
+                      cat.main.name === (newGig.category?.main || mainCategory),
                   )?.subs || []
                 ).map((sub) => (
-                  <option key={sub} value={sub}>
-                    {sub}
+                  <option key={sub.sub} value={sub.sub}>
+                    {sub.sub}
                   </option>
                 ))}
               </select>
             </div>
           </div>
 
-          <div className="flex flex-col gap-6 shadow-md border border-[#C7C4D8] bg-white p-6 rounded-2xl">
+          <div className="flex flex-col gap-6 shadow-md border border-[#ACA8D7]/15 bg-white p-6 rounded-2xl">
             <div className="flex flex-col gap-3">
               <h3 className="text-xl font-bold">Search Tags</h3>
               <p>Add up to 5 tags to help buyers find your Gig. Be specific.</p>
@@ -132,11 +137,13 @@ function Overview({
                       className="text-[#54647A] font-medium gap-1 flex items-center bg-[#D0E1FB] px-6 py-1 rounded-lg min-h-9"
                     >
                       {tag}
-                      <img
-                        src={removeIcon}
-                        className="w-3 h-3 cursor-pointer contrast-100 invert-50"
-                        onClick={() => removeTag(index)}
-                      />
+                             <span
+                    className="ml-2 cursor-pointer text-neutral-400 font-bold"
+                    onClick={() => removeTag(index)}
+                    title="Remove tag"
+                  >
+                    ×
+                  </span>
                     </span>
                   ))}
               </div>
@@ -181,7 +188,7 @@ function Overview({
             </ul>
           </div>
 
-          <div className="flex flex-col p-6 rounded-2xl gap-3 border-[#C7C4D8] border bg-[#EAEDFF] text-[#DAD7FF]">
+          <div className="flex flex-col p-6 rounded-2xl gap-3 border-[#C7C4D8]/15 border bg-[#EAEDFF] text-[#DAD7FF]">
             <span className="text-[#464555] font-semibold">Need help?</span>
             <span className="text-[#3525CD] font-semibold flex gap-1 items-center">
               {" "}

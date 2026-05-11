@@ -4,16 +4,100 @@ import { getSocket } from "../socket/Socket";
 import { useOrders } from "./useOrders";
 import type { Order } from "../types/Order";
 import { useAuth } from "./useAuth";
-
+import { createRoot } from "react-dom/client";
+import { useNavigate } from "react-router-dom";
+import type { ObjectId } from "mongodb";
 const SocketContext = createContext<SocketContextType | undefined>(undefined);
 
 export function SocketProvider({ children }: { children: React.ReactNode }) {
   const [onlineList, setOnlineList] = useState<OnlineList | null>(null);
   const [unreadMessages, setUnreadMessages] = useState<number>(0);
   const [activeOrder, setActiveOrder] = useState<Order | null>(null);
-  const { orders, updateOrders } = useOrders();
+  const { orders, updateOrders, setOrders } = useOrders();
+  const ordersRef = useRef(orders);
+  const navigate = useNavigate();
   const { user } = useAuth();
   const audioRef = useRef(new Audio("/message_sound.mp3"));
+  const popupMessageRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    ordersRef.current = orders;
+  }, [orders]);
+
+  const createMessagePopup = (
+    username: string,
+    message: string,
+    orderId: ObjectId,
+  ) => {
+    if (window.location.pathname === "/messages") return;
+    if (popupMessageRef.current) popupMessageRef.current.remove();
+    popupMessageRef.current = document.createElement("div");
+    document.body.appendChild(popupMessageRef.current);
+    console.log(username, message, orderId);
+
+    const checker = setInterval(() => {
+      if (window.location.pathname === "/messages")
+        popupMessageRef.current?.remove();
+    }, 200);
+    setTimeout(() => {
+      popupMessageRef.current!.remove();
+      clearInterval(checker);
+    }, 5_000);
+
+    const root = createRoot(popupMessageRef.current);
+    const order = ordersRef.current?.find((order) => order._id === orderId);
+    root.render(
+      <div
+        className="right-5 bottom-5 z-100 fixed flex flex-col justify-center gap-1 bg-[#DDD9FF]/90 shadow-lg px-5 rounded-2xl rounded-br-none w-100 h-25 transition-transform cursor-pointer"
+        onClick={async () => {
+          navigate("/messages");
+          console.log(ordersRef.current);
+          await getSocket().emitWithAck("read_chat", {
+            orderId: order!._id,
+          });
+          setOrders((prev) => {
+            if (!prev) return null;
+
+            return prev.map((orderTemp) => {
+              if (orderTemp._id !== order!._id) {
+                return orderTemp;
+              }
+
+              return {
+                ...orderTemp,
+                chathistory: orderTemp.chathistory.map((message) => ({
+                  ...message,
+                  readBy: message.readBy.includes(user!._id)
+                    ? message.readBy
+                    : [...message.readBy, user!._id],
+                })),
+              };
+            });
+          });
+          setActiveOrder((prev) => {
+            if (!order) {
+              console.log(order);
+              return prev;
+            }
+
+            return order;
+          });
+          popupMessageRef.current!.remove();
+        }}
+      >
+        <div className="flex items-center gap-2">
+          <p className="font-bold text-[#4338CA]">{username} -</p>
+          <p className="truncate">{order?.gigname}</p>
+          <p className="top-3 right-5 absolute text-xs">Sent you a message!</p>
+        </div>
+
+        <p className="max-w-9/10 truncate">{message}</p>
+        <span className="right-2 bottom-2 absolute self-center font-black text-black">
+          <i className="fa-arrow-right shadow-2xl fa-solid"></i>
+        </span>
+      </div>,
+    );
+  };
 
   const updateUnreadMessagesCount = () => {
     if (user) {
@@ -44,7 +128,8 @@ export function SocketProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     const socket = getSocket();
 
-    const handleMessage = async () => {
+    const handleMessage = async (data: any) => {
+      createMessagePopup(data.sender, data.message, data.orderId);
       if (activeOrder) {
         await getSocket().emitWithAck("read_chat", {
           orderId: activeOrder._id,

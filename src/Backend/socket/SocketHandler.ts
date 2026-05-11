@@ -29,127 +29,167 @@ class SocketHandler {
       },
     });
 
+    this.#io.use(async (socket, next) => {
+      try {
+        const cookies = parseCookies(socket.handshake.headers.cookie);
+        const token = cookies.token;
+
+        const payload: JWTPayload = JWTModel.verify(token);
+
+        const user = await Users.findOne({ _id: payload._id });
+
+        if (!user) return new Error("UNAUTHORIZED");
+        socket.data.user = {
+          _id: user._id,
+          username: user.username,
+        };
+        // attach user to socket
+        console.log(
+          `\nSOCKET: /${"connection"}`,
+          "-",
+          socket.data.user.username,
+          "\n\tConnection success!",
+        );
+        next();
+      } catch (err) {
+        console.log(
+          `\nSOCKET: /${"connection"}`,
+          "-",
+          socket.id,
+          "\n\tUNAUTHORIZED DUE TO INVALID JWT TOKEN:",
+          socket.handshake.address,
+        );
+        socket.disconnect();
+        next(new Error("UNAUTHORIZED"));
+      }
+    });
+
     this.initialize();
   }
 
   initialize() {
     if (!this.#io) throw Error("SocketHandler Failed to initialize");
     this.#io.on("connection", async (socket: Socket) => {
-      const cookies = parseCookies(socket.handshake.headers.cookie);
-      const token = cookies.token;
+      socket.use(([event, ...args], next) => {
+        console.log(`\nSOCKET: /${event}`, "-", socket.data.user.username);
+        try {
+          const cookies = parseCookies(socket.handshake.headers.cookie);
+          const token = cookies.token;
 
-      try {
-        const userCookie: JWTPayload = JWTModel.verify(token);
-        console.log(userCookie.username, socket.id);
-        const user = await Users.findOne({ username: userCookie.username });
+          const payload: JWTPayload = JWTModel.verify(token);
 
-        if (!user) throw Error("No such user exists!");
-        const uid = new mongoose.Types.ObjectId(user._id);
-        registerSocket(socket.id, user.username);
+          next();
 
-        BroadcastOnlineStatus(uid, user.username, this.#io!, "Online");
-
-        socket.on("disconnect", () => {
-          console.log(getUsername(socket.id), "disconnected!");
-          BroadcastOnlineStatus(uid, user.username, this.#io!, "Offline");
-          unregisterSocket(socket.id);
-        });
-
-        socket.on("request_online_statuses", async () => {
-          const orders = await Orders.find({
-            $or: [{ buyerId: uid }, { sellerId: uid }],
-          });
-
-          const otherUsers = orders.map((order) =>
-            order.buyerId.toString() === uid.toString()
-              ? order.sellerUsername
-              : order.buyerUsername,
+          console.log("\tJWT Token verified on request:", event);
+        } catch {
+          console.log(
+            "\tUnauthorized request by",
+            socket.data.user.username,
+            " on event:",
+            event,
           );
+          socket.disconnect();
+          next(new Error("Unauthorized"));
+        }
+      });
 
-          const usersWithStatus = otherUsers.map((username) => ({
-            username,
-            status: getSocketId(username) ? "Online" : "Offline",
-          }));
+      const user = socket.data.user;
+      registerSocket(socket.id, user.username);
 
-          console.log("request_online_statuses received from", socket.id);
-          console.log("sending:", usersWithStatus);
-          socket.emit("online_status", usersWithStatus);
+      BroadcastOnlineStatus(user._id, user.username, this.#io!, "Online");
 
-          socket.emit("online_status", usersWithStatus);
+      socket.on("disconnect", () => {
+        console.log("SOCKET: /disconnect -", getUsername(socket.id));
+        BroadcastOnlineStatus(user._id, user.username, this.#io!, "Offline");
+        unregisterSocket(socket.id);
+      });
+
+      socket.on("request_online_statuses", async () => {
+        const orders = await Orders.find({
+          $or: [{ buyerId: user._id }, { sellerId: user._id }],
         });
 
-        socket.on("read_chat", async (data, ack) => {
-          await Orders.updateOne(
-            { _id: data.orderId },
-            {
-              $addToSet: {
-                "chathistory.$[].readBy": uid,
-              },
+        const otherUsers = orders.map((order) =>
+          order.buyerId.toString() === user._id.toString()
+            ? order.sellerUsername
+            : order.buyerUsername,
+        );
+
+        const usersWithStatus = otherUsers.map((username) => ({
+          username,
+          status: getSocketId(username) ? "Online" : "Offline",
+        }));
+        socket.emit("online_status", usersWithStatus);
+
+        socket.emit("online_status", usersWithStatus);
+      });
+
+      socket.on("read_chat", async (data, ack) => {
+        await Orders.updateOne(
+          { _id: data.orderId },
+          {
+            $addToSet: {
+              "chathistory.$[].readBy": user._id,
             },
-          );
+          },
+        );
 
-          if (typeof ack === "function") {
-            ack({ success: true });
-          }
-        });
+        if (typeof ack === "function") {
+          ack({ success: true });
+        }
+      });
 
-        socket.on("send_message", async (data) => {
-          console.log(data);
-          try {
-            const order: OrderType | null = await Orders.findOneAndUpdate(
-              {
-                _id: data.orderId,
-                $or: [
-                  {
-                    buyerId: uid,
-                  },
-                  {
-                    sellerId: uid,
-                  },
-                ],
-              },
-              {
-                $push: {
-                  chathistory: {
-                    username: user.username,
-                    message: data.message,
-                    readBy: [uid],
-                    time: new Date(),
-                  },
+      socket.on("send_message", async (data) => {
+        try {
+          const order: OrderType | null = await Orders.findOneAndUpdate(
+            {
+              _id: data.orderId,
+              $or: [
+                {
+                  buyerId: user._id,
+                },
+                {
+                  sellerId: user._id,
+                },
+              ],
+            },
+            {
+              $push: {
+                chathistory: {
+                  username: user.username,
+                  message: data.message,
+                  readBy: [user._id],
+                  time: new Date(),
                 },
               },
-              { returnDocument: "after" },
-            );
+            },
+            { returnDocument: "after" },
+          );
+          if (!order) return;
 
-            if (!order) return;
+          const receiverId =
+            order.buyerId.toString() === user._id.toString()
+              ? order.sellerUsername
+              : order.buyerUsername;
+          const recipientSocketId = getSocketId(receiverId.toString());
 
-            const receiverId =
-              order.buyerId.toString() === uid.toString()
-                ? order.sellerUsername
-                : order.buyerUsername;
-            console.log(receiverId);
-            const recipientSocketId = getSocketId(receiverId.toString());
+          if (recipientSocketId) {
+            const recipientSocket =
+              this.#io!.sockets.sockets.get(recipientSocketId);
 
-            if (recipientSocketId) {
-              const recipientSocket =
-                this.#io!.sockets.sockets.get(recipientSocketId);
-
-              recipientSocket!.emit("message_received");
-              console.log("emitting to", recipientSocketId);
-            }
-          } catch (error) {
-            console.log("Message wasnt stored in the database");
+            recipientSocket!.emit("message_received", {
+              sender: user.username,
+              message: data.message,
+              orderId: data.orderId,
+            });
+            console.log("emitting to", recipientSocketId);
           }
-        });
+        } catch (error) {
+          console.log("Message wasnt stored in the database");
+        }
+      });
 
-        socket.emit("server_ready");
-      } catch (error) {
-        console.log(
-          socket.handshake.address,
-          "was disconnected due to invalid JWTtoken!",
-        );
-        socket.disconnect();
-      }
+      socket.emit("server_ready");
     });
   }
 }

@@ -1,6 +1,7 @@
 import Users from "../models/userModel.js";
 import Orders from "../models/orderModel.js";
 import { Request, Response, NextFunction } from "express";
+import orderModel from "../models/orderModel.js";
 
 class OrderController {
   async getOrders(req: Request, res: Response, next: NextFunction) {

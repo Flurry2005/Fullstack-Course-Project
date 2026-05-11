@@ -2,7 +2,11 @@ import NavLink from "./NavLink";
 import MiniButton from "../HomePageComponents/MiniButtonLink";
 import { useAuth } from "../../Context/useAuth";
 
-function AuthButtons() {
+interface Props {
+  additionalClasses?: string;
+}
+
+function AuthButtons({ additionalClasses }: Props) {
   const { user, logout } = useAuth();
 
   return (
@@ -13,7 +17,10 @@ function AuthButtons() {
             onClick={() => {
               logout();
             }}
-            className="bg-red-400 px-3 py-1.5 rounded-2xl font-semibold text-white cursor-pointer"
+            className={
+              "bg-red-400 px-3 py-1.5 rounded-2xl font-semibold text-white cursor-pointer " +
+              additionalClasses
+            }
           >
             Logout
           </button>

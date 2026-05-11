@@ -7,25 +7,52 @@ type ReviewProps = {
   newGig: NewGig;
   setSuccess: (value: boolean) => void;
   success: boolean;
-  primaryImagePreview: string;
+  primaryImagePreview: File | null;
+  secondaryImagePreview: File | null;
+  ternaryImagePreview: File | null;
 };
 function Review({
   newGig,
   setSuccess,
   success,
   primaryImagePreview,
+  secondaryImagePreview,
+  ternaryImagePreview,
 }: ReviewProps) {
   const [TOS, setTOS] = useState(false);
 
   const publishGig = async () => {
-    const header = { "Content-type": "Application/json" };
-    const body = JSON.stringify(newGig);
+    const formData = new FormData();
+
+    formData.append("gig", JSON.stringify(newGig));
+
+    if (primaryImagePreview) {
+      formData.append("images", primaryImagePreview);
+    }
+
+    if (secondaryImagePreview) {
+      formData.append("images", secondaryImagePreview);
+    }
+
+    if (ternaryImagePreview) {
+      formData.append("images", ternaryImagePreview);
+    }
+
     const response = await fetch(
-      `${import.meta.env.VITE_DEV === "true" ? "http://localhost:3000" : "https://fullstackapi.liamjorgensen.dev"}/api${"/gig"}`,
-      { method: "POST", headers: header, body: body, credentials: "include" },
+      `${
+        import.meta.env.VITE_DEV === "true"
+          ? "http://localhost:3000"
+          : "https://fullstackapi.liamjorgensen.dev"
+      }/api/gig`,
+      {
+        method: "POST",
+        body: formData,
+        credentials: "include",
+      },
     );
+
     const data = await response.json();
-    console.log(data);
+
     setSuccess(response.ok);
   };
 
@@ -34,7 +61,7 @@ function Review({
       {success && (
         <div className="flex flex-col gap-3 text-center">
           <h2 className="text-4xl">Success!</h2>
-          <p className="text-[#464555] text-xl ">
+          <p className="text-[#464555] text-xl">
             Your gig will be reviewed before it will be published.
           </p>
         </div>
@@ -43,93 +70,75 @@ function Review({
         <>
           <div className="flex flex-col gap-3 text-center">
             <h2 className="text-4xl">Review & Publish</h2>
-            <p className="text-[#464555] text-xl ">
+            <p className="text-[#464555] text-xl">
               Double-check your details and publish your gig when you're ready.
             </p>
           </div>
-          <div className="flex flex-col mx-auto gap-6 md:w-[50vw]">
-            <div className="flex flex-col shadow-md border border-[#C7C4D8] bg-white rounded-2xl overflow-hidden">
+          <div className="flex flex-col gap-6 mx-auto md:w-[50vw]">
+            <div className="flex flex-col bg-white shadow-md border border-[#ACA8D7]/15 rounded-2xl overflow-hidden">
               <img
-                src={primaryImagePreview || fish}
+                src={
+                  primaryImagePreview
+                    ? URL.createObjectURL(primaryImagePreview)
+                    : fish
+                }
                 className="w-full h-75"
                 style={{ borderRadius: 0 }}
               />
               <div className="flex flex-col gap-1 px-6 py-6">
                 <div className="flex items-center gap-2 font-semibold text-[#3525CD]">
                   <span>{newGig.category?.main}</span>
-                  <span>•</span>
+                  <span>{">"}</span>
                   <span>{newGig.category?.sub}</span>
                 </div>
-                <h3 className="text-3xl text-[#131B2E] font-semibold">
+                <h3 className="font-semibold text-[#131B2E] text-3xl">
                   {newGig?.title}
                 </h3>
               </div>
             </div>
-            <div className="flex flex-col gap-6 shadow-md border border-[#C7C4D8] bg-white p-6 rounded-2xl">
+            <div className="flex flex-col gap-6 bg-white shadow-md p-6 border border-[#ACA8D7]/15 rounded-2xl">
               <div className="flex flex-col gap-3">
-                <h3 className="text-xl text-[#131B2E]  font-semibold">
+                <h3 className="font-semibold text-[#131B2E] text-xl">
                   Description
                 </h3>
                 <p>{newGig?.description}</p>
               </div>
             </div>
 
-            <div className="flex flex-col gap-6 shadow-md border border-[#C7C4D8] bg-white p-6 rounded-2xl">
+            <div className="flex flex-col gap-6 bg-white shadow-md p-6 border border-[#ACA8D7]/15 rounded-2xl">
               <div className="flex flex-col gap-3">
-                <h3 className="text-xl text-[#131B2E]  font-semibold">
+                <h3 className="font-semibold text-[#131B2E] text-xl">
                   Gallery
                 </h3>
               </div>
             </div>
 
             <div className="flex flex-col gap-6">
-              <h3 className="text-xl px-6 text-[#131B2E] font-semibold">
+              <h3 className="px-6 font-semibold text-[#131B2E] text-xl">
                 Pricing & Packages
               </h3>
-              <div className="grid md:grid-cols-3 gap-3 grid-cols-1">
+              <div className="gap-3 grid grid-cols-1 md:grid-cols-3">
                 {newGig.basic?.price && (
-                  <div className="flex flex-col gap-6 shadow-md border border-[#C7C4D8] bg-white p-6 rounded-2xl">
+                  <div className="flex flex-col gap-6 bg-white shadow-md p-6 border border-[#ACA8D7]/15 rounded-2xl">
                     <div className="flex flex-col gap-6">
                       <div className="flex flex-col gap-1">
                         <h3 className="text-[#464555]">BASIC</h3>
-                        <span className="text-3xl font-semibold text-[#131B2E]">
+                        <span className="font-semibold text-[#131B2E] text-3xl">
                           ${newGig?.basic?.price}
                         </span>
                       </div>
                       <div className="flex flex-col gap-1">
-                        <span className="text-sm font-semibold">
+                        <span className="font-semibold text-sm">
                           Basic features
                         </span>
 
                         {(newGig?.basic?.features ?? []).map((e, id) => (
                           <span
                             key={id}
-                            className="flex min-w-0 items-start gap-2"
+                            className="flex items-start gap-2 min-w-0"
                           >
                             <img src={checkIcon} className="w-5 h-5" />
-                            <span className="wrap-break-word break-all leading-tight">
-                              {e}
-                            </span>
-                          </span>
-                        ))}
-                        {(newGig?.standard?.features ?? []).map((e, id) => (
-                          <span
-                            key={id}
-                            className="flex min-w-0 opacity-25 items-start gap-2"
-                          >
-                            <img src={checkIcon} className="w-5 h-5" />
-                            <span className="wrap-break-word break-all leading-tight">
-                              {e}
-                            </span>
-                          </span>
-                        ))}
-                        {(newGig?.premium?.features ?? []).map((e, id) => (
-                          <span
-                            key={id}
-                            className="flex min-w-0 opacity-25 items-start gap-2"
-                          >
-                            <img src={checkIcon} className="w-5 h-5" />
-                            <span className="wrap-break-word break-all leading-tight">
+                            <span className="break-all wrap-break-word leading-tight">
                               {e}
                             </span>
                           </span>
@@ -140,48 +149,26 @@ function Review({
                 )}
 
                 {newGig.standard?.price && (
-                  <div className="flex flex-col gap-6 shadow-md border border-[#C7C4D8] bg-white p-6 rounded-2xl">
+                  <div className="flex flex-col gap-6 bg-white shadow-md p-6 border border-[#C7C4D8] rounded-2xl">
                     <div className="flex flex-col gap-6">
                       <div className="flex flex-col gap-1">
                         <h3 className="text-[#464555]">STANDARD</h3>
-                        <span className="text-3xl font-semibold text-[#131B2E]">
+                        <span className="font-semibold text-[#131B2E] text-3xl">
                           ${newGig?.standard?.price}
                         </span>
                       </div>
                       <div className="flex flex-col gap-1">
-                        <span className="text-sm font-semibold">
+                        <span className="font-semibold text-sm">
                           Basic features
                         </span>
 
-                        {(newGig?.basic?.features ?? []).map((e, id) => (
-                          <span
-                            key={id}
-                            className="flex min-w-0 items-start gap-2"
-                          >
-                            <img src={checkIcon} className="w-5 h-5" />
-                            <span className="wrap-break-word break-all leading-tight">
-                              {e}
-                            </span>
-                          </span>
-                        ))}
                         {(newGig?.standard?.features ?? []).map((e, id) => (
                           <span
                             key={id}
-                            className="flex min-w-0 items-start gap-2"
+                            className="flex items-start gap-2 min-w-0"
                           >
                             <img src={checkIcon} className="w-5 h-5" />
-                            <span className="wrap-break-word break-all leading-tight">
-                              {e}
-                            </span>
-                          </span>
-                        ))}
-                        {(newGig?.premium?.features ?? []).map((e, id) => (
-                          <span
-                            key={id}
-                            className="flex min-w-0 opacity-25 items-start gap-2"
-                          >
-                            <img src={checkIcon} className="w-5 h-5" />
-                            <span className="wrap-break-word break-all leading-tight">
+                            <span className="break-all wrap-break-word leading-tight">
                               {e}
                             </span>
                           </span>
@@ -192,48 +179,26 @@ function Review({
                 )}
 
                 {newGig.premium?.price && (
-                  <div className="flex flex-col gap-6 shadow-md border border-[#C7C4D8] bg-white p-6 rounded-2xl">
+                  <div className="flex flex-col gap-6 bg-white shadow-md p-6 border border-[#C7C4D8] rounded-2xl">
                     <div className="flex flex-col gap-6">
                       <div className="flex flex-col gap-1">
                         <h3 className="text-[#464555]">PREMIUM</h3>
-                        <span className="text-3xl font-semibold text-[#131B2E]">
+                        <span className="font-semibold text-[#131B2E] text-3xl">
                           ${newGig?.premium?.price}
                         </span>
                       </div>
                       <div className="flex flex-col gap-1">
-                        <span className="text-sm font-semibold">
+                        <span className="font-semibold text-sm">
                           Basic features
                         </span>
 
-                        {(newGig?.basic?.features ?? []).map((e, id) => (
-                          <span
-                            key={id}
-                            className="flex min-w-0 items-start gap-2"
-                          >
-                            <img src={checkIcon} className="w-5 h-5" />
-                            <span className="wrap-break-word break-all leading-tight">
-                              {e}
-                            </span>
-                          </span>
-                        ))}
-                        {(newGig?.standard?.features ?? []).map((e, id) => (
-                          <span
-                            key={id}
-                            className="flex min-w-0 items-start gap-2"
-                          >
-                            <img src={checkIcon} className="w-5 h-5" />
-                            <span className="wrap-break-word break-all leading-tight">
-                              {e}
-                            </span>
-                          </span>
-                        ))}
                         {(newGig?.premium?.features ?? []).map((e, id) => (
                           <span
                             key={id}
-                            className="flex min-w-0 items-start gap-2"
+                            className="flex items-start gap-2 min-w-0"
                           >
                             <img src={checkIcon} className="w-5 h-5" />
-                            <span className="wrap-break-word break-all leading-tight">
+                            <span className="break-all wrap-break-word leading-tight">
                               {e}
                             </span>
                           </span>
@@ -244,9 +209,9 @@ function Review({
                 )}
               </div>
 
-              <div className="flex flex-col gap-6 shadow-md border border-[#C7C4D8] bg-white p-6 rounded-2xl">
+              <div className="flex flex-col gap-6 bg-white shadow-md p-6 border border-[#ACA8D7]/15 rounded-2xl">
                 <div className="flex flex-col gap-3">
-                  <h3 className="text-xl text-[#131B2E]  font-semibold">
+                  <h3 className="font-semibold text-[#131B2E] text-xl">
                     Search Tags
                   </h3>
                   <div className="flex flex-wrap gap-2">
@@ -254,7 +219,7 @@ function Review({
                       newGig.tags.map((tag, index) => (
                         <span
                           key={`${tag}-${index}`}
-                          className="text-[#54647A] font-medium gap-1 flex items-center bg-[#D0E1FB] px-6 py-1 rounded-lg min-h-9"
+                          className="flex items-center gap-1 bg-[#D0E1FB] px-6 py-1 rounded-lg min-h-9 font-medium text-[#54647A]"
                         >
                           {tag}
                         </span>
@@ -263,12 +228,12 @@ function Review({
                 </div>
               </div>
             </div>
-            <span className="flex gap-3 place-self-center items-center">
+            <span className="flex items-center place-self-center gap-3">
               <input
                 type="checkbox"
                 name="terms"
                 onClick={() => setTOS((prev) => !prev)}
-                className="bg-white shrink-0 border-[#C7C4D8] h-4 w-4 border appearance-none checked:bg-[#3323CC]"
+                className="bg-white checked:bg-[#3323CC] border border-[#C7C4D8] w-4 h-4 appearance-none shrink-0"
               />
               <label htmlFor="terms">I agree to the terms of service</label>
             </span>

@@ -7,6 +7,7 @@
     "dev": "vite",
     "backend": "nodemon --watch src --ext ts --exec tsx ./src/Backend/server.ts",
     "production": "tsx ./src/Backend/server.ts",
+    "stripe": "stripe.exe listen --forward-to localhost:3000/api/webhook-checkout",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview"
@@ -14,6 +15,7 @@
   "dependencies": {
     "@tailwindcss/vite": "^4.2.2",
     "bcrypt": "^6.0.0",
+    "cloudinary": "^2.10.0",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.6",
     "dotenv": "^17.4.0",
@@ -22,12 +24,15 @@
     "mongodb": "^7.1.1",
     "mongoose": "^9.6.1",
     "morgan": "^1.10.1",
+    "multer": "^2.1.1",
     "nodemon": "^3.1.14",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
     "react-router-dom": "^7.13.2",
     "socket.io": "^4.8.3",
     "socket.io-client": "^4.8.3",
+    "streamifier": "^0.1.1",
+    "stripe": "^22.1.1",
     "tailwindcss": "^4.2.2"
   },
   "devDependencies": {
@@ -38,9 +43,11 @@
     "@types/express": "^5.0.6",
     "@types/jsonwebtoken": "^9.0.10",
     "@types/morgan": "^1.9.10",
+    "@types/multer": "^2.1.0",
     "@types/node": "^24.12.2",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
+    "@types/streamifier": "^0.1.2",
     "@vitejs/plugin-react": "^6.0.1",
     "eslint": "^9.39.4",
     "eslint-plugin-react-hooks": "^7.0.1",
