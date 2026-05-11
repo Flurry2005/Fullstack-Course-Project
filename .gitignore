@@ -66,8 +66,9 @@ web_modules/
 .yarn-integrity
 
 # dotenv environment variable files
-!.env
 .env.*
+!.env.template
+
 .env.local
 !.env.example
 stripe.exe

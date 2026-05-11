@@ -1,7 +1,12 @@
 import dotenv from "dotenv";
-dotenv.config({
-  path: ".env",
-});
+import fs from "fs";
+if (fs.existsSync(".env.local")) {
+  dotenv.config({ path: ".env.local" });
+}
+
+if (fs.existsSync(".env")) {
+  dotenv.config({ path: ".env" });
+}
 
 export const options = {
   auth: {
