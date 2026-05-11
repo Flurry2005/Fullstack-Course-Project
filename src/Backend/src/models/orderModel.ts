@@ -33,7 +33,7 @@ const orderSchema = new mongoose.Schema(
       required: true,
       trim: true,
       minlength: 3,
-      maxlength: 20,
+      maxlength: 40,
     },
     dueDate: {
       type: Date,
