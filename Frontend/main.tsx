@@ -19,6 +19,7 @@ import ScrollToTop from "./utils/ScrollToTop.tsx";
 import ProfilePage from "./ProfilePage/ProfilePage.tsx";
 import SuccessPage from "./checkoutPage/sucessPage.tsx";
 import Home from "./HomePage/Home.tsx";
+import AboutPage from "./AboutPage/AboutPage.tsx";
 
 const router = createBrowserRouter([
   {
@@ -90,6 +91,10 @@ const router = createBrowserRouter([
       {
         path: "/success",
         element: <SuccessPage />,
+      },
+      {
+        path: "/about",
+        element: <AboutPage />,
       },
     ],
   },
