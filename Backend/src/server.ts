@@ -1,9 +1,9 @@
 import dotenv from "dotenv";
 dotenv.config();
 
-import { app } from "./src/express.js";
-import DatabaseConnection from "./src/services/DatabaseConnection.js";
-import SocketHandler from "./src/socket/SocketHandler.js";
+import { app } from "./express.js";
+import DatabaseConnection from "./services/DatabaseConnection.js";
+import SocketHandler from "./socket/SocketHandler.js";
 
 DatabaseConnection.connect();
 
