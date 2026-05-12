@@ -1,0 +1,212 @@
+import InputField from "../Components/General/InputField";
+import "../App.css";
+import GlowingButton from "../Components/General/GlowingButton";
+import { Link, useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { Login } from "./Login";
+import { Register } from "./Register";
+import { useAuth } from "../Context/useAuth.tsx";
+
+interface Props {
+  registerMode?: boolean;
+}
+
+function LoginPage({ registerMode }: Props) {
+  const [fullname, setFullname] = useState<string>("");
+  const [username, setUsername] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const [errorMessage, setErrorMessage] = useState<string>("‎ ");
+
+  const [loginMode, setLoginMode] = useState<boolean>(
+    registerMode ? false : true,
+  );
+
+  const { user, login, logout } = useAuth();
+
+  const navigate = useNavigate();
+
+  const MessgaeColors = ["text-red-500", "text-green-500"];
+
+  const [messageColor, setMessageColor] = useState("text-red-500");
+
+  const loginUser = async () => {
+    // Code for contacting db, use email and password variables. Redirect on success
+    console.log("Trying to log in....");
+    const response = await Login(email, password);
+
+    if (response?.success) {
+      //Success Login
+      setMessageColor(MessgaeColors[1]);
+      setErrorMessage("‎ ");
+      const userData = response.data;
+      login(userData);
+      setErrorMessage(`You have been logged in ${userData?.username}!`);
+      setTimeout(() => {
+        navigate("/");
+      }, 1000);
+    } else {
+      //Failed login
+      setMessageColor(MessgaeColors[0]);
+      setErrorMessage(response?.error);
+    }
+  };
+
+  const registerUser = async () => {
+    console.log("Trying to log in....");
+    const response = await Register(fullname, username, email, password);
+
+    if (response?.success) {
+      //Success Register
+      setErrorMessage(response.message);
+      setTimeout(() => {
+        navigate("/");
+      }, 1000);
+    } else {
+      //Failed Register
+      setErrorMessage(response?.error);
+    }
+  };
+
+  return (
+    <>
+      <main className="flex w-full min-h-screen">
+        {/* Login Section */}
+        <section className="flex flex-col items-center bg-[#f9f5ff] pb-10 w-250 min-h-full">
+          <h1 className="self-start mx-8! my-4! text-2xl!">Project Name</h1>
+          <div className="mt-40 w-6/10">
+            <h2 className="text-[#2C2A51] text-3xl!">
+              {loginMode ? "Welcome Back" : "Join the craft."}
+            </h2>
+            <p className="">
+              {loginMode
+                ? "Step into your creative headquarters. Connect with artisans worldwide."
+                : "Start your journey in the digital atelier today."}
+            </p>
+          </div>
+
+          {/* Container for Login Credentials */}
+
+          <div className="flex flex-col items-center gap-5 mt-10 w-6/10 text-[#2C2A51]">
+            {/* Container for Fullname related */}
+            {!loginMode && (
+              <div className="flex flex-col w-full">
+                <label htmlFor="fullname" className="ml-1">
+                  Fullname
+                </label>
+                <InputField
+                  id="fullname"
+                  value={fullname}
+                  required={true}
+                  placeholder="John Doe"
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                    setFullname(e.target.value);
+                  }}
+                  additionalClasses="w-full h-12 border-0 bg-[#DDD9FF]"
+                ></InputField>
+              </div>
+            )}
+            {/* Container for Username related */}
+            {!loginMode && (
+              <div className="flex flex-col w-full">
+                <label htmlFor="fullname" className="ml-1">
+                  Username
+                </label>
+                <InputField
+                  id="username"
+                  value={username}
+                  required={true}
+                  placeholder="SigmaLover"
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                    setUsername(e.target.value);
+                  }}
+                  additionalClasses="w-full h-12 border-0 bg-[#DDD9FF]"
+                ></InputField>
+              </div>
+            )}
+
+            {/* Container for Email related */}
+
+            <div className="flex flex-col w-full">
+              <label htmlFor="email" className="ml-1">
+                Email address
+              </label>
+              <InputField
+                id="email"
+                value={email}
+                required={true}
+                placeholder="name@example.com"
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                  setEmail(e.target.value);
+                }}
+                additionalClasses="w-full h-12 border-0 bg-[#DDD9FF]"
+              ></InputField>
+            </div>
+
+            {/* Container for Password related */}
+
+            <div className="flex flex-col w-full">
+              <span className="flex flex-row justify-between w-full">
+                <label htmlFor="password" className="ml-1">
+                  Password
+                </label>
+                <Link
+                  to={"/"}
+                  className="font-semibold text-blue-500 text-sm text-center"
+                >
+                  Forgot password?
+                </Link>
+              </span>
+              <InputField
+                id="password"
+                value={password}
+                type="password"
+                required={true}
+                placeholder="•••••••••"
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                  setPassword(e.target.value);
+                }}
+                additionalClasses="w-full h-12 border-0 bg-[#DDD9FF]"
+              ></InputField>
+            </div>
+            <p className={messageColor}>{errorMessage}</p>
+            {/* Login Button */}
+            <GlowingButton
+              outline={false}
+              onClick={() => {
+                if (loginMode) loginUser();
+                else registerUser();
+              }}
+              additionalClasses="cursor-pointer"
+            >
+              {loginMode ? "Sign In" : "Create Free Account"}
+            </GlowingButton>
+          </div>
+          <p className="flex flex-row flex-wrap justify-center gap-2 pt-10 w-6/10 text-nowrap">
+            {loginMode
+              ? "Don't have an account yet?"
+              : "Already have an account?"}{" "}
+            <span className="font-semibold text-blue-500">
+              <a
+                className="text-nowrap cursor-pointer"
+                onClick={() => setLoginMode((p) => !p)}
+              >
+                {loginMode ? "Create free account" : "Log in"}
+              </a>
+            </span>
+          </p>
+        </section>
+        {/* Static Image Section */}
+        <section className="hidden md:block w-full min-h-full">
+          <img
+            src="Island.jpg"
+            alt="Island in Ocean"
+            className="w-full min-h-full object-cover"
+          />
+        </section>
+      </main>
+    </>
+  );
+}
+
+export default LoginPage;
