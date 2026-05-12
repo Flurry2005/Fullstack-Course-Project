@@ -1,14 +1,12 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Footer from "../Footer";
-import NavBar from "../NavBar";
 import fishImage from "../assets/fish.jpg";
-import meImage from "../assets/me.jpeg";
 import type { Gig } from "../types/Gig";
-import ListingsHeader from "./components/ListingsHeader";
-import Sidebar from "./components/Sidebar";
-import { useAuth } from "../Context/useAuth";
+import ListingsHeader from "./Components/ListingsHeader";
+import Sidebar from "./Components/Sidebar";
 import { fetchProfile } from "../utils/GetProfile";
+import NavBar from "../NavBar/NavBar";
 
 type Listing = {
   id: string;

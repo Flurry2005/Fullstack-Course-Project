@@ -1,9 +1,8 @@
 import type { Gig } from "../../types/Gig";
 import gigsModel from "../models/gigsModel";
 import { Request, Response, NextFunction } from "express";
-import { categories } from "../../../Frontend/SellerDashboard/CreateNewGig/Categories";
+import { categories } from "../../../Frontend/SellerDashboard/Components/CreateNewGig/Categories";
 import orderModel from "../models/orderModel";
-import { Document } from "mongodb";
 import { getSquareImage, uploadBuffer } from "../../services/Cloudinary";
 
 class GigController {
@@ -125,18 +124,21 @@ class GigController {
           features: newGig.basic?.features ?? [],
         },
         standard: {
-          price: stdFeatures.length === 0 ? 0 : parsePrice(newGig.standard?.price),
+          price:
+            stdFeatures.length === 0 ? 0 : parsePrice(newGig.standard?.price),
           delivery: newGig.standard?.delivery ?? "",
           features: stdFeatures,
         },
         premium: {
-          price: premFeatures.length === 0 ? 0 : parsePrice(newGig.premium?.price),
+          price:
+            premFeatures.length === 0 ? 0 : parsePrice(newGig.premium?.price),
           delivery: newGig.premium?.delivery ?? "",
           features: premFeatures,
         },
         pending: true,
       });
 
+      //@ts-ignore
       const files = req.files as Express.Multer.File[];
 
       const uploadedImages: string[] = [];
@@ -248,12 +250,18 @@ class GigController {
               features: updatedGig.basic?.features ?? [],
             },
             standard: {
-              price: stdFeatures.length === 0 ? 0 : parsePrice(updatedGig.standard?.price),
+              price:
+                stdFeatures.length === 0
+                  ? 0
+                  : parsePrice(updatedGig.standard?.price),
               delivery: updatedGig.standard?.delivery ?? "",
               features: stdFeatures,
             },
             premium: {
-              price: premFeatures.length === 0 ? 0 : parsePrice(updatedGig.premium?.price),
+              price:
+                premFeatures.length === 0
+                  ? 0
+                  : parsePrice(updatedGig.premium?.price),
               delivery: updatedGig.premium?.delivery ?? "",
               features: premFeatures,
             },

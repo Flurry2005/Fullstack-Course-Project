@@ -8,17 +8,17 @@ import { Outlet } from "react-router-dom";
 import RecoverPassword from "./LoginPage/RecoverPassword.tsx";
 import { AuthProvider } from "./Context/useAuth.tsx";
 import SellerDashBoard from "./SellerDashboard/SellerDashboard.tsx";
-import EditGig from "./SellerDashboard/EditGig/EditGig.tsx";
-import CreateNewGig from "./SellerDashboard/CreateNewGig/CreateNewGig.tsx";
+import EditGig from "./SellerDashboard/Components/EditGig/EditGig.tsx";
+import CreateNewGig from "./SellerDashboard/Components/CreateNewGig/CreateNewGig.tsx";
 import ChatPage from "./ChatPage/ChatPage.tsx";
 import { OrderProvider } from "./Context/useOrders.tsx";
 import { SocketProvider } from "./Context/useSocket.tsx";
 import ServiceListings from "./ServiceListings/ServiceListings.tsx";
-import ServiceDetail from "./ServiceDetail/Main.tsx";
-import Home from "./Home.tsx";
+import ServiceDetail from "./ServiceDetail/ServiceDetail.tsx";
 import ScrollToTop from "./utils/ScrollToTop.tsx";
 import ProfilePage from "./ProfilePage/ProfilePage.tsx";
 import SuccessPage from "./checkoutPage/sucessPage.tsx";
+import Home from "./HomePage/Home.tsx";
 
 const router = createBrowserRouter([
   {

@@ -1,12 +1,11 @@
 import { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
-import NavBar from "../NavBar";
 import { useAuth } from "../Context/useAuth";
 import type { Gig } from "../types/Gig";
 import type { User } from "../types/User";
-import ProfileGigs from "./components/ProfileGigs";
-import ProfileHeader from "./components/ProfileHeader";
-import ProfileDetails from "./components/ProfileDetails";
+import ProfileGigs from "./Components/ProfileGigs";
+import ProfileHeader from "./Components/ProfileHeader";
+import ProfileDetails from "./Components/ProfileDetails";
 import type { PublicProfile } from "./types";
 import {
   API_BASE,
@@ -16,6 +15,7 @@ import {
   parseLanguagesInput,
   parseSkillsInput,
 } from "./profileUtils";
+import NavBar from "../NavBar/NavBar";
 
 function ProfilePage() {
   const { username } = useParams();
@@ -275,7 +275,7 @@ function ProfilePage() {
         onImageChange={handleProfileImageChange}
       />
 
-      <main className="gap-6 grid lg:grid-cols-[320px_1fr] mx-auto px-4 sm:px-6 py-8 max-w-[1184px]">
+      <main className="gap-6 grid lg:grid-cols-[320px_1fr] mx-auto px-4 sm:px-6 py-8 max-w-296">
         <ProfileDetails
           profile={visibleProfile}
           isEditing={isEditing}

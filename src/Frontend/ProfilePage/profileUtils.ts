@@ -60,7 +60,9 @@ export function parseLanguagesInput(value: string): ProfileLanguage[] {
         .split("-")
         .map((part) => part.trim());
 
-      const safeLevel = LANGUAGE_LEVELS.includes(level as ProfileLanguage["level"])
+      const safeLevel = LANGUAGE_LEVELS.includes(
+        level as ProfileLanguage["level"],
+      )
         ? (level as ProfileLanguage["level"])
         : "Conversational";
 
