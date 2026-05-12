@@ -1,8 +1,8 @@
 import { useSearchParams, Link } from "react-router-dom";
-import NavBar from "../NavBar";
 import Footer from "../Footer";
 import { useEffect, useState } from "react";
 import { API_BASE } from "../ProfilePage/profileUtils";
+import NavBar from "../NavBar/NavBar";
 
 type PaymentItem = {
   name: string;
@@ -67,24 +67,24 @@ function SuccessPage() {
   }, [sessionId]);
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#f9f5ff]">
+    <div className="flex flex-col bg-[#f9f5ff] min-h-screen">
       <NavBar />
 
-      <main className="flex flex-1 items-center justify-center px-5 py-16">
-        <section className="w-full max-w-5xl overflow-hidden rounded-[2rem] bg-[#F3EEFF] shadow-md border border-[#E3DFFF]">
+      <main className="flex flex-1 justify-center items-center px-5 py-16">
+        <section className="bg-[#F3EEFF] shadow-md border border-[#E3DFFF] rounded-4xl w-full max-w-5xl overflow-hidden">
           <div className="relative px-8 py-10 text-center">
-            <div className="absolute left-8 top-8 h-24 w-24 rounded-full bg-[#91FEEF]/40 blur-2xl"></div>
-            <div className="absolute right-8 top-12 h-28 w-28 rounded-full bg-[#635BFF]/20 blur-2xl"></div>
+            <div className="top-8 left-8 absolute bg-[#91FEEF]/40 blur-2xl rounded-full w-24 h-24"></div>
+            <div className="top-12 right-8 absolute bg-[#635BFF]/20 blur-2xl rounded-full w-28 h-28"></div>
 
-            <div className="relative mx-auto mb-6 flex h-24 w-24 items-center justify-center rounded-full bg-[#91FEEF] shadow-sm">
-              <i className="fa-solid fa-check text-5xl text-[#17213A]"></i>
+            <div className="relative flex justify-center items-center bg-[#91FEEF] shadow-sm mx-auto mb-6 rounded-full w-24 h-24">
+              <i className="text-[#17213A] text-5xl fa-solid fa-check"></i>
             </div>
 
-            <p className="text-sm font-semibold uppercase tracking-[0.25em] text-[#635BFF]">
+            <p className="font-semibold text-[#635BFF] text-sm uppercase tracking-[0.25em]">
               Order Confirmed
             </p>
 
-            <h1 className="mt-3 text-4xl font-bold text-[#17213A]">
+            <h1 className="mt-3 font-bold text-[#17213A] text-4xl">
               Payment Successful
             </h1>
 
@@ -95,33 +95,33 @@ function SuccessPage() {
           </div>
 
           {loading ? (
-            <div className="px-8 pb-10 text-center text-[#4b4268]">
+            <div className="px-8 pb-10 text-[#4b4268] text-center">
               Loading order details...
             </div>
           ) : payment ? (
-            <div className="grid gap-6 px-8 pb-10 lg:grid-cols-[1.4fr_0.9fr]">
-              <div className="rounded-3xl bg-white p-6 shadow-sm">
-                <h2 className="text-2xl font-semibold text-[#17213A]">
+            <div className="gap-6 grid lg:grid-cols-[1.4fr_0.9fr] px-8 pb-10">
+              <div className="bg-white shadow-sm p-6 rounded-3xl">
+                <h2 className="font-semibold text-[#17213A] text-2xl">
                   Order Summary
                 </h2>
 
-                <div className="mt-5 space-y-4">
+                <div className="space-y-4 mt-5">
                   {payment.items.map((item, index) => (
                     <div
                       key={index}
-                      className="rounded-2xl bg-[#f9f5ff] p-5 border border-[#E3DFFF]"
+                      className="bg-[#f9f5ff] p-5 border border-[#E3DFFF] rounded-2xl"
                     >
-                      <div className="flex items-start justify-between gap-5">
+                      <div className="flex justify-between items-start gap-5">
                         <div>
-                          <p className="text-sm font-semibold text-[#635BFF]">
+                          <p className="font-semibold text-[#635BFF] text-sm">
                             {payment.metadata.tier} Package
                           </p>
 
-                          <h3 className="mt-1 text-xl font-semibold text-[#17213A]">
+                          <h3 className="mt-1 font-semibold text-[#17213A] text-xl">
                             {item.name}
                           </h3>
 
-                          <p className="mt-2 text-sm text-[#4b4268]">
+                          <p className="mt-2 text-[#4b4268] text-sm">
                             Sold by{" "}
                             <span className="font-semibold">
                               {payment.metadata.sellerUsername}
@@ -130,8 +130,8 @@ function SuccessPage() {
                         </div>
 
                         <div className="text-right">
-                          <p className="text-xs text-[#4b4268]">Quantity</p>
-                          <p className="text-lg font-semibold text-[#17213A]">
+                          <p className="text-[#4b4268] text-xs">Quantity</p>
+                          <p className="font-semibold text-[#17213A] text-lg">
                             {item.quantity}
                           </p>
                         </div>
@@ -140,7 +140,7 @@ function SuccessPage() {
                   ))}
                 </div>
 
-                <div className="mt-6 rounded-2xl bg-[#E9E5FF] p-5">
+                <div className="bg-[#E9E5FF] mt-6 p-5 rounded-2xl">
                   <div className="flex justify-between py-2 text-[#4b4268]">
                     <span>Gig price</span>
                     <span>${Number(payment.metadata.gigPrice).toFixed(2)}</span>
@@ -153,7 +153,7 @@ function SuccessPage() {
                     </span>
                   </div>
 
-                  <div className="mt-3 flex justify-between border-t border-[#d7ceff] pt-4 text-xl font-bold text-[#17213A]">
+                  <div className="flex justify-between mt-3 pt-4 border-[#d7ceff] border-t font-bold text-[#17213A] text-xl">
                     <span>Total paid</span>
                     <span>
                       {formatMoney(payment.amountTotal, payment.currency)}
@@ -162,50 +162,50 @@ function SuccessPage() {
                 </div>
               </div>
 
-              <aside className="rounded-3xl bg-white p-6 shadow-sm">
-                <h2 className="text-2xl font-semibold text-[#17213A]">
+              <aside className="bg-white shadow-sm p-6 rounded-3xl">
+                <h2 className="font-semibold text-[#17213A] text-2xl">
                   Payment Details
                 </h2>
 
-                <div className="mt-5 space-y-4 text-sm">
-                  <div className="rounded-2xl bg-[#f9f5ff] p-4">
+                <div className="space-y-4 mt-5 text-sm">
+                  <div className="bg-[#f9f5ff] p-4 rounded-2xl">
                     <p className="text-[#4b4268]">Status</p>
                     <p className="mt-1 font-semibold text-green-600">
                       {payment.status.toUpperCase()}
                     </p>
                   </div>
 
-                  <div className="rounded-2xl bg-[#f9f5ff] p-4">
+                  <div className="bg-[#f9f5ff] p-4 rounded-2xl">
                     <p className="text-[#4b4268]">Customer Email</p>
-                    <p className="mt-1 break-all font-semibold text-[#17213A]">
+                    <p className="mt-1 font-semibold text-[#17213A] break-all">
                       {payment.customerEmail}
                     </p>
                   </div>
 
-                  <div className="rounded-2xl bg-[#f9f5ff] p-4">
+                  <div className="bg-[#f9f5ff] p-4 rounded-2xl">
                     <p className="text-[#4b4268]">Order Reference</p>
-                    <p className="mt-1 break-all font-mono text-xs text-[#0050D4]">
+                    <p className="mt-1 font-mono text-[#0050D4] text-xs break-all">
                       {payment.id}
                     </p>
                   </div>
                 </div>
 
-                <div className="mt-6 rounded-2xl bg-[#91FEEF]/40 p-4 text-sm text-[#17213A]">
-                  <i className="fa-solid fa-shield-halved mr-2"></i>
+                <div className="bg-[#91FEEF]/40 mt-6 p-4 rounded-2xl text-[#17213A] text-sm">
+                  <i className="mr-2 fa-solid fa-shield-halved"></i>
                   Your test payment was processed securely through Stripe.
                 </div>
 
-                <div className="mt-6 flex flex-col gap-3">
+                <div className="flex flex-col gap-3 mt-6">
                   <Link
                     to="/"
-                    className="rounded-2xl bg-[#635BFF] px-6 py-4 text-center font-semibold text-white transition hover:opacity-90"
+                    className="bg-[#635BFF] hover:opacity-90 px-6 py-4 rounded-2xl font-semibold text-white text-center transition"
                   >
                     Continue Browsing
                   </Link>
 
                   <Link
                     to="/messages"
-                    className="rounded-2xl bg-[#E3DFFF] px-6 py-4 text-center font-semibold text-[#0050D4] transition hover:opacity-90"
+                    className="bg-[#E3DFFF] hover:opacity-90 px-6 py-4 rounded-2xl font-semibold text-[#0050D4] text-center transition"
                   >
                     Message Seller
                   </Link>
@@ -213,7 +213,7 @@ function SuccessPage() {
               </aside>
             </div>
           ) : (
-            <div className="px-8 pb-10 text-center text-[#4b4268]">
+            <div className="px-8 pb-10 text-[#4b4268] text-center">
               Could not load payment details.
             </div>
           )}

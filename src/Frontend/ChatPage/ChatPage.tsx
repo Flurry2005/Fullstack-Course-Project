@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import NavBar from "../NavBar";
 import Footer from "../Footer";
 import Conversations from "./Components/Conversations";
 import ChatPanel from "./Components/ChatPanel";
@@ -7,6 +6,7 @@ import { useOrders } from "../Context/useOrders";
 import { useSocket } from "../Context/useSocket";
 import { useAuth } from "../Context/useAuth";
 import { fetchProfile } from "../utils/GetProfile";
+import NavBar from "../NavBar/NavBar";
 
 function ChatPage() {
   const { onlineList, activeOrder, setActiveOrder } = useSocket();

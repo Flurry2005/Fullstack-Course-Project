@@ -1,8 +1,5 @@
-import Navbar from "../NavBar";
 import Footer from "../Footer";
-import OrderCard from "./OrderCard";
-import MessageCard from "./MessageCard";
-import GigCard from "./GigCard";
+
 import profileRatingsIcon from "../assets/profile-ratings-icon.svg";
 import createNewIcon from "../assets/create-plus-icon.svg";
 import { Link, useNavigate } from "react-router-dom";
@@ -12,6 +9,10 @@ import type { Gig } from "../types/Gig";
 import { useSocket } from "../Context/useSocket";
 import { useOrders } from "../Context/useOrders";
 import { fetchProfile } from "../utils/GetProfile";
+import NavBar from "../NavBar/NavBar";
+import OrderCard from "./Components/OrderCard";
+import MessageCard from "./Components/MessageCard";
+import GigCard from "./Components/GigCard";
 
 function SellerDashBoard() {
   const { setActiveOrder } = useSocket();
@@ -71,7 +72,7 @@ function SellerDashBoard() {
 
   return (
     <div className="bg-[#f9f5ff]">
-      <Navbar />
+      <NavBar />
 
       {/* Dashboard header */}
       <main className="flex flex-col gap-10 bg-[#f9f5ff] mx-auto p-6 w-full container">

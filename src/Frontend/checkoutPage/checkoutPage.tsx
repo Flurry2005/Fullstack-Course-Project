@@ -1,12 +1,12 @@
 import InputField from "../Components/General/InputField";
 import "../App.css";
-import NavBar from "../NavBar";
 import GlowingButton from "../Components/General/GlowingButton";
 import { useEffect, useState } from "react";
 import Footer from "../Footer";
 import { API_BASE } from "../ProfilePage/profileUtils";
 import { useSearchParams } from "react-router-dom";
 import type { Gig } from "../types/Gig";
+import NavBar from "../NavBar/NavBar";
 
 function CheckoutPage() {
   const [selected] = useState<"card" | "paypal" | "swish" | null>("card");
@@ -118,12 +118,12 @@ function CheckoutPage() {
   }, [price]);
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#f9f5ff]">
+    <div className="flex flex-col bg-[#f9f5ff] min-h-screen">
       <NavBar />
 
-      <main className="flex flex-1 justify-between gap-5 px-5 items-start pb-5">
+      <main className="flex flex-1 justify-between items-start gap-5 px-5 pb-5">
         {/* Left main container */}
-        <div className="flex flex-col w-7/10 gap-5">
+        <div className="flex flex-col gap-5 w-7/10">
           <section className="py-10">
             <h1 className="text-3xl">Finalize your order</h1>
             <h3>Review your details and complete your purchase.</h3>
@@ -131,7 +131,7 @@ function CheckoutPage() {
 
           <h2 className="text-2xl">Billing information</h2>
 
-          <div className="flex flex-col justify-center gap-5 bg-[#F3EEFF] py-10 w-full rounded-2xl">
+          <div className="flex flex-col justify-center gap-5 bg-[#F3EEFF] py-10 rounded-2xl w-full">
             <section className="mx-auto w-9/10">
               <label htmlFor="email">Email Address</label>
               <InputField
