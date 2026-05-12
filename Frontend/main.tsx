@@ -18,8 +18,8 @@ import ServiceDetail from "./ServiceDetail/ServiceDetail.tsx";
 import ScrollToTop from "./utils/ScrollToTop.tsx";
 import ProfilePage from "./ProfilePage/ProfilePage.tsx";
 import SuccessPage from "./checkoutPage/sucessPage.tsx";
-import Home from "./HomePage/Home.tsx";
 import AboutPage from "./AboutPage/AboutPage.tsx";
+import Home from "./HomePage/Home.tsx";
 
 const router = createBrowserRouter([
   {
