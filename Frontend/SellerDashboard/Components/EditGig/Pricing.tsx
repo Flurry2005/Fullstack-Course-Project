@@ -79,8 +79,6 @@ function Pricing({ gig, setGig, setEditState, setConfirm }: Pricing) {
                 features={basicFeatures}
                 delivery={basicDelivery}
                 editState={true}
-                gig={gig}
-                setGig={setGig}
               />
             )}
             {gig?.standard?.features && gig.standard.features.length > 0 && (
@@ -94,8 +92,6 @@ function Pricing({ gig, setGig, setEditState, setConfirm }: Pricing) {
                 price={standardPrice}
                 delivery={standardDelivery}
                 editState={true}
-                gig={gig}
-                setGig={setGig}
               />
             )}
             {gig?.premium?.features && gig.premium.features.length > 0 && (
@@ -109,8 +105,6 @@ function Pricing({ gig, setGig, setEditState, setConfirm }: Pricing) {
                 features={premiumFeatures}
                 delivery={premiumDelivery}
                 editState={true}
-                gig={gig}
-                setGig={setGig}
               />
             )}
           </div>
