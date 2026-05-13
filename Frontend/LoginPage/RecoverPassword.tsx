@@ -112,7 +112,7 @@ function RecoverPassword() {
           </a>
         </p>
         <p className="text-[#b0abbe] text-[0.65rem]">
-          © 2024 Project Name. All rights reserved.
+          © 2026 Project Name. All rights reserved.
         </p>
       </div>
     </div>
