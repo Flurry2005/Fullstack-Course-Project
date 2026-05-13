@@ -99,7 +99,7 @@ class UserController {
         $set: { passwordHash: hashedPassword },
       });
 
-      // Delete the used token
+      // Deletes the used token
       await recoverPasswordModel.deleteOne({ _id: resetToken._id });
 
       return res
