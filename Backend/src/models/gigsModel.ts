@@ -60,6 +60,16 @@ const gigsSchema = new mongoose.Schema({
     delivery: { type: String },
     features: { type: [] },
   },
+  reviews: {
+    type: [
+      {
+        username: { type: String, required: true },
+        content: { type: String, required: true },
+        rating: { type: Number, required: true, min: 1, max: 5 },
+      },
+    ],
+    default: [],
+  },
 });
 
 export default mongoose.model("Gigs", gigsSchema);

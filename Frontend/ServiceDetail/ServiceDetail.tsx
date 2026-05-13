@@ -31,6 +31,16 @@ function ServiceDetail({
   const [loaded, setLoaded] = useState(false);
   const [gig, setGig] = useState<Gig>();
 
+  /* Const variables for calc gig reviews/reflections  */
+  const reviews = gig?.reviews ?? [];
+
+  const reviewsAmount = reviews.length;
+
+  const averageRating =
+    reviewsAmount > 0
+      ? reviews.reduce((sum, review) => sum + review.rating, 0) / reviewsAmount
+      : 0;
+
   const getGig = async () => {
     const response = await fetch(
       `${import.meta.env.VITE_DEV === "true" ? "http://localhost:3000" : "https://fullstackapi.liamjorgensen.dev"}/api${"/gig/"}${gigId}`,
@@ -78,8 +88,8 @@ function ServiceDetail({
                     seller={gig?.sellerUsername}
                     gig={gig}
                     profile={profile}
-                    rating={4.9}
-                    reviewsAmount={494}
+                    rating={averageRating}
+                    reviewsAmount={reviewsAmount}
                   />
                 </div>
                 <div className="w-full md:w-1/3">
@@ -97,7 +107,11 @@ function ServiceDetail({
               <div className="flex flex-col gap-6 md:w-2/3">
                 <AboutService about={gig?.description} />
                 <AboutSeller profile={profile} />
-                <ClientReflections />
+                <ClientReflections
+                  reviews={reviews}
+                  averageRating={averageRating}
+                  reviewsAmount={reviewsAmount}
+                />
               </div>
             </div>
           </main>
