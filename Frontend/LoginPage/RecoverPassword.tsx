@@ -2,8 +2,30 @@ import React, { useState } from "react";
 import { RotateCcw, Lock, Mail, ArrowLeft } from "lucide-react";
 import NavigationLink from "../NavBar/NavbarComponents/NavigationLink";
 
-function RecoveryPage() {
+function RecoverPassword() {
   const [email, setEmail] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState("");
+
+  const handleSubmit = async () => {
+    if (!email) return;
+    setLoading(true);
+    setMessage("");
+    try {
+      const res = await fetch("http://localhost:3000/api/forgot-password", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ email }),
+      });
+      const data = await res.json();
+      setMessage(data.message);
+    } catch {
+      setMessage("Something went wrong. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="flex flex-col justify-center items-center bg-[#f4f0fb] w-full min-h-screen font-sans">
@@ -62,8 +84,10 @@ function RecoveryPage() {
               "linear-gradient(135deg, #5b4dc7 0%, #3a2d9e 50%, #2d1b6e 100%)",
             boxShadow: "0 4px 16px -2px rgba(59, 45, 158, 0.4)",
           }}
+          disabled={loading || !email}
+          onClick={handleSubmit}
         >
-          Send Reset Link
+          {loading ? "Sending..." : "Send Reset Link"}
         </button>
 
         {/* Back to Login */}
@@ -92,4 +116,4 @@ function RecoveryPage() {
   );
 }
 
-export default RecoveryPage;
+export default RecoverPassword;
