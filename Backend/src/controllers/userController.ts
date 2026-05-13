@@ -145,11 +145,27 @@ class UserController {
       });
       const resetLink = `${process.env.CLIENT_URL}/reset-password?token=${token}`;
 
-      resend.emails.send({
+      await resend.emails.send({
         from: "onboarding@resend.dev",
-        to: "drievmail@gmail.com",
-        subject: "Hello World",
-        html: "<p>Congrats on sending your <strong>first email</strong>!</p>",
+        to: [email],
+        subject: "Reset your password",
+        html: `
+    <div style="font-family: sans-serif; max-width: 480px; margin: 0 auto; padding: 32px;">
+      <h2 style="color: #1a1a2e;">Reset your password</h2>
+      <p style="color: #6b6b7b; line-height: 1.6;">
+        We received a request to reset your password. Click the button below to choose a new one.
+        This link expires in 1 hour.
+      </p>
+      <a href="${resetLink}"
+         style="display: inline-block; background: #2d2b7c; color: white; padding: 12px 32px;
+                border-radius: 8px; text-decoration: none; font-weight: bold; margin: 16px 0;">
+        Reset Password
+      </a>
+      <p style="color: #8a8a9a; font-size: 13px;">
+        If you didn't request this, you can safely ignore this email.
+      </p>
+    </div>
+  `,
       });
 
       return res.status(200).json(genericResponse);
