@@ -20,6 +20,7 @@ import ProfilePage from "./ProfilePage/ProfilePage.tsx";
 import SuccessPage from "./checkoutPage/sucessPage.tsx";
 import AboutPage from "./AboutPage/AboutPage.tsx";
 import Home from "./HomePage/Home.tsx";
+import ResetPassword from "./LoginPage/ResetPassword.tsx";
 
 const router = createBrowserRouter([
   {
@@ -95,6 +96,10 @@ const router = createBrowserRouter([
       {
         path: "/about",
         element: <AboutPage />,
+      },
+      {
+        path: "/reset-password",
+        element: <ResetPassword />,
       },
     ],
   },

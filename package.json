@@ -19,6 +19,12 @@
     "stripe": "stripe.exe listen --forward-to localhost:3000/api/webhook-checkout"
   },
   "devDependencies": {
+    "@types/bcrypt": "^6.0.0",
     "concurrently": "^9.2.1"
+  },
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "crypto": "^1.0.1",
+    "resend": "^6.12.3"
   }
 }
