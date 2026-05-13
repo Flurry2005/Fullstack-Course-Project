@@ -4,7 +4,7 @@ import featureIcon from "../../assets/circle-check-req-icon.svg";
 import timeIcon from "../../assets/time-icon.svg";
 import ContinueButton from "./ContinueButton";
 import ContactSellerButton from "./ContactSellerButton";
-import QuoteButton from "./QuoteButton";
+import QuoteButton from "./CopyLinkButton";
 
 type PurchaseOptionsProps = {
   options: {
@@ -96,7 +96,7 @@ function PurchaseOptions({ options = {}, gigId }: PurchaseOptionsProps) {
 
       <div className="flex flex-col gap-3 bg-[#0050D4]/5 p-6 rounded-2xl">
         <span className="place-self-center text-[#0050D4]">
-          Custom Requirement?
+          Share this gig?
         </span>
         <QuoteButton />
       </div>
