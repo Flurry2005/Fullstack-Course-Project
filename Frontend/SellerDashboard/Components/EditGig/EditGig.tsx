@@ -277,8 +277,6 @@ function EditGig() {
                       name="Basic"
                       plan={gig?.basic}
                       editState={false}
-                      gig={gig}
-                      setGig={setGig}
                     />
                   )}
                   {gig?.standard?.features &&
@@ -293,8 +291,6 @@ function EditGig() {
                         delivery={gig.standard?.delivery}
                         plan={gig?.standard}
                         editState={false}
-                        gig={gig}
-                        setGig={setGig}
                       />
                     )}
                   {gig?.premium?.features &&
@@ -309,8 +305,6 @@ function EditGig() {
                         name="Premium"
                         plan={gig?.premium}
                         editState={false}
-                        gig={gig}
-                        setGig={setGig}
                       />
                     )}
                 </div>
