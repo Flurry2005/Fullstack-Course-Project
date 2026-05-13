@@ -151,7 +151,7 @@ function LoginPage({ registerMode }: Props) {
                   Password
                 </label>
                 <Link
-                  to={"/"}
+                  to={"/forgotPassword"}
                   className="font-semibold text-blue-500 text-sm text-center"
                 >
                   Forgot password?

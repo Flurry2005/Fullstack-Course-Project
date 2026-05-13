@@ -2,6 +2,9 @@ import Users from "../models/userModel.js";
 import { Request, Response, NextFunction } from "express";
 import JWTModel from "../models/JWT.js";
 import bcrypt from "bcrypt";
+import recoverPasswordModel from "../models/recoverPasswordModel.js";
+import { randomBytes } from "node:crypto";
+import { Resend } from "resend";
 
 class UserController {
   async login(req: Request, res: Response, next: NextFunction) {
@@ -71,6 +74,107 @@ class UserController {
     });
 
     return res.status(200).json({ success: true, message: "User created!" });
+  }
+
+  async resetPassword(req: Request, res: Response) {
+    try {
+      const { token, password } = req.body;
+
+      if (!token || !password)
+        return res
+          .status(400)
+          .json({ success: false, error: "Token and password are required." });
+
+      const resetToken = await recoverPasswordModel.findOne({ token });
+
+      if (!resetToken || resetToken.expiresAt < new Date()) {
+        return res
+          .status(400)
+          .json({ success: false, error: "Invalid or expired reset link." });
+      }
+
+      const hashedPassword = await bcrypt.hash(password, 12);
+
+      await Users.findByIdAndUpdate(resetToken.userId, {
+        $set: { passwordHash: hashedPassword },
+      });
+
+      // Delete the used token
+      await recoverPasswordModel.deleteOne({ _id: resetToken._id });
+
+      return res
+        .status(200)
+        .json({ success: true, message: "Password updated successfully." });
+    } catch (error) {
+      console.error("Reset password error:", error);
+      return res
+        .status(500)
+        .json({ success: false, error: "Something went wrong." });
+    }
+  }
+
+  async forgotPassword(req: Request, res: Response) {
+    const resend = new Resend(process.env.RESEND_API_KEY);
+    try {
+      const { email } = req.body;
+      if (!email)
+        return res
+          .status(400)
+          .json({ success: false, error: "Email is required." });
+
+      // Always return the same response to prevent email enumeration
+      const genericResponse = {
+        success: true,
+        message: "If that email exists, a reset link was sent.",
+      };
+
+      const user = await Users.findOne({ email });
+      if (!user) return res.status(200).json(genericResponse);
+
+      // Invalidate any existing tokens for this user
+      await recoverPasswordModel.deleteMany({ userId: user._id });
+
+      // Generate secure token with 1-hour expiry
+      const token = randomBytes(32).toString("hex");
+      const expiresAt = new Date(Date.now() + 60 * 60 * 1000);
+
+      await recoverPasswordModel.create({
+        token,
+        userId: user._id,
+        expiresAt,
+      });
+      const resetLink = `${process.env.CLIENT_URL}/reset-password?token=${token}`;
+
+      await resend.emails.send({
+        from: "onboarding@resend.dev",
+        to: [email],
+        subject: "Reset your password",
+        html: `
+    <div style="font-family: sans-serif; max-width: 480px; margin: 0 auto; padding: 32px;">
+      <h2 style="color: #1a1a2e;">Reset your password</h2>
+      <p style="color: #6b6b7b; line-height: 1.6;">
+        We received a request to reset your password. Click the button below to choose a new one.
+        This link expires in 1 hour.
+      </p>
+      <a href="${resetLink}"
+         style="display: inline-block; background: #2d2b7c; color: white; padding: 12px 32px;
+                border-radius: 8px; text-decoration: none; font-weight: bold; margin: 16px 0;">
+        Reset Password
+      </a>
+      <p style="color: #8a8a9a; font-size: 13px;">
+        If you didn't request this, you can safely ignore this email.
+      </p>
+    </div>
+  `,
+      });
+
+      return res.status(200).json(genericResponse);
+    } catch (error) {
+      console.error("Forgot password error:", error);
+      return res
+        .status(500)
+        .json({ success: false, error: "Something went wrong." });
+    }
   }
 
   async getPublicProfile(req: Request, res: Response) {
