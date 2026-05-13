@@ -1,9 +1,17 @@
 import envelopeIcon from "../../assets/envelope-icon.svg";
 
 function ContactSellerButton() {
+
+  const openGmail = () => {
+    window.open("https://mail.google.com/mail/?view=cm&fs=1", "_blank");
+  };
+
   return (
     <>
-      <button className="flex justify-center items-center gap-1 py-3 border border-[#75729E] rounded-xl w-full font-bold text-[#5A5781] text-sm">
+      <button
+        onClick={openGmail}
+        className="flex justify-center items-center gap-1 py-3 border border-[#75729E] rounded-xl w-full font-bold text-[#5A5781] text-sm
+        hover: cursor-pointer">
         <img src={envelopeIcon} className="w-5 h-5" /> Contact Seller
       </button>
     </>
