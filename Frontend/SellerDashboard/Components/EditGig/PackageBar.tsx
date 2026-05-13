@@ -4,46 +4,33 @@ import checkIcon from "../../../assets/circle-check-req-icon.svg";
 import removeIcon from "../../../assets/x-icon.svg";
 import deleteIcon from "../../../assets/delete-icon-white.svg";
 
-import type { Gig } from "../../../types/Gig";
 type PackageBarProps = {
   plan: Package;
   name: string;
   editState: boolean;
-  setGig: React.Dispatch<React.SetStateAction<Gig | undefined>>;
   setDelivery: React.Dispatch<React.SetStateAction<string | undefined>>;
   setPrice: React.Dispatch<React.SetStateAction<string | number | undefined>>;
   setFeatures: React.Dispatch<React.SetStateAction<string[] | undefined>>;
   features: string[] | undefined;
   price: string | number | undefined;
   delivery: string | undefined;
-  gig: Gig;
 };
 
 function PackageBar({
   plan,
   name,
   editState,
-  setGig,
   delivery,
   price,
   setDelivery,
   setPrice,
-  gig,
   features,
   setFeatures,
 }: PackageBarProps) {
   const [toggle, setToggle] = useState(false);
   const [featureInput, setFeatureInput] = useState("");
-  // price and delivery are controlled by parent
-  const featureRef = useRef<HTMLInputElement>(null);
 
-  // Helper to get the correct package key
-  const getPackageKey = () => {
-    if (name === "Basic") return "basic";
-    if (name === "Standard") return "standard";
-    if (name === "Premium") return "premium";
-    return "basic";
-  };
+  const featureRef = useRef<HTMLInputElement>(null);
 
   const addFeature = () => {
     const trimmed = featureInput.trim();
@@ -75,7 +62,9 @@ function PackageBar({
             setToggle((prev) => !prev);
         }}
       >
-        {editState && <span>{">"}</span>}
+        {editState && (
+          <span className={`${toggle ? "rotate-90" : ""}`}>{">"}</span>
+        )}
         <span className="text-[#131B2E] text-xl">{name}</span>
         <span className="ml-auto font-bold text-[#3525CD] text-xl">
           ${plan.price}
