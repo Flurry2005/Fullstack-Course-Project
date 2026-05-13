@@ -100,15 +100,15 @@ function SellerDashBoard() {
         <section className="gap-6 grid grid-cols-1 md:grid-cols-4">
           <div className="flex flex-col bg-white p-6 border-[#ACA8D7]/15 border-2 rounded-2xl w-full">
             <span className="text-[#5A5781]">Total Earnings</span>
-            <span className="text-3xl">$12,840</span>
+            <span className="text-3xl font-semibold">$12,840</span>
           </div>
           <div className="flex flex-col bg-white p-6 border-[#ACA8D7]/15 border-2 rounded-2xl w-full">
             <span className="text-[#5A5781]">Pending Clearance</span>
-            <span className="text-[#0050D4] text-3xl">$1,250</span>
+            <span className="text-[#0050D4] text-3xl font-semibold">$1,250</span>
           </div>
           <div className="flex flex-col bg-white p-6 border-[#ACA8D7]/15 border-2 rounded-2xl w-full">
             <span className="text-[#5A5781]">Profile Rating</span>
-            <span className="flex gap-1 text-3xl">
+            <span className="flex gap-1 text-3xl font-semibold">
               4.9{" "}
               <img
                 src={profileRatingsIcon}
@@ -118,7 +118,7 @@ function SellerDashBoard() {
           </div>
           <div className="flex flex-col bg-white p-6 border-[#ACA8D7]/15 border-2 rounded-2xl w-full">
             <span className="text-[#5A5781]">Response Time</span>
-            <span className="text-3xl">1 hour</span>
+            <span className="text-3xl font-semibold">1 hour</span>
           </div>
         </section>
 
