@@ -70,8 +70,8 @@ function ChatPanel({ activeOrder, onlineList, profilePictures }: Props) {
 
   if (!activeOrder || !user) return <></>;
   return (
-    <main className="flex flex-col bg-[#F9F5FF] w-7/10 h-full">
-      <section className="flex gap-5 bg-white px-5 w-full h-20">
+    <main className="flex flex-col bg-[#F9F5FF] w-8/10 not-lg:w-full h-full not-lg:max-h-[calc(100vh-4.5rem)]">
+      <section className="flex gap-5 bg-white px-5 not-lg:px-3 w-full h-20 not-lg:h-30">
         <div className="relative flex items-center">
           <img
             src={
@@ -80,7 +80,7 @@ function ChatPanel({ activeOrder, onlineList, profilePictures }: Props) {
                 : profilePictures[activeOrder.buyerUsername]
             }
             alt=""
-            className="rounded-full h-10"
+            className="rounded-full w-10 h-auto object-contain aspect-square"
             onError={(e) => {
               e.currentTarget.src =
                 "https://res.cloudinary.com/dnpnpkqig/image/upload/c_fill,f_auto,g_auto,h_500,q_auto,w_500/v1778358513/default-profilePicture?_a=BAMAPqUs0&t=1778358700344";
@@ -103,7 +103,9 @@ function ChatPanel({ activeOrder, onlineList, profilePictures }: Props) {
               ? activeOrder.sellerUsername
               : activeOrder.buyerUsername}
           </p>
-          <p className="text-[#0050D4]">{activeOrder.gigname}</p>
+          <p className="not-lg:max-w-9/10 text-[#0050D4] text-xs truncate">
+            {activeOrder.gigname}
+          </p>
         </div>
       </section>
       {/* Chat Section */}
