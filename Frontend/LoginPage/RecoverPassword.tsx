@@ -12,12 +12,15 @@ function RecoverPassword() {
     setLoading(true);
     setMessage("");
     try {
-      const res = await fetch("http://localhost:3000/api/forgot-password", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-        body: JSON.stringify({ email }),
-      });
+      const res = await fetch(
+        `${import.meta.env.VITE_DEV === "true" ? "http://localhost:3000" : "https://fullstackapi.liamjorgensen.dev"}/api${"/forgot-password"}`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+          body: JSON.stringify({ email }),
+        },
+      );
       const data = await res.json();
       setMessage(data.message);
     } catch {
