@@ -49,7 +49,7 @@ function OrderCard({ order, gig, profilePictures }: props) {
             <StatusBadge status={true} />
           </span>
         </div>
-        <div className="flex flex-col border-t py-3 border-[#f0eef8]">
+        <div className="flex flex-col border-t py-3 gap-3 border-[#f0eef8]">
           <span className="text-[#5A5781] text-sm">Due in</span>
           <div className="flex items-center">
             <span
@@ -68,8 +68,45 @@ function OrderCard({ order, gig, profilePictures }: props) {
             />
           </div>
           {toggleInfo && (
-            <div className=" p-3 text-[#3525CD] bg-[#C3C0FF]/10 border-t justify-between border-[#f0eef8] flex-wrap flex mt-3">
-              <span className="cursor-pointer">Cancel</span> <span className="cursor-pointer">Mark as delivered</span>
+            <div className=" p-3 text-[#3525CD] bg-[#C3C0FF]/10 border-t justify-between border-[#f0eef8] gap-3 flex flex-col mt-3">
+              <div className="flex flex-col">
+                <span className="text-[10px] font-semibold uppercase leading-3">
+                  Service
+                </span>
+                <span className="text-xl ml-auto">{gig?.title}</span>
+              </div>
+
+              <div className="flex flex-col border-t border-t-[#f0eef8]">
+                <span className="text-[10px] font-semibold uppercase leading-3">
+                  Plan
+                </span>
+                <span className="text-xl ml-auto">
+                  {order.gigTier.charAt(0).toUpperCase()}
+                  {order.gigTier.substring(1).toLowerCase()}
+                </span>
+              </div>
+              <div className="flex flex-col border-t border-t-[#f0eef8]">
+                <span className="text-[10px] font-semibold uppercase leading-3">
+                  Total
+                </span>
+                <span className="text-xl ml-auto">
+                  $
+                  {order.gigTier === "basic"
+                    ? gig?.basic?.price
+                    : order.gigTier === "standard"
+                      ? gig?.standard?.price
+                      : gig?.premium?.price}
+                </span>
+              </div>
+              <div className=" border-t border-t-[#f0eef8] flex justify-between gap-3 font-semibold flex-wrap">
+                <span className="
+                 bg-red-400 rounded-lg text-white px-3 py-1 mt-3 cursor-pointer gap-1 flex items-center text-sm">
+                  Cancel order
+                </span>{" "}
+                <span className="text-white rounded-lg bg-[#4F46E5] px-3 py-1  mt-3 cursor-pointer flex gap-1 text-sm items-center">
+                  Mark as delivered
+                </span>
+              </div>
             </div>
           )}
         </div>
