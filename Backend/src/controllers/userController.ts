@@ -147,7 +147,7 @@ class UserController {
       const resetLink = `${process.env.VITE_DEV === "true" ? "http://localhost:5173" : "https://fullstack.liamjorgensen.dev"}${`/reset-password?token=${token}`}`;
 
       await resend.emails.send({
-        from: "onboarding@resend.dev",
+        from: "FullstackProject <no-reply@liamjorgensen.dev>",
         to: [email],
         subject: "Reset your password",
         html: `
