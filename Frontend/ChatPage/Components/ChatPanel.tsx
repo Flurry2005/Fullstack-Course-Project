@@ -71,7 +71,7 @@ function ChatPanel({ activeOrder, onlineList, profilePictures }: Props) {
   if (!activeOrder || !user) return <></>;
   return (
     <main className="flex flex-col bg-[#F9F5FF] w-8/10 not-lg:w-full h-full not-lg:min-h-[calc(100vh-4.5rem)] not-lg:max-h-[calc(100vh-4.5rem)]">
-      <section className="flex gap-5 bg-white px-5 not-lg:px-3 w-full h-20 not-lg:h-30">
+      <section className="flex gap-5 bg-white px-5 not-lg:px-3 py-2 w-full h-20 not-lg:h-20">
         <div className="relative flex items-center">
           <img
             src={
@@ -109,7 +109,10 @@ function ChatPanel({ activeOrder, onlineList, profilePictures }: Props) {
         </div>
       </section>
       {/* Chat Section */}
-      <section ref={chatRef} className="flex-1 px-20 py-5 overflow-y-auto">
+      <section
+        ref={chatRef}
+        className="px-20 not-md:px-5 py-5 h-screen overflow-y-auto"
+      >
         <div className="flex flex-col gap-10">
           {activeOrder.chathistory && activeOrder.chathistory.length > 0 ? (
             activeOrder.chathistory.map((message: Message, index) => (

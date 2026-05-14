@@ -43,7 +43,7 @@ function Conversations({
 
   return (
     <section className="bg-[#F8FAFC] not-lg:pb-5 not-lg:border-gray-200 border-r-[#E2E8F0] not-lg:border-b w-2/10 not-lg:w-full h-full not-lg:h-fit">
-      <div className="flex flex-col justify-around not-2xl:gap-2 p-5 h-2/10 min-h-fit">
+      <div className="flex flex-col justify-around gap-2 not-2xl:gap-2 p-5 h-fit min-h-fit">
         <div className="flex not-2xl:flex-col not-lg:flex-row! justify-between items-center not-2xl:gap-2">
           <div>
             <p className="text-[#4338CA] text-2xl">Conversations</p>
@@ -77,7 +77,7 @@ function Conversations({
           + New Messages
         </button>
       </div>
-      <div className="flex flex-col justify-start items-center px-5 h-8/10 overflow-x-hidden overflow-y-scroll">
+      <div className="flex flex-col justify-start items-center px-5 h-auto overflow-x-hidden overflow-y-scroll no-scrollbar">
         <p className="mb-1 font-semibold text-[#8e50b3] text-sm text-center">
           {buyerMode ? "CHATTING AS CUSTOMER" : "CHATTING AS SELLER"}
         </p>
