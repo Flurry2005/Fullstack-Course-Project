@@ -2,12 +2,14 @@ import React from "react";
 
 import Footer from "../Footer";
 import NavBar from "../NavBar/NavBar";
+import { Link, useNavigate } from "react-router-dom";
 
 function AboutPage() {
+  const navigate = useNavigate();
+
   return (
     <>
       <NavBar></NavBar>
-
       <main>
         {/*First seciton*/}
         <section className="flex justify-center items-center bg-[#FFFFFF] h-140">
@@ -181,17 +183,22 @@ function AboutPage() {
               </p>
             </div>
             <div className="flex justify-between items-center gap-20">
-              <button className="hover:bg-white shadow-2xl border border-white/30 rounded-2xl w-40 h-10 text-[#F1F2FF] hover:text-[#0050D4] hover:transition-colors cursor-pointer">
+              <Link
+                to="/register"
+                className="flex justify-center justify-items-center items-center hover:bg-white shadow-2xl border border-white/30 rounded-2xl w-40 h-10 text-[#F1F2FF] hover:text-[#0050D4] text-center hover:transition-colors cursor-pointer"
+              >
                 Apply as Creator
-              </button>
-              <button className="hover:bg-white shadow-2xl border border-white/30 rounded-2xl w-40 h-10 text-[#F1F2FF] hover:text-[#0050D4] hover:transition-colors cursor-pointer">
+              </Link>
+              <Link
+                to="/services"
+                className="flex justify-center justify-items-center items-center hover:bg-white shadow-2xl border border-white/30 rounded-2xl w-40 h-10 text-[#F1F2FF] hover:text-[#0050D4] text-center hover:transition-colors cursor-pointer"
+              >
                 Browse listnings
-              </button>
+              </Link>
             </div>
           </div>
         </section>
       </main>
-
       <Footer></Footer>
     </>
   );
