@@ -5,6 +5,7 @@ import bcrypt from "bcrypt";
 import recoverPasswordModel from "../models/recoverPasswordModel.js";
 import { randomBytes } from "node:crypto";
 import { Resend } from "resend";
+import { getSocketId } from "../socket/registry.js";
 
 class UserController {
   async login(req: Request, res: Response, next: NextFunction) {
@@ -202,7 +203,9 @@ class UserController {
         .json({ response: "Not Found", message: "User was not found." });
     }
 
-    return res.status(200).json(result);
+    const isOnline = getSocketId(result.username) === undefined ? false : true;
+
+    return res.status(200).json({ ...result, online: isOnline });
   }
 
   async updateProfile(req: Request, res: Response) {

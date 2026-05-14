@@ -3,7 +3,7 @@ import MiniButton from "./MiniButtonLink";
 
 function Section1() {
   return (
-    <section className="z-0 flex bg-[#f9f5ff] px-10 pt-20 w-full min-h-140">
+    <section className="z-0 flex bg-[#f9f5ff]  pt-20 w-full min-h-140 container mx-auto">
       <div className="flex flex-col justify-center w-[50%] h-full">
         <h1 className="font-semibold text-6xl leading-18">
           GET HIGH-QUALITY
@@ -13,10 +13,8 @@ function Section1() {
           AT YOUR FINGERTIPS
         </h1>
         <p className="pt-10 pb-5">
-          Lorem ipsum dolor sit amet consectetur, adipisicing elit. Fuga neque
-          optio totam dolorum architecto tenetur cum nemo voluptates iure
-          minima! Placeat distinctio obcaecati maiores, qui magnam illum hic
-          possimus eveniet?
+          The Digital Atelier connects you with the world's most talented
+          creators to bring your vision to life through artisanal digital craft.
         </p>
         <div className="flex mb-5 pb-5 h-18">
           <InputField
@@ -30,17 +28,17 @@ function Section1() {
         <div className="mb-10">
           <h2 className="pb-5 text-2xl">POPULAR:</h2>
           <div className="flex gap-5">
-            <MiniButton to={"/"} text={"Graphic Design"} />
-            <MiniButton to={"/"} text={"Writing"} />
-            <MiniButton to={"/"} text={"Video Editing"} />
-            <MiniButton to={"/"} text={"SEO"} />
+            <MiniButton to={"/services"} text={"Graphic Design"} />
+            <MiniButton to={"/services"} text={"Writing"} />
+            <MiniButton to={"/services"} text={"Video Editing"} />
+            <MiniButton to={"/services"} text={"SEO"} />
           </div>
         </div>
       </div>
       <div className="gap-4 grid grid-cols-[1fr_0.95fr] w-1/2">
         <div className="pt-8">
           <img
-            src="/HomePage/goon.jpg"
+            src="/HomePage/hero_place_holder_1.png"
             alt="Designer working"
             className="shadow-[0_10px_20px_rgba(0,0,0,0.08)] hover:shadow-[0_30px_60px_rgba(0,0,0,0.25)] rounded-3xl w-full h-97.5 object-cover hover:scale-[1.03] transition-all hover:-translate-y-3 duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]"
           />
@@ -48,12 +46,12 @@ function Section1() {
 
         <div className="flex flex-col gap-4">
           <img
-            src="HomePage/goon.jpg"
+            src="HomePage/hero_place_holder_2.png"
             alt="Desk workspace"
             className="shadow-[0_10px_20px_rgba(0,0,0,0.08)] hover:shadow-[0_30px_60px_rgba(0,0,0,0.25)] rounded-3xl w-full h-97.5 object-cover hover:scale-[1.03] transition-all hover:-translate-y-3 duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]"
           />
 
-          <div className="flex flex-col justify-end bg-[#82e3d7] p-8 rounded-3xl w-full h-55">
+          <div className="flex flex-col justify-end bg-[#82e3d7] p-8 rounded-3xl w-full h-55 mb-8">
             <div className="flex justify-center items-center mb-4 rounded-full w-12 h-12 text-[#145b56]">
               <i className="absolute text-5xl fa-solid fa-shield"></i>
               <i className="absolute text-[#82e3d7] text-[2.5rem] fa-solid fa-shield"></i>

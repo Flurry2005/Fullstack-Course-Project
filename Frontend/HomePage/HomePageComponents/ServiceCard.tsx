@@ -1,15 +1,27 @@
+import { useNavigate } from "react-router-dom";
+
 interface Props {
   image: string;
   rating: string;
   name: string;
   description: string;
   price: string;
+  to: string;
 }
 
-function ServiceCard({ image, rating, name, description, price }: Props) {
+
+
+function ServiceCard({ image, rating, name, description, price, to }: Props) {
+  const navigate = useNavigate();
+  
   return (
     <article className="bg-white shadow-sm hover:shadow-md rounded-2xl overflow-hidden transition hover:-translate-y-1 cursor-pointer">
-      <div className="relative">
+      <div
+        className="relative"
+        onClick={() => {
+          navigate(`${"/" + to}`);
+        }}
+      >
         {/*Service Image*/}
         <img src={image} alt={name} className="w-full h-45 object-cover" />
         {/*Rating Badge*/}
