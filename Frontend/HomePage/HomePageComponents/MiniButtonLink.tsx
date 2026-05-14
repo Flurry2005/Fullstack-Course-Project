@@ -15,7 +15,11 @@ function MiniButton({ onClick, to, text, additionalClassName }: Props) {
         <Link to={to}>
           <button
             onClick={() => onClick}
-            className={`bg-indigo-600 hover:bg-indigo-700 px-4 py-1.5 rounded-full font-medium text-white text-sm transition cursor-pointer ${additionalClassName}`}
+            className={`bg-indigo-600 hover:bg-indigo-700 
+            px-3 py-1 text-xs
+            sm:px-4 sm:py-1.5 sm:text-sm
+            md:px-5 md:py-2 md:text-base
+            rounded-full font-medium text-white transition cursor-pointer ${additionalClassName}`}
           >
             {text}
           </button>
@@ -23,7 +27,11 @@ function MiniButton({ onClick, to, text, additionalClassName }: Props) {
       ) : (
         <button
           onClick={() => onClick}
-          className={`bg-indigo-600 hover:bg-indigo-700 px-4 py-1.5 rounded-full font-medium text-white text-sm transition cursor-pointer ${additionalClassName}`}
+          className={`bg-indigo-600 hover:bg-indigo-700 
+          px-3 py-1 text-xs
+          sm:px-4 sm:py-1.5 sm:text-sm
+          md:px-5 md:py-2 md:text-base
+          rounded-full font-medium text-white transition cursor-pointer ${additionalClassName}`}
         >
           {text}
         </button>
