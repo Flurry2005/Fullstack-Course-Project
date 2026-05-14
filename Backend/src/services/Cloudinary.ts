@@ -30,8 +30,8 @@ export function uploadBuffer(buffer: Buffer, publicId: string, folder: string) {
         format: "webp",
 
         transformation: {
-          width: 1200,
-          height: 1200,
+          width: 1920,
+          height: 1080,
           crop: "limit",
           quality: "auto:good",
         },
