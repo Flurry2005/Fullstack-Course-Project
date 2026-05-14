@@ -33,8 +33,8 @@ function NewMessageModal({ closeModal, profilePictures }: props) {
         >
           <i className="fa-solid fa-xmark"></i>
         </span>
-        <h2 className="top-5 left-10 absolute font-black text-[#4338CA] text-2xl">
-          SELECT AN ORDER TO START CHATTING!
+        <h2 className="top-5 left-10 absolute max-w-full font-black text-[#4338CA] not-md:text-xs text-2xl">
+          SELECT AN ORDER TO START A CHAT!
         </h2>
         <span className="block border-[#f0f0f0] border-b w-full h-1"></span>
         <div className="flex flex-col gap-3 px-5 py-5 rounded-2xl min-h-full overflow-y-scroll">

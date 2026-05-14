@@ -3,14 +3,14 @@ import { Link, useNavigate } from "react-router-dom";
 function Footer() {
   const navigate = useNavigate();
   return (
-    <header className="z-50 relative flex justify-between items-center  px-6 w-full h-28 container mx-auto">
+    <footer className="z-50 flex justify-between items-center mx-auto px-6 w-full h-28 container">
       <p className="text-gray-600 max-sm:text-xs">© 2026 ProjetName.</p>
       <div className="flex gap-8 text-2xl cursor-pointer">
         <p
           onClick={() => {
             navigate("/about");
           }}
-          className="font-semibold text-xl max-sm:text-base"
+          className="font-semibold max-sm:text-base text-xl"
         >
           About
         </p>
@@ -18,7 +18,7 @@ function Footer() {
         <i className="fa-solid fa-share-nodes"></i>
         <i className="fa-regular fa-id-card"></i>
       </div>
-    </header>
+    </footer>
   );
 }
 
