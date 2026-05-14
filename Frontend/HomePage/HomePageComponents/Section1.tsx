@@ -3,10 +3,10 @@ import MiniButton from "./MiniButtonLink";
 
 function Section1() {
   return (
-    <section className="z-0 flex lg:flex-row flex-col bg-[#f9f5ff] px-5 sm:px-10 pt-10 sm:pt-20 pb-6 sm:pb-8 w-full min-h-[90vh] lg:min-h-[70vh] container mx-auto">
+    <section className="z-0 flex lg:flex-row flex-col bg-[#f9f5ff] max-sm:px-4  pt-10 sm:pt-20 pb-6 sm:pb-8 w-full min-h-[90vh] lg:min-h-[70vh] container mx-auto">
       {/* LEFT SIDE */}
       <div className="flex flex-col justify-center w-full lg:w-1/2 h-full">
-        <h1 className="font-semibold text-3xl sm:text-4xl md:text-5xl lg:text-6xl leading-tight lg:leading-18">
+        <h1 className="font-semibold text-3xl sm:text-4xl md:text-5xl lg:text-6xl leading-tight lg:leading-16">
           GET HIGH-QUALITY
           <br />
           <span className="text-indigo-800">DIGITAL SERVICES</span>
@@ -14,7 +14,7 @@ function Section1() {
           AT YOUR FINGERTIPS
         </h1>
 
-        <p className="pt-6 sm:pt-10 pb-4 sm:pb-5 text-sm sm:text-base">
+        <p className="pt-6 sm:pt-10 pb-4 sm:pb-5 text-sm sm:text-base max-w-[550px]">
           The Digital Atelier connects you with the world's most talented
           creators to bring your vision to life through artisanal digital craft.
         </p>
@@ -58,14 +58,14 @@ function Section1() {
             className="shadow-[0_10px_20px_rgba(0,0,0,0.08)] hover:shadow-[0_30px_60px_rgba(0,0,0,0.25)] rounded-3xl w-full h-60 sm:h-80 lg:h-97 object-cover hover:scale-[1.03] transition-all hover:-translate-y-3 duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]"
           />
 
-          <div className="flex flex-col justify-end bg-[#82e3d7] p-6 sm:p-8 rounded-3xl w-full h-auto sm:h-55">
+          <div className="flex flex-col justify-end bg-[#82e3d7] p-6 sm:p-8 rounded-3xl w-full h-auto sm:h-55 items-center">
             <div className="flex justify-center items-center mb-4 rounded-full w-12 h-12 text-[#145b56]">
               <i className="absolute text-5xl fa-solid fa-shield"></i>
               <i className="absolute text-[#82e3d7] text-[2.5rem] fa-solid fa-shield"></i>
               <i className="absolute fa-solid fa-check"></i>
             </div>
 
-            <p className="font-medium text-[#145b56] sm:text-[17px] text-sm">
+            <p className="font-medium text-[#145b56] sm:text-[17px] text-sm text-center">
               Curated Talent Only
             </p>
           </div>
