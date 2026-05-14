@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import { Lock, ArrowLeft } from "lucide-react";
+//import { Lock, ArrowLeft } from "lucide-react";
 import NavigationLink from "../NavBar/NavbarComponents/NavigationLink";
 
 function ResetPassword() {

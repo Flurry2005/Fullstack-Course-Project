@@ -245,6 +245,8 @@ webHookRouter.post(
         buyerUsername: buyerUsername,
         sellerId: sellerId,
         sellerUsername: sellerUsername,
+        delivered: false,
+        reviewed: false,
       });
     }
 
