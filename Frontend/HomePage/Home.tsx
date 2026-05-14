@@ -7,7 +7,7 @@ import Section4 from "./HomePageComponents/Section4";
 
 function Home() {
   return (
-    <main className="bg-[#f9f5ff] w-full h-screen">
+    <main className="bg-[#f9f5ff] w-full min-h-screen overflow-x-hidden">
       <NavBar />
       <Section1 />
       <Section2 />

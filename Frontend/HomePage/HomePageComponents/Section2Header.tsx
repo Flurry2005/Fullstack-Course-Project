@@ -3,24 +3,24 @@ import { useNavigate } from "react-router-dom";
 function Section2Header() {
   const navigate = useNavigate();
   return (
-    <div className="flex justify-between items-start gap-6">
+    <div className="flex sm:flex-row flex-col sm:justify-between sm:items-start gap-6">
       <div>
-        <h2 className="font-bold text-[#23235b] text-[44px] leading-tight">
+        <h2 className="font-bold text-[#23235b] lg:text-[44px] text-2xl sm:text-3xl md:text-4xl leading-tight">
           Browse by Craft
         </h2>
-        <p className="mt-3 text-[#6f6f9a] text-[20px]">
+
+        <p className="mt-3 text-[#6f6f9a] lg:text-[20px] text-sm sm:text-base md:text-lg">
           Explore specialized services from certified professionals.
         </p>
       </div>
 
-      <button
+      <button className="inline-flex items-center self-start sm:self-auto gap-2 hover:opacity-80 font-semibold text-[#1857f7] lg:text-[22px] text-base sm:text-lg md:text-xl cursor-pointer"
         onClick={() => {
           navigate(`${"/services"}`);
         }}
-        className="inline-flex items-center gap-2 hover:opacity-80 mt-4 font-semibold text-[#1857f7] text-[22px] cursor-pointer"
-      >
+>
         View All
-        <span className="text-2xl">→</span>
+        <span className="text-xl sm:text-2xl">→</span>
       </button>
     </div>
   );
