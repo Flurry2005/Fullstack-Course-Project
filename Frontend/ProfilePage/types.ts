@@ -12,4 +12,5 @@ export type PublicProfile = Pick<
   | "languages"
   | "skills"
   | "createdAt"
+  | "online"
 >;

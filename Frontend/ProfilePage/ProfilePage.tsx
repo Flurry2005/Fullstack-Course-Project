@@ -36,6 +36,7 @@ function ProfilePage() {
   const [isLoadingGigs, setIsLoadingGigs] = useState(true);
   const [isUploadingImage, setIsUploadingImage] = useState(false);
   const [imageCacheBust, setImageCacheBust] = useState(Date.now());
+  const [online, setOnline] = useState(false);
 
   // Checks if the profile URL belongs to the logged-in user.
   const isOwnProfile = Boolean(user?.username && user.username === username);
@@ -73,6 +74,11 @@ function ProfilePage() {
         }
 
         const data = (await response.json()) as PublicProfile;
+
+        if (data.online == true) {
+          setOnline(true);
+        }
+
         setProfile(data);
         setDraftBio(data.bio ?? "");
         setDraftLocation(data.location ?? "");
@@ -273,6 +279,7 @@ function ProfilePage() {
         onBioChange={setDraftBio}
         onLocationChange={setDraftLocation}
         onImageChange={handleProfileImageChange}
+        onlineStatus={online}
       />
 
       <main className="gap-6 grid lg:grid-cols-[320px_1fr] mx-auto px-4 sm:px-6 py-8 max-w-296">

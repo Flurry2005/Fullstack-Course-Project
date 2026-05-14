@@ -19,6 +19,7 @@ type ProfileHeaderProps = {
   onBioChange: (value: string) => void;
   onLocationChange: (value: string) => void;
   onImageChange: (event: ChangeEvent<HTMLInputElement>) => void;
+  onlineStatus: boolean;
 };
 
 function ProfileHeader({
@@ -38,6 +39,7 @@ function ProfileHeader({
   onBioChange,
   onLocationChange,
   onImageChange,
+  onlineStatus,
 }: ProfileHeaderProps) {
   const hasCoverImage = Boolean(profile?.coverImageUrl);
   const primaryTextClass = hasCoverImage ? "text-white" : "text-[#2C2A51]";
@@ -137,15 +139,29 @@ function ProfileHeader({
               {/* Profile identity */}
               <div>
                 <div className="flex flex-wrap items-center gap-3">
-                  <h1 className={`max-w-[780px] text-[40px] font-bold leading-tight drop-shadow-sm md:text-[44px] ${primaryTextClass}`}>
+                  <h1
+                    className={`max-w-[780px] text-[40px] font-bold leading-tight drop-shadow-sm md:text-[44px] ${primaryTextClass}`}
+                  >
                     Hi, I'm {profile.fullname || profile.username}
                   </h1>
                 </div>
-
-                <p className={`mt-2 text-sm font-bold drop-shadow-sm ${secondaryTextClass}`}>
+                <p
+                  className={`mt-1 text-sm font-bold drop-shadow-sm ${secondaryTextClass}`}
+                >
                   <i className="fa-solid fa-location-dot mr-2 text-[11px]"></i>
                   {profile.location || "Location not added"}
                 </p>
+                <div className="flex gap-x-2 items-center mt-3">
+                  <span
+                    className={`w-3 h-3 rounded-full ${onlineStatus ? "bg-green-500" : "bg-red-500"} `}
+                  ></span>
+
+                  <span
+                    className={`text-sm font-bold drop-shadow-sm  ${hasCoverImage ? "text-white/85" : "text-[#5A5781]"}`}
+                  >
+                    {onlineStatus ? "Online" : "Offline"}
+                  </span>
+                </div>
               </div>
 
               {/* Profile description and location edit fields */}
@@ -153,7 +169,7 @@ function ProfileHeader({
                 {isEditing ? (
                   <div className="space-y-4">
                     <label className="block">
-                      <span className="mb-2 block text-sm font-bold text-black">
+                      <span className="mb-2 block text-sm font-bold text-white">
                         Location
                       </span>
                       <input
@@ -166,7 +182,7 @@ function ProfileHeader({
                     </label>
 
                     <label className="block">
-                      <span className="mb-2 block text-sm font-bold text-black">
+                      <span className="mb-2 block text-sm font-bold text-white">
                         Description
                       </span>
                       <textarea
@@ -180,7 +196,9 @@ function ProfileHeader({
                     </label>
                   </div>
                 ) : (
-                  <p className={`text-[17px] leading-7 drop-shadow-sm ${secondaryTextClass}`}>
+                  <p
+                    className={`text-[17px] leading-7 drop-shadow-sm ${secondaryTextClass}`}
+                  >
                     {profile.bio || FALLBACK_BIO}
                   </p>
                 )}

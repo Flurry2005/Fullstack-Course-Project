@@ -1,4 +1,7 @@
+import { useNavigate } from "react-router-dom";
+
 function Section2Header() {
+  const navigate = useNavigate();
   return (
     <div className="flex sm:flex-row flex-col sm:justify-between sm:items-start gap-6">
       <div>
@@ -11,7 +14,11 @@ function Section2Header() {
         </p>
       </div>
 
-      <button className="inline-flex items-center self-start sm:self-auto gap-2 hover:opacity-80 font-semibold text-[#1857f7] lg:text-[22px] text-base sm:text-lg md:text-xl cursor-pointer">
+      <button className="inline-flex items-center self-start sm:self-auto gap-2 hover:opacity-80 font-semibold text-[#1857f7] lg:text-[22px] text-base sm:text-lg md:text-xl cursor-pointer"
+        onClick={() => {
+          navigate(`${"/services"}`);
+        }}
+>
         View All
         <span className="text-xl sm:text-2xl">→</span>
       </button>

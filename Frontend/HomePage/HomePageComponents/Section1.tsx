@@ -3,7 +3,7 @@ import MiniButton from "./MiniButtonLink";
 
 function Section1() {
   return (
-    <section className="z-0 flex lg:flex-row flex-col bg-[#f9f5ff] px-5 sm:px-10 pt-10 sm:pt-20 pb-6 sm:pb-8 w-full min-h-[90vh] lg:min-h-[70vh]">
+    <section className="z-0 flex lg:flex-row flex-col bg-[#f9f5ff] px-5 sm:px-10 pt-10 sm:pt-20 pb-6 sm:pb-8 w-full min-h-[90vh] lg:min-h-[70vh] container mx-auto">
       {/* LEFT SIDE */}
       <div className="flex flex-col justify-center w-full lg:w-1/2 h-full">
         <h1 className="font-semibold text-3xl sm:text-4xl md:text-5xl lg:text-6xl leading-tight lg:leading-18">
@@ -15,10 +15,8 @@ function Section1() {
         </h1>
 
         <p className="pt-6 sm:pt-10 pb-4 sm:pb-5 text-sm sm:text-base">
-          Lorem ipsum dolor sit amet consectetur, adipisicing elit. Fuga neque
-          optio totam dolorum architecto tenetur cum nemo voluptates iure
-          minima! Placeat distinctio obcaecati maiores, qui magnam illum hic
-          possimus eveniet?
+          The Digital Atelier connects you with the world's most talented
+          creators to bring your vision to life through artisanal digital craft.
         </p>
 
         <div className="flex mb-5 pb-5 w-full h-14 sm:h-16 md:h-18">
@@ -35,10 +33,10 @@ function Section1() {
           <h2 className="pb-5 text-lg sm:text-xl md:text-2xl">POPULAR:</h2>
 
           <div className="flex flex-wrap gap-3 sm:gap-5">
-            <MiniButton to={"/"} text={"Graphic Design"} />
-            <MiniButton to={"/"} text={"Writing"} />
-            <MiniButton to={"/"} text={"Video Editing"} />
-            <MiniButton to={"/"} text={"SEO"} />
+            <MiniButton to={"/services"} text={"Graphic Design"} />
+            <MiniButton to={"/services"} text={"Writing"} />
+            <MiniButton to={"/services"} text={"Video Editing"} />
+            <MiniButton to={"/services"} text={"SEO"} />
           </div>
         </div>
       </div>
@@ -47,7 +45,7 @@ function Section1() {
       <div className="gap-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-[1fr_0.95fr] mt-10 lg:mt-0 w-full lg:w-1/2">
         <div className="pt-0 sm:pt-8">
           <img
-            src="/HomePage/goon.jpg"
+            src="/HomePage/hero_place_holder_1.png"
             alt="Designer working"
             className="shadow-[0_10px_20px_rgba(0,0,0,0.08)] hover:shadow-[0_30px_60px_rgba(0,0,0,0.25)] rounded-3xl w-full h-60 sm:h-80 lg:h-97 object-cover hover:scale-[1.03] transition-all hover:-translate-y-3 duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]"
           />
@@ -55,7 +53,7 @@ function Section1() {
 
         <div className="flex flex-col gap-4">
           <img
-            src="HomePage/goon.jpg"
+            src="HomePage/hero_place_holder_2.png"
             alt="Desk workspace"
             className="shadow-[0_10px_20px_rgba(0,0,0,0.08)] hover:shadow-[0_30px_60px_rgba(0,0,0,0.25)] rounded-3xl w-full h-60 sm:h-80 lg:h-97 object-cover hover:scale-[1.03] transition-all hover:-translate-y-3 duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]"
           />
