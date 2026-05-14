@@ -70,7 +70,7 @@ function ChatPanel({ activeOrder, onlineList, profilePictures }: Props) {
 
   if (!activeOrder || !user) return <></>;
   return (
-    <main className="flex flex-col bg-[#F9F5FF] w-8/10 not-lg:w-full h-full not-lg:max-h-[calc(100vh-4.5rem)]">
+    <main className="flex flex-col bg-[#F9F5FF] w-8/10 not-lg:w-full h-full not-lg:min-h-[calc(100vh-4.5rem)] not-lg:max-h-[calc(100vh-4.5rem)]">
       <section className="flex gap-5 bg-white px-5 not-lg:px-3 w-full h-20 not-lg:h-30">
         <div className="relative flex items-center">
           <img
@@ -87,7 +87,7 @@ function ChatPanel({ activeOrder, onlineList, profilePictures }: Props) {
             }}
           />
           <span
-            className={`right-0 bottom-4 box-content absolute border-3 border-white rounded-full w-2 h-2 ${onlineList?.find((entry: any) => entry.username === (user?.username === activeOrder?.buyerUsername ? activeOrder?.sellerUsername : activeOrder?.buyerUsername) && entry.status === "Online") ? "bg-green-500" : "bg-red-500"}`}
+            className={`right-0 bottom-4 not-lg:bottom-9 box-content absolute border-3 border-white rounded-full w-2 h-2 ${onlineList?.find((entry: any) => entry.username === (user?.username === activeOrder?.buyerUsername ? activeOrder?.sellerUsername : activeOrder?.buyerUsername) && entry.status === "Online") ? "bg-green-500" : "bg-red-500"}`}
           />
         </div>
         <div className="flex flex-col justify-center leading-4">

@@ -42,7 +42,7 @@ function Conversations({
   };
 
   return (
-    <section className="bg-[#F8FAFC] not-lg:pb-5 not-lg:border-gray-200 border-r-[#E2E8F0] not-lg:border-b w-2/10 not-lg:w-full h-screen not-lg:h-fit">
+    <section className="bg-[#F8FAFC] not-lg:pb-5 not-lg:border-gray-200 border-r-[#E2E8F0] not-lg:border-b w-2/10 not-lg:w-full h-full not-lg:h-fit">
       <div className="flex flex-col justify-around not-2xl:gap-2 p-5 h-2/10 min-h-fit">
         <div className="flex not-2xl:flex-col not-lg:flex-row! justify-between items-center not-2xl:gap-2">
           <div>
