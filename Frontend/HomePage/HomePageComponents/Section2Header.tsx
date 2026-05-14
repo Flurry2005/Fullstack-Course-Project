@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import { ChevronRight } from "lucide-react";
 
 function Section2Header() {
   const navigate = useNavigate();
@@ -14,13 +15,14 @@ function Section2Header() {
         </p>
       </div>
 
-      <button className="inline-flex items-center self-start sm:self-auto gap-2 hover:opacity-80 font-semibold text-[#1857f7] lg:text-[22px] text-base sm:text-lg md:text-xl cursor-pointer"
+      <button
+        className="inline-flex items-center self-start sm:self-auto gap-2 hover:opacity-80 font-semibold text-[#1857f7] lg:text-[22px] text-base sm:text-lg  cursor-pointer"
         onClick={() => {
           navigate(`${"/services"}`);
         }}
->
+      >
         View All
-        <span className="text-xl sm:text-2xl">→</span>
+        <ChevronRight />
       </button>
     </div>
   );
