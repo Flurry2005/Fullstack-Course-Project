@@ -87,7 +87,7 @@ function ChatPanel({ activeOrder, onlineList, profilePictures }: Props) {
             }}
           />
           <span
-            className={`right-0 bottom-4 not-lg:bottom-9 box-content absolute border-3 border-white rounded-full w-2 h-2 ${onlineList?.find((entry: any) => entry.username === (user?.username === activeOrder?.buyerUsername ? activeOrder?.sellerUsername : activeOrder?.buyerUsername) && entry.status === "Online") ? "bg-green-500" : "bg-red-500"}`}
+            className={`right-0 bottom-1 box-content absolute border-3 border-white rounded-full w-2 h-2 ${onlineList?.find((entry: any) => entry.username === (user?.username === activeOrder?.buyerUsername ? activeOrder?.sellerUsername : activeOrder?.buyerUsername) && entry.status === "Online") ? "bg-green-500" : "bg-red-500"}`}
           />
         </div>
         <div className="flex flex-col justify-center leading-4">
