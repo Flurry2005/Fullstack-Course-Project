@@ -63,20 +63,20 @@ function OrderCard({ order, gig, profilePictures }: props) {
           </span>
         </div>
         <div className="flex flex-col border-t py-3 gap-3 border-[#f0eef8]">
+          <div className="flex flex-col items-center">
           <span className="text-[#5A5781] text-sm">Due in</span>
           <div className="flex items-center">
             <span
-              className={`flex items-center gap-3 font-semibold text-xl ${dueDate < 1 ? "text-red-400" : ""}`}
+              className={`flex px-3 items-center gap-3 font-semibold text-xl ${dueDate < 1 ? "text-red-400" : ""}`}
             >
-              {dueDate < 0 ? dueDate * -1 : dueDate} Days
-              {dueDate < 0 && " late"}
+             {dueDate < 0 ? `${Math.abs(dueDate)} days ago` : `${dueDate} days`}
             </span>
-
-            <img
+      
+          </div>
+           <span
               onClick={() => setToggleInfo((prev) => !prev)}
-              src={infoIcon}
-              className={`${toggleInfo ? "opacity-50" : ""} hover:opacity-50 cursor-pointer ml-auto w-7 h-7`}
-            />
+              className={`${toggleInfo ? "opacity-50" : ""} hover:opacity-50 text-[#3525CD]  text-2xl font-semibold cursor-pointer ml-auto w-7 h-7`}
+            >[{toggleInfo ? "−" : "+"}]</span>
           </div>
           {toggleInfo && (
             <>
@@ -85,13 +85,13 @@ function OrderCard({ order, gig, profilePictures }: props) {
                 <span className="text-[10px] font-semibold uppercase leading-3">
                   Service
                 </span>
-                <span className="text-xl ml-auto">{gig?.title || order.gigname}</span>            </div>
+                <span className="ml-auto">{gig?.title || order.gigname}</span>            </div>
 
               <div className="flex flex-col border-t border-t-[#f0eef8]">
                 <span className="text-[10px] font-semibold uppercase leading-3">
                   Plan
                 </span>
-                <span className="text-xl ml-auto">
+                <span className="ml-auto">
                   {order.gigTier.charAt(0).toUpperCase()}
                   {order.gigTier.substring(1).toLowerCase()}
                 </span>
@@ -100,7 +100,7 @@ function OrderCard({ order, gig, profilePictures }: props) {
                 <span className="text-[10px] font-semibold uppercase leading-3">
                   Total
                 </span>
-                <span className="text-xl ml-auto">
+                <span className="ml-auto">
                   {selectedPrice !== undefined && selectedPrice !== null
                     ? `$${selectedPrice}`
                     : "Price unavailable"}
@@ -111,7 +111,7 @@ function OrderCard({ order, gig, profilePictures }: props) {
              <div className="   flex justify-between gap-3 font-semibold flex-wrap">
                 <span
                   className="
-                 bg-white rounded-lg text-red-400 px-3 py-1 mt-3 cursor-pointer gap-1 flex items-center text-sm"
+                 bg-white rounded-lg border border-red-400 text-red-400 px-3 py-1 mt-3 cursor-pointer gap-1 flex items-center text-sm"
                 >
                   Cancel order
                 </span>{" "}

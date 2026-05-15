@@ -148,6 +148,7 @@ function SellerDashBoard() {
             <div className="flex place-items-center">
               <h2 className="px-3 text-[#2C2A51] text-3xl">Active Orders</h2>
               <span className="cursor-pointer mr-3 ml-auto text-[#0050D4] text-xl">
+                {/* Show all orders if orders > 2 */}
                 {(orders?.filter(
                   (order) => order.sellerUsername === user?.username,
                 ).length ?? 0) > 2 && (
@@ -182,7 +183,7 @@ function SellerDashBoard() {
               )}
             </div>
           </section>
-          <section className="flex flex-col gap-6 bg-[#ACA8D7]/10 p-6 border-[#ACA8D7]/15 border-2 rounded-2xl">
+          <section className="flex h-fit flex-col gap-6 bg-[#ACA8D7]/10 p-6 border-[#ACA8D7]/15 border-2 rounded-2xl">
             <div className="flex">
               <h2 className="text-[#060607] text-2xl align-middle">Messages</h2>
 
