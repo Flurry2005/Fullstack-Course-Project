@@ -149,10 +149,7 @@ class GigController {
           `${createdGig._id}-${crypto.randomUUID()}`,
           "gigPreviewImages",
         );
-
-        uploadedImages.push(
-          getSquareImage(resultUpload.public_id, resultUpload.version),
-        );
+        uploadedImages.push(resultUpload.secure_url);
       }
 
       await gigsModel.updateOne(

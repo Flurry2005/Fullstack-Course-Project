@@ -3,6 +3,7 @@ import Footer from "../Footer";
 import { useEffect, useState } from "react";
 import { API_BASE } from "../ProfilePage/profileUtils";
 import NavBar from "../NavBar/NavBar";
+import { useOrders } from "../Context/useOrders";
 
 type PaymentItem = {
   name: string;
@@ -32,6 +33,8 @@ function SuccessPage() {
   const [searchParams] = useSearchParams();
   const sessionId = searchParams.get("session_id");
 
+  const { updateOrders } = useOrders();
+
   const [payment, setPayment] = useState<PaymentData | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -54,7 +57,12 @@ function SuccessPage() {
           credentials: "include",
         });
 
-        const data = await res.json();
+        const data = (await res.json()) as PaymentData;
+
+        if (data.status === "paid") {
+          updateOrders();
+        }
+
         setPayment(data);
       } catch (error) {
         console.error(error);

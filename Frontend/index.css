@@ -103,3 +103,16 @@ code {
     background-color: #111827; /* gray-900 */
   }
 }
+
+@utility no-scrollbar {
+  @apply [scrollbar-width:none] [&::-webkit-scrollbar]:hidden;
+}
+@keyframes slideIn {
+  from {
+    transform: translateX(120%);
+  }
+
+  to {
+    transform: translateX(0);
+  }
+}
