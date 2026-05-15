@@ -6,6 +6,7 @@ import ordersModel from "../models/orderModel.js";
 import userModel from "../models/userModel.js";
 import JWTModel from "../models/JWT.js";
 import express from "express";
+import SocketHandler from "../socket/SocketHandler.js";
 
 export const checkoutRouter = Router();
 
@@ -245,6 +246,12 @@ webHookRouter.post(
         buyerUsername: buyerUsername,
         sellerId: sellerId,
         sellerUsername: sellerUsername,
+      });
+
+      SocketHandler.emitToUser(sellerUsername!, "purchase_received", {
+        gigname,
+        buyerUsername,
+        tier,
       });
     }
 

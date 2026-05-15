@@ -19,6 +19,7 @@ const allowedOrigins = [
 ];
 
 class SocketHandler {
+  private static instance: SocketHandler;
   #io: Server | null = null;
 
   constructor(server: ServerType) {
@@ -63,8 +64,18 @@ class SocketHandler {
         next(new Error("UNAUTHORIZED"));
       }
     });
-
+    SocketHandler.instance = this;
     this.initialize();
+  }
+
+  static emitToUser(username: string, event: string, data?: any) {
+    const socketId = getSocketId(username);
+    if (socketId && this.instance.#io) {
+      const socket = this.instance.#io.sockets.sockets.get(socketId);
+      if (socket) {
+        socket.emit(event, data);
+      }
+    }
   }
 
   initialize() {
