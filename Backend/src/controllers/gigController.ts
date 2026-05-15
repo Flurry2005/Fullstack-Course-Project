@@ -146,7 +146,7 @@ class GigController {
       for (const file of files) {
         const resultUpload: any = await uploadBuffer(
           file.buffer,
-          `${createdGig._id}-${crypto.randomUUID()}`,
+          `${createdGig._id}-${files.indexOf(file) + 1}`,
           "gigPreviewImages",
         );
         uploadedImages.push(resultUpload.secure_url);
