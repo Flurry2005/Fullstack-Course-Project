@@ -21,7 +21,7 @@ function NavBar() {
   }, []);
 
   return (
-    <header className="z-50 relative flex flex-wrap justify-between items-center px-6 w-full md:h-fit min-h-17">
+    <header className="z-50 relative flex flex-wrap justify-between items-center shadow-lg/4 px-6 w-full md:h-fit min-h-17">
       {/* Left side */}
       <Logo />
       {/* Middle side */}
