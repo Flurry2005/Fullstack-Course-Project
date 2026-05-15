@@ -26,6 +26,7 @@ function SellerDashBoard() {
   const [profilePictures, setProfilePictures] = useState<
     Record<string, string>
   >({});
+  const [maxOrders, setMaxOrders] = useState(2);
 
   useEffect(() => {
     const loadPictures = async () => {
@@ -56,6 +57,8 @@ function SellerDashBoard() {
   }, [orders, user]);
 
   const getGigs = async () => {
+    if (!user?.username) return;
+
     const response = await fetch(
       `${import.meta.env.VITE_DEV === "true" ? "http://localhost:3000" : "https://fullstackapi.liamjorgensen.dev"}/api${"/gig/seller/"}${user?.username}`,
     );
@@ -66,6 +69,7 @@ function SellerDashBoard() {
   };
 
   useEffect(() => {
+    if (!user?.username) return;
     getGigs();
     setActive(true);
   }, [user]);
@@ -118,7 +122,7 @@ function SellerDashBoard() {
           </div>
           <div className="flex flex-col bg-white p-6 border-[#ACA8D7]/15 border-2 rounded-2xl w-full">
             <span className="text-[#5A5781]">Pending Clearance</span>
-            <span className="font-semibold text-[#0050D4] text-3xl">
+            <span className="text-[#0050D4] text-3xl font-semibold">
               $1,250
             </span>
           </div>
@@ -143,25 +147,33 @@ function SellerDashBoard() {
           <section className="flex flex-col gap-3">
             <div className="flex place-items-center">
               <h2 className="px-3 text-[#2C2A51] text-3xl">Active Orders</h2>
-              <span className="mr-3 ml-auto text-[#0050D4] text-xl">
-                View All (
-                {
-                  orders?.filter(
-                    (order) => order.sellerUsername === user?.username,
-                  ).length
-                }
-                )
+              <span className="cursor-pointer mr-3 ml-auto text-[#0050D4] text-xl">
+                {/* Show all orders if orders > 2 */}
+                {(orders?.filter(
+                  (order) => order.sellerUsername === user?.username,
+                ).length ?? 0) > 2 && (
+                  <span onClick={() => maxOrders === 2 ? setMaxOrders( orders?.filter(
+                        (order) => order.sellerUsername === user?.username,
+                      ).length ?? 0): setMaxOrders(2)} >
+                    {maxOrders === 2 ? "Show All" : "Show Less " }
+                     {maxOrders === 2 ? " (" + orders?.filter(
+                        (order) => order.sellerUsername === user?.username,
+                      ).length +")"  : "" }
+                  </span>
+                )}
               </span>
             </div>
             <div className="gap-6 grid grid-cols-1 md:grid-cols-2">
               {orders
                 ?.filter((order) => order.sellerUsername === user?.username)
-                .slice(0, 2)
+                .slice(0, maxOrders)
                 ?.map((order) => (
                   <OrderCard
                     profilePictures={profilePictures}
                     order={order}
-                    gig={gigs?.filter((gig) => gig._id === order.gigId)[0]}
+                    gig={gigs?.find(
+                      (gig) => String(gig._id) === String(order.gigId),
+                    )}
                   />
                 ))}
               {orders?.filter(
@@ -171,7 +183,7 @@ function SellerDashBoard() {
               )}
             </div>
           </section>
-          <section className="flex flex-col gap-6 bg-[#ACA8D7]/10 p-6 border-[#ACA8D7]/15 border-2 rounded-2xl">
+          <section className="flex h-fit flex-col gap-6 bg-[#ACA8D7]/10 p-6 border-[#ACA8D7]/15 border-2 rounded-2xl">
             <div className="flex">
               <h2 className="text-[#060607] text-2xl align-middle">Messages</h2>
 
