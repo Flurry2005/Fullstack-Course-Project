@@ -22,7 +22,9 @@ export function connectSocket() {
   if (!s.connected) {
     s.connect();
   }
-  console.log("Socket connected:", s.connected);
+  setTimeout(() => {
+    console.log("Socket connected:", s.connected);
+  }, 1000);
   return s;
 }
 

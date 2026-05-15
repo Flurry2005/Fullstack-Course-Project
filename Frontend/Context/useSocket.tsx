@@ -16,7 +16,7 @@ export function SocketProvider({ children }: { children: React.ReactNode }) {
   const { orders, updateOrders, setOrders } = useOrders();
   const ordersRef = useRef(orders);
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
   const audioRef = useRef(new Audio("/message_sound.mp3"));
   const popupMessageRef = useRef<HTMLDivElement>(null);
 
@@ -208,9 +208,16 @@ export function SocketProvider({ children }: { children: React.ReactNode }) {
       audioRef.current.play();
     };
 
+    const handleDisconnect = (reason: string) => {
+      console.log("Disconnected from server", reason);
+      logout();
+    };
+
     socket.on("message_received", handleMessage);
     socket.on("online_status", handleStatus);
     socket.on("purchase_received", handlePurchaseReceived);
+    socket.on("disconnect", handleDisconnect);
+    socket.on("reconnect_failed", handleDisconnect);
 
     const requestStatus = () => {
       socket.emit("request_online_statuses");
@@ -223,6 +230,8 @@ export function SocketProvider({ children }: { children: React.ReactNode }) {
       socket.off("online_status", handleStatus);
       socket.off("server_ready", requestStatus);
       socket.off("purchase_received", handlePurchaseReceived);
+      socket.off("disconnect", handleDisconnect);
+      socket.off("reconnect_failed", handleDisconnect);
     };
   }, [user, activeOrder]);
 
