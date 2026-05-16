@@ -1,15 +1,18 @@
 import me from "../../assets/react.svg";
 import profileRatingsIcon from "../../assets/profile-ratings-icon.svg";
 import type { Review } from "../../types/Gig";
+import { Link } from "react-router-dom";
 
 type ClientReflectionsProps = {
   reviews: Review[];
+  profilePictures?: Record<string, string>;
   averageRating: number;
   reviewsAmount: number;
 };
 
 function ClientReflections({
   reviews,
+  profilePictures,
   averageRating,
   reviewsAmount,
 }: ClientReflectionsProps) {
@@ -22,7 +25,9 @@ function ClientReflections({
             <img src={profileRatingsIcon} className="w-6 h-6" />
             {averageRating.toFixed(1)}
           </span>
-          <span className="text-[#5A5781] max-sm:text-sm">({reviewsAmount} Reviews)</span>
+          <span className="text-[#5A5781] max-sm:text-sm">
+            ({reviewsAmount} Reviews)
+          </span>
         </span>
       </div>
 
@@ -32,11 +37,18 @@ function ClientReflections({
           className="flex flex-col gap-3 p-6 border border-[#ACA8D7]/10 rounded-2xl"
         >
           <div className="flex items-center gap-3 w-full">
-            <img src={me} className="rounded-full w-12 h-12" />
+            <img
+              src={profilePictures?.[e.username] || me}
+              className="rounded-full w-12 h-12"
+              alt={e.username}
+            />
             <div className="flex flex-col flex-wrap">
-              <span className="font-bold text-[#2C2A51] text-sm">
+              <Link
+                to={`/profile/${e.username}`}
+                className="font-bold text-[#2C2A51] text-sm cursor-pointer"
+              >
                 {e.username}
-              </span>
+              </Link>
               <span className="text-[#5A5781] max-sm:text-xs text-sm">
                 profession
               </span>
