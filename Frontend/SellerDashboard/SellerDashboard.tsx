@@ -113,7 +113,8 @@ function SellerDashBoard() {
             ))}
           </h3>
         </section>
-
+     
+       
         {/* Statistics */}
         <section className="gap-6 grid grid-cols-1 md:grid-cols-4">
           <div className="flex flex-col bg-white p-6 border-[#ACA8D7]/15 border-2 rounded-2xl w-full">
@@ -301,6 +302,7 @@ function SellerDashBoard() {
             ))}
           </div>
         </section>
+         <Link className="bg-amber-300 w-fit p-3" to={"/services/review/6a05f0f3310a915cb83399e5"}>Test review</Link>
       </main>
 
       <Footer />

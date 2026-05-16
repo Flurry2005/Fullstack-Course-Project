@@ -11,6 +11,12 @@ export type Package = {
   features?: string[];
 };
 
+export type Review = {
+  reviewer?: string;
+  comment?: string;
+  rating?: number;
+};
+
 export type Gig = {
   _id?: string;
   sellerUsername?: string;
@@ -19,9 +25,11 @@ export type Gig = {
   primaryImagePreview?: string;
   secondaryImagePreview?: string;
   ternaryImagePreview?: string;
-  category?: Category;
-  tags?: string[];
   description?: string;
+  tags?: string[];
+  category?: Category;
+  rating?: number;
+  reviews?: Review[];
   basic?: Package;
   standard?: Package;
   premium?: Package;

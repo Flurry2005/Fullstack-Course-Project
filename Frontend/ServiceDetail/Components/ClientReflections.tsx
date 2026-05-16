@@ -1,5 +1,10 @@
 import me from "../../assets/react.svg";
 import profileRatingsIcon from "../../assets/profile-ratings-icon.svg";
+import type { Gig } from "../../types/Gig";
+
+type ClientReflectionsProps = {
+  gig: Gig;
+};
 
 const reflectionsDemo = [
   {
@@ -28,7 +33,7 @@ const reflectionsDemo = [
   },
 ];
 
-function ClientReflections() {
+function ClientReflections({ gig }: ClientReflectionsProps) {
   return (
     <div className="flex flex-col gap-6">
       <div className="flex items-center gap-3">
@@ -42,28 +47,28 @@ function ClientReflections() {
         </span>
       </div>
 
-      {reflectionsDemo.slice(0, 2).map((e) => (
+      {gig.reviews?.slice(0, 10).map((e) => (
         <div
-          key={e.author}
+          key={e.reviewer}
           className="flex flex-col gap-3 p-6 border border-[#ACA8D7]/10 rounded-2xl"
         >
           <div className="flex items-center gap-3 w-full">
-            <img src={e.avatar} className="rounded-full w-12 h-12" />
+            <img src={me} className="rounded-full w-12 h-12" />
             <div className="flex flex-col flex-wrap">
               <span className="font-bold text-[#2C2A51] text-sm">
-                {e.author}
+                {e.reviewer}
               </span>
               <span className="text-[#5A5781] max-sm:text-xs text-sm">
-                {e.profession}
+                {"Job title"}
               </span>
             </div>
             <div className="flex flex-wrap gap-1 ml-auto">
-              {Array.from({ length: e.rating }, (_, i) => (
+              {Array.from({ length: e.rating || 0 }, (_, i) => (
                 <img key={i} src={profileRatingsIcon} className="w-3 h-3" />
               ))}
             </div>
           </div>
-          <p className="text-[#5A5781] text-sm">{e.content}</p>
+          <p className="text-[#5A5781] text-sm">{e.comment}</p>
         </div>
       ))}
       {reflectionsDemo.length > 2 && (

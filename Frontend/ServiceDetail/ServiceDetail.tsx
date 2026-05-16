@@ -97,7 +97,7 @@ function ServiceDetail({
               <div className="flex flex-col gap-6 md:w-2/3">
                 <AboutService about={gig?.description} />
                 <AboutSeller profile={profile} />
-                <ClientReflections />
+                <ClientReflections gig={gig} />
               </div>
             </div>
           </main>

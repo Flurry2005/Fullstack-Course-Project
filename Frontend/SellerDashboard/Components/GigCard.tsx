@@ -53,7 +53,7 @@ function GigCard({
           </Link>
           <span className="top-3 right-3 z-10 absolute flex items-center gap-1 bg-white px-3 py-1 rounded-2xl w-fit font-semibold text-[#2c2a51] text-sm">
             <img src={ratingsIcon} className="w-4 h-4" />
-            {rating} ({reviewerAmount})
+            {rating} <span className="text-[#838384]">({reviewerAmount})</span>
           </span>
         </div>
         <div className="flex flex-col gap-3 bg-white p-6 border-[#ACA8D7]/15 border-x-2 border-b-2 rounded-b-2xl h-full">
