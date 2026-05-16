@@ -209,7 +209,22 @@ export function SocketProvider({ children }: { children: React.ReactNode }) {
     };
 
     const handleDisconnect = (reason: string) => {
-      console.log("Disconnected from server", reason);
+      console.log("Disconnected from server:", reason);
+      if (
+        reason === "transport close" ||
+        reason === "transport error" ||
+        reason === "ping timeout"
+      ) {
+        return;
+      }
+
+      if (reason === "io server disconnect") {
+        logout();
+      }
+    };
+
+    const handleReconnectFailed = () => {
+      console.log("Reconnect failed");
       logout();
     };
 
@@ -217,7 +232,7 @@ export function SocketProvider({ children }: { children: React.ReactNode }) {
     socket.on("online_status", handleStatus);
     socket.on("purchase_received", handlePurchaseReceived);
     socket.on("disconnect", handleDisconnect);
-    socket.on("reconnect_failed", handleDisconnect);
+    socket.on("reconnect_failed", handleReconnectFailed);
 
     const requestStatus = () => {
       socket.emit("request_online_statuses");
