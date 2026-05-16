@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { Gig } from "../../../types/Gig";
 import CancelButton from "./CancelButton";
 import UpdateButton from "./UpdateButton";
@@ -17,7 +17,7 @@ function Description({
   setConfirm,
 }: DescriptionProps) {
   const [desc, setDesc] = useState(gig.description || "");
-
+  const [everythingOK, setEverythingOK] = useState(true);
   const handleUpdate = () => {
     setGig((prev) => {
       if (!prev) return prev;
@@ -30,6 +30,14 @@ function Description({
     setConfirm(true);
   };
 
+  (useEffect(() => {
+    if (desc.length < 12) {
+      setEverythingOK(false);
+    } else {
+      setEverythingOK(true);
+    }
+  }),
+    [desc]);
   return (
     <div
       className={`z-100 md:w-[50vw] w-full h-fit left-1/2 -translate-x-1/2 absolute border border-[#ACA8D7]/15 bg-[#f9f5ff]/50 p-6 rounded-2xl`}
@@ -54,7 +62,10 @@ function Description({
           <span onClick={() => setEditState(false)}>
             <CancelButton />
           </span>
-          <span className="ml-auto" onClick={handleUpdate}>
+          <span
+            className={`${everythingOK ? "opacity-100" : "opacity-50"} ml-auto`}
+            onClick={everythingOK ? handleUpdate : () => {}}
+          >
             <UpdateButton text={"Update"} />
           </span>
         </span>

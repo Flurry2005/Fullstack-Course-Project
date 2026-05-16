@@ -1,0 +1,137 @@
+---
+query: "@mermaid-chart generate squence diagram all routes from client, to backend
+  and also stripe using all my files and socket event end points and emittions"
+references:
+  - "File: /Backend/src"
+  - "File: /Frontend/ChatPage"
+  - "File: /Frontend/ChatPage/Components"
+  - "File: /Frontend/checkoutPage"
+  - "File: /Frontend/Components"
+  - "File: /Frontend/Context"
+  - "File: /Frontend/HomePage"
+  - "File: /Frontend/LoginPage"
+  - "File: /Frontend/NavBar"
+  - "File: /Frontend/node_modules"
+  - "File: /Frontend/ProfilePage"
+  - "File: /Frontend/SellerDashboard"
+  - "File: /Frontend/ServiceDetail"
+  - "File: /Frontend/ServiceListings"
+  - "File: /Frontend/socket"
+  - "File: /Frontend/utils"
+  - "File: /Backend/package-lock.json"
+generationTime: 2026-05-12T07:20:00.563Z
+---
+
+sequenceDiagram
+  participant Browser
+  participant ClientApp
+  participant AuthContext
+  participant OrdersContext
+  participant SocketContext
+  participant BackendExpress
+  participant SocketServer
+  participant Stripe
+
+  Browser->>ClientApp: Load app
+  alt Session reestablished (via localStorage and cookie is present)
+    ClientApp->>AuthContext: restore user from localStorage
+  AuthContext->>SocketContext: connectSocket()
+  SocketContext->>SocketServer: socket connect
+  SocketServer-->>SocketContext: server_ready
+  SocketContext->>SocketServer: request_online_statuses
+  SocketServer-->>SocketContext: online_status
+  end
+
+  alt User login
+    Browser->>ClientApp: submit login form
+    ClientApp->>BackendExpress: POST /api/login {email,password}
+    BackendExpress-->>ClientApp: {success,user}
+    ClientApp->>AuthContext: login(user)
+    AuthContext->>SocketContext: connectSocket()
+    else Invalid credentials
+    BackendExpress-->>ClientApp: {success:false,error:"Invalid credentials"}
+  end
+
+  alt User register
+    Browser->>ClientApp: submit register form
+    ClientApp->>BackendExpress: POST /api/register {fullname,username,email,password}
+    BackendExpress-->>ClientApp: {success}
+  end
+
+
+  Note over ClientApp,OrdersContext: Fetch orders on app load if user logged in
+  Browser->>ClientApp: Open seller Dashboard page
+  ClientApp->>OrdersContext: fetch orders
+  OrdersContext->>BackendExpress: GET /api/orders
+  BackendExpress-->>OrdersContext: {success,orders}
+  OrdersContext->>ClientApp: orders available
+
+  ClientApp->>BackendExpress: GET /api/profile/:username
+  BackendExpress-->>ClientApp: public profile
+
+  ClientApp->>BackendExpress: GET /api/gig
+  BackendExpress-->>ClientApp: gig list
+
+  Note over ClientApp: Fetch service detail and seller profile when open service detail page
+  Browser->>ClientApp: open service detail
+  ClientApp->>BackendExpress: GET /api/gig/:gigId
+  BackendExpress-->>ClientApp: gig detail
+  ClientApp->>BackendExpress: GET /api/profile/:sellerUsername
+  BackendExpress-->>ClientApp: seller profile
+
+  Note over ClientApp: Fetch profile data and seller gigs when open profile page
+  Browser->>ClientApp: open profile page
+  ClientApp->>BackendExpress: GET /api/profile/:username
+  BackendExpress-->>ClientApp: profile data
+  ClientApp->>BackendExpress: GET /api/gig/seller/:username
+  BackendExpress-->>ClientApp: seller gigs
+
+  alt Edit own profile
+    ClientApp->>BackendExpress: PATCH /api/profile
+    BackendExpress-->>ClientApp: updated profile
+    ClientApp->>AuthContext: login(updatedUser)
+  end
+
+  alt Upload profile picture
+    ClientApp->>BackendExpress: POST /api/upload/profilePicture
+    BackendExpress-->>ClientApp: imageUrl
+  end
+
+  alt Upload cover banner
+    ClientApp->>BackendExpress: POST /api/upload/profileBanner
+    BackendExpress-->>ClientApp: imageUrl
+  end
+
+  Note over ClientApp: Fetch gig when open checkout page
+  Browser->>ClientApp: open checkout page
+  ClientApp->>BackendExpress: GET /api/gig/:gigId
+  BackendExpress-->>ClientApp: gig detail
+
+  Note over ClientApp: User confirms payment and backend creates Stripe checkout session
+  Browser->>ClientApp: confirm pay
+  ClientApp->>BackendExpress: POST /api/create-checkout-session {gigId,tier,billing}
+  BackendExpress->>Stripe: create checkout session
+  Stripe-->>BackendExpress: {sessionUrl}
+  BackendExpress-->>ClientApp: {url}
+  ClientApp->>Browser: redirect to Stripe checkout
+  Stripe-->>Browser: checkout page
+  Stripe->>Browser: redirect /success?session_id=...
+  Browser->>ClientApp: open success page
+  ClientApp->>BackendExpress: GET /api/session/:session_id
+  BackendExpress-->>ClientApp: payment details
+
+    Stripe->>BackendExpress: POST /api/webhook-checkout event
+    BackendExpress-->>BackendExpress: process webhook event
+    alt payment successful
+      BackendExpress->>BackendExpress: Create order in database
+    end
+
+  Note over ClientApp, SocketContext: Handle incoming chat messages and read events via socket events
+  note over SocketContext,SocketServer: Server-side chat socket events
+  ClientApp->>SocketContext: emit send_message {orderId,message}
+  SocketContext->>SocketServer: send_message
+  SocketServer-->>SocketContext: message_received
+  SocketContext->>ClientApp: update chat UI / popup / audio
+  ClientApp->>SocketContext: emit read_chat {orderId}
+  SocketContext->>SocketServer: read_chat
+  SocketServer-->>SocketContext: ack

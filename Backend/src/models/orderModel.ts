@@ -60,6 +60,18 @@ const orderSchema = new mongoose.Schema(
       type: [messageSchema],
       default: [],
     },
+
+    delivered: {
+      type: Boolean,
+      required: true,
+      default: false,
+    },
+
+    reviewed: {
+      type: Boolean,
+      required: true,
+      default: false,
+    },
   },
   { timestamps: true },
 );

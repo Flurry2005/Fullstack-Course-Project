@@ -1,6 +1,7 @@
 import type { Gig } from "../types/Gig.js";
 import gigsModel from "../models/gigsModel.js";
 import { Request, Response, NextFunction } from "express";
+import { isValidObjectId } from "mongoose";
 import { categories } from "../utils/Categories.js";
 import orderModel from "../models/orderModel.js";
 import { getSquareImage, uploadBuffer } from "../services/Cloudinary.js";
@@ -146,13 +147,10 @@ class GigController {
       for (const file of files) {
         const resultUpload: any = await uploadBuffer(
           file.buffer,
-          `${createdGig._id}-${crypto.randomUUID()}`,
+          `${createdGig._id}-${files.indexOf(file) + 1}`,
           "gigPreviewImages",
         );
-
-        uploadedImages.push(
-          getSquareImage(resultUpload.public_id, resultUpload.version),
-        );
+        uploadedImages.push(resultUpload.secure_url);
       }
 
       await gigsModel.updateOne(
@@ -308,5 +306,110 @@ class GigController {
       return false;
     }
   }
+
+  async getGigToReview(req: Request, res: Response) {
+    const id = req.params.id;
+
+    if (!res.locals.jwt?._id) {
+      return res.status(401).json({ status: false, message: "Unauthorized" });
+    }
+    if (!id)
+      return res.status(400).json({ status: false, message: "No id provided" });
+
+    if (!isValidObjectId(id)) {
+      return res.status(400).json({ status: false, message: "Invalid gig id" });
+    }
+
+    try {
+      const order = await orderModel.findOne({
+        gigId: id,
+        buyerId: res.locals.jwt._id,
+      });
+      if (!order)
+        return res
+          .status(404)
+          .json({ status: false, message: "No order found" });
+    } catch (error) {
+      console.error(error);
+    }
+
+    try {
+      const gig = await gigsModel.findById(id);
+      return gig
+        ? res.status(200).json(gig)
+        : res.status(404).json({ status: false, message: "No gig was found" });
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  async reviewGig(req: Request, res: Response) {
+    const { id, rating, comment } = req.body;
+
+    if (!res.locals.jwt?._id) {
+      return res.status(401).json({ status: false, message: "Unauthorized" });
+    }
+
+    if (!id)
+      return res.status(400).json({ status: false, message: "No id provided" });
+
+    if (!isValidObjectId(id)) {
+      return res.status(400).json({ status: false, message: "Invalid gig id" });
+    }
+
+    if (!rating)
+      return res
+        .status(400)
+        .json({ status: false, message: "No rating provided" });
+
+    try {
+      const order = await orderModel.findOne({
+        gigId: id,
+        buyerId: res.locals.jwt._id,
+      });
+      if (!order)
+        return res
+          .status(404)
+          .json({ status: false, message: "No order found" });
+    } catch (error) {
+      console.error(error);
+    }
+
+    try {
+      const gig = await gigsModel.findById(id);
+      if (!gig)
+        res.status(404).json({ status: false, message: "No gig was found" });
+
+      const reviews = gig?.reviews || [];
+      const avgRating =
+        reviews.length > 0
+          ? reviews.reduce((sum, r) => sum + (r.rating || 0), 0) /
+            reviews.length
+          : rating;
+
+      await gigsModel.findByIdAndUpdate(
+        { _id: id },
+        {
+          $push: {
+            reviews: {
+              comment: comment,
+              rating: rating,
+              reviewer: res.locals._id,
+            },
+          },
+          $set: {
+            rating: avgRating,
+          },
+        },
+      );
+    } catch (error) {
+      console.error(error);
+    }
+
+    return res
+      .status(201)
+      .json({ status: "success", message: "Review posted!" });
+  }
 }
+
 export default new GigController();

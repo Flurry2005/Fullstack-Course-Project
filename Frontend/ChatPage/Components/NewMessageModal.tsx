@@ -26,15 +26,15 @@ function NewMessageModal({ closeModal, profilePictures }: props) {
         }
       }}
     >
-      <div className="relative flex flex-col gap-5 bg-white shadow-xl p-4 px-10 py-15 rounded-2xl w-8/10 h-9/10 overflow-y-hidden">
+      <div className="relative flex flex-col gap-5 bg-white shadow-xl p-4 px-10 py-15 rounded-2xl w-8/10 max-w-240 h-9/10 overflow-y-hidden">
         <span
           className="top-5 right-5 absolute font-black text-black text-2xl cursor-pointer"
           onClick={closeModal}
         >
           <i className="fa-solid fa-xmark"></i>
         </span>
-        <h2 className="top-5 left-10 absolute font-black text-[#4338CA] text-2xl">
-          SELECT A CHAT!
+        <h2 className="top-5 left-10 absolute max-w-full font-black text-[#4338CA] not-md:text-xs text-2xl">
+          SELECT AN ORDER TO START A CHAT!
         </h2>
         <span className="block border-[#f0f0f0] border-b w-full h-1"></span>
         <div className="flex flex-col gap-3 px-5 py-5 rounded-2xl min-h-full overflow-y-scroll">

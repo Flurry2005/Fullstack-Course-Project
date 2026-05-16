@@ -16,7 +16,7 @@ export function SocketProvider({ children }: { children: React.ReactNode }) {
   const { orders, updateOrders, setOrders } = useOrders();
   const ordersRef = useRef(orders);
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
   const audioRef = useRef(new Audio("/message_sound.mp3"));
   const popupMessageRef = useRef<HTMLDivElement>(null);
 
@@ -48,7 +48,7 @@ export function SocketProvider({ children }: { children: React.ReactNode }) {
     const order = ordersRef.current?.find((order) => order._id === orderId);
     root.render(
       <div
-        className="right-5 bottom-5 z-100 fixed flex flex-col justify-center gap-1 bg-[#DDD9FF]/90 shadow-lg px-5 rounded-2xl rounded-br-none w-100 h-25 transition-transform cursor-pointer"
+        className="right-5 bottom-5 z-100 fixed flex flex-col justify-center gap-1 bg-[#DDD9FF]/90 shadow-lg px-5 rounded-2xl rounded-br-none w-100 h-25 transition-transform animate-[slideIn_0.3s_ease-out] cursor-pointer"
         onClick={async () => {
           navigate("/messages");
           console.log(ordersRef.current);
@@ -92,6 +92,38 @@ export function SocketProvider({ children }: { children: React.ReactNode }) {
         </div>
 
         <p className="max-w-9/10 truncate">{message}</p>
+        <span className="right-2 bottom-2 absolute self-center font-black text-black">
+          <i className="fa-arrow-right shadow-2xl fa-solid"></i>
+        </span>
+      </div>,
+    );
+  };
+
+  const createPurchaseReceivedPopup = (
+    buyerUsername: string,
+    gigname: string,
+    tier: string,
+  ) => {
+    if (popupMessageRef.current) popupMessageRef.current.remove();
+    popupMessageRef.current = document.createElement("div");
+    document.body.appendChild(popupMessageRef.current);
+
+    setTimeout(() => {
+      popupMessageRef.current!.remove();
+    }, 5_000);
+
+    const root = createRoot(popupMessageRef.current);
+    root.render(
+      <div className="right-5 bottom-5 z-100 fixed flex flex-col justify-center gap-1 bg-green-200/90 shadow-lg px-5 rounded-2xl rounded-br-none w-100 h-25 animate-[slideIn_0.3s_ease-out] cursor-pointer">
+        <div className="flex items-center gap-2">
+          <p className="font-bold text-[#4338CA]">{buyerUsername} -</p>
+          <p className="truncate">{gigname}</p>
+          <p className="top-3 right-5 absolute text-xs">
+            Purchased your {tier} package!
+          </p>
+        </div>
+
+        <p className="max-w-9/10 truncate">You have got a new purchase!</p>
         <span className="right-2 bottom-2 absolute self-center font-black text-black">
           <i className="fa-arrow-right shadow-2xl fa-solid"></i>
         </span>
@@ -169,19 +201,52 @@ export function SocketProvider({ children }: { children: React.ReactNode }) {
       });
     };
 
+    const handlePurchaseReceived = (data: any) => {
+      updateOrders();
+      const { gigname, buyerUsername, tier } = data;
+      createPurchaseReceivedPopup(buyerUsername, gigname, tier);
+      audioRef.current.play();
+    };
+
+    const handleDisconnect = (reason: string) => {
+      console.log("Disconnected from server:", reason);
+      if (
+        reason === "transport close" ||
+        reason === "transport error" ||
+        reason === "ping timeout"
+      ) {
+        return;
+      }
+
+      if (reason === "io server disconnect") {
+        logout();
+      }
+    };
+
+    const handleReconnectFailed = () => {
+      console.log("Reconnect failed");
+      logout();
+    };
+
     socket.on("message_received", handleMessage);
     socket.on("online_status", handleStatus);
+    socket.on("purchase_received", handlePurchaseReceived);
+    socket.on("disconnect", handleDisconnect);
+    socket.on("reconnect_failed", handleReconnectFailed);
 
     const requestStatus = () => {
       socket.emit("request_online_statuses");
     };
-
+    // Request online statuses when the server is ready
     socket.on("server_ready", requestStatus);
 
     return () => {
       socket.off("message_received", handleMessage);
       socket.off("online_status", handleStatus);
       socket.off("server_ready", requestStatus);
+      socket.off("purchase_received", handlePurchaseReceived);
+      socket.off("disconnect", handleDisconnect);
+      socket.off("reconnect_failed", handleDisconnect);
     };
   }, [user, activeOrder]);
 

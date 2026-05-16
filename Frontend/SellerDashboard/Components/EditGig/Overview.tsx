@@ -10,27 +10,24 @@ type OverviewProps = {
   setConfirm: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-import { useState, useMemo, useRef } from "react";
+import { useState, useMemo, useRef, useEffect } from "react";
 
 function Overview({ setEditState, gig, setGig, setConfirm }: OverviewProps) {
-  // Local state for selects (default to gig values)
+  const [everythingOK, setEverythingOK] = useState(true);
+
   const [mainCategory, setMainCategory] = useState(gig.category?.main || "");
   const [subCategory, setSubCategory] = useState(gig.category?.sub || "");
 
-  // Title state
   const [title, setTitle] = useState(gig.title || "");
 
-  // Tags state
   const [tags, setTags] = useState<string[]>(gig.tags || []);
   const tagRef = useRef<HTMLInputElement>(null);
 
-  // Find the selected main category object
   const selectedMainCategory = useMemo(
     () => categories.find((cat) => cat.main.name === mainCategory),
     [mainCategory],
   );
 
-  // Add tag handler
   const addTag = () => {
     const newTag = tagRef.current?.value.trim();
     if (!newTag || tags.includes(newTag) || tags.length >= 5) return;
@@ -38,12 +35,10 @@ function Overview({ setEditState, gig, setGig, setConfirm }: OverviewProps) {
     if (tagRef.current) tagRef.current.value = "";
   };
 
-  // Remove tag handler
   const removeTag = (index: number) => {
     setTags(tags.filter((_, i) => i !== index));
   };
 
-  // Handler for update button
   const handleUpdate = () => {
     setGig((prev) => {
       if (!prev) return prev;
@@ -60,6 +55,14 @@ function Overview({ setEditState, gig, setGig, setConfirm }: OverviewProps) {
     setEditState(false);
     setConfirm(true);
   };
+
+  useEffect(() => {
+    if (title.length < 3 || !subCategory || !mainCategory) {
+      setEverythingOK(false);
+    } else {
+      setEverythingOK(true);
+    }
+  }, [title, mainCategory, subCategory]);
 
   return (
     <div
@@ -137,9 +140,12 @@ function Overview({ setEditState, gig, setGig, setConfirm }: OverviewProps) {
                   className="flex items-center gap-1 bg-[#D0E1FB] px-6 py-1 rounded-lg min-h-9 font-medium text-[#54647A]"
                 >
                   {tag}
+
                   <span
                     className="ml-2 font-bold text-neutral-400 cursor-pointer"
-                    onClick={() => removeTag(index)}
+                    onClick={() =>
+                      tags.length > 1 ? removeTag(index) : () => {}
+                    }
                     title="Remove tag"
                   >
                     ×
@@ -170,7 +176,10 @@ function Overview({ setEditState, gig, setGig, setConfirm }: OverviewProps) {
             {" "}
             <CancelButton />
           </span>
-          <span className="ml-auto" onClick={handleUpdate}>
+          <span
+            className={`${everythingOK ? "opacity-100" : "opacity-50"} ml-auto`}
+            onClick={everythingOK ? handleUpdate : () => {}}
+          >
             <UpdateButton text={"Update"} />
           </span>
         </span>

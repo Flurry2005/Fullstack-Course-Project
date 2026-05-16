@@ -6,6 +6,7 @@ import ordersModel from "../models/orderModel.js";
 import userModel from "../models/userModel.js";
 import JWTModel from "../models/JWT.js";
 import express from "express";
+import SocketHandler from "../socket/SocketHandler.js";
 
 export const checkoutRouter = Router();
 
@@ -226,10 +227,18 @@ webHookRouter.post(
       const gigname = session.metadata?.gigname;
       const deliveryTime = session.metadata?.deliveryTime ?? "1 Day";
 
-      const match = deliveryTime.match(/\d+/);
-      const days = match ? Number(match[0]) : 1;
+      const match = deliveryTime.match(/(\d+)\s*(Day|Days|Week|Weeks)/i);
 
-      const adjustedDays = Math.max(days - 1, 0);
+      let totalDays = 1;
+
+      if (match) {
+        const value = Number(match[1]);
+        const unit = match[2].toLowerCase();
+
+        totalDays = unit.startsWith("week") ? value * 7 : value;
+      }
+
+      const adjustedDays = Math.max(totalDays - 1, 0);
 
       const dueDate = new Date();
       dueDate.setHours(0, 0, 0, 0);
@@ -245,6 +254,14 @@ webHookRouter.post(
         buyerUsername: buyerUsername,
         sellerId: sellerId,
         sellerUsername: sellerUsername,
+        delivered: false,
+        reviewed: false,
+      });
+
+      SocketHandler.emitToUser(sellerUsername!, "purchase_received", {
+        gigname,
+        buyerUsername,
+        tier,
       });
     }
 

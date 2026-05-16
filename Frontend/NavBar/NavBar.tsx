@@ -21,7 +21,7 @@ function NavBar() {
   }, []);
 
   return (
-    <header className="z-50 relative flex flex-wrap justify-between items-center bg-white shadow-[0px_1px_3px_0px_rgba(0,0,0,0.1)] px-6 w-full md:h-fit min-h-17">
+    <header className="z-50 relative flex flex-wrap justify-between items-center shadow-lg/4 px-6 w-full md:h-fit min-h-17">
       {/* Left side */}
       <Logo />
       {/* Middle side */}
@@ -67,7 +67,7 @@ function NavBar() {
 
       {/*THe burger Menu */}
       <div
-        className="md:hidden right-8 absolute flex flex-col justify-center space-y-1.5 cursor-pointer"
+        className="md:hidden right-8 z-500 absolute flex flex-col justify-center space-y-1.5 cursor-pointer"
         onClick={toggleNav}
       >
         <span

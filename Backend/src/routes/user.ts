@@ -11,6 +11,13 @@ userRouter.post("/register", async (req, res, next) => {
   userController.register(req, res, next);
 });
 
+userRouter.post("/forgot-password", async (req, res) => {
+  userController.forgotPassword(req, res);
+});
+userRouter.post("/reset-password", async (req, res) => {
+  userController.resetPassword(req, res);
+});
+
 userRouter.get("/profile/:username", async (req, res) => {
   userController.getPublicProfile(req, res);
 });
@@ -27,6 +34,3 @@ userRouter.get("/", async (req, res) => {
   const id = req.query.id;
   userController.getUser(req, res, id);
 });
-
-
-

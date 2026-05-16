@@ -26,7 +26,7 @@ function ClientReflections({
         </span>
       </div>
 
-      {reviews.slice(0, 2).map((e) => (
+      {reviews.slice(0, 10).map((e) => (
         <div
           key={e.username}
           className="flex flex-col gap-3 p-6 border border-[#ACA8D7]/10 rounded-2xl"
@@ -42,12 +42,12 @@ function ClientReflections({
               </span>
             </div>
             <div className="flex flex-wrap gap-1 ml-auto">
-              {Array.from({ length: e.rating }, (_, i) => (
+              {Array.from({ length: e.rating || 0 }, (_, i) => (
                 <img key={i} src={profileRatingsIcon} className="w-3 h-3" />
               ))}
             </div>
           </div>
-          <p className="text-[#5A5781] text-sm">{e.content}</p>
+          <p className="text-[#5A5781] text-sm">{e.comment}</p>
         </div>
       ))}
       {reviews.length > 2 && (

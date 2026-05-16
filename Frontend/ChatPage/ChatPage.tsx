@@ -59,7 +59,7 @@ function ChatPage() {
   return (
     <>
       <NavBar />
-      <main className="flex w-full h-[calc(100vh-4.5rem)]">
+      <main className="flex lg:flex-row flex-col w-full lg:h-[calc(100vh-4.5rem)]">
         <Conversations
           setActiveOrder={setActiveOrder}
           activeOrder={activeOrder}

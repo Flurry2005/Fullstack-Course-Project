@@ -46,30 +46,38 @@ function GigCard({
               onClick={(e) => {
                 e.stopPropagation();
               }}
-              className="top-3 left-3 z-10 absolute hover:bg-white/50 p-1 rounded-full w-9 h-9 cursor-pointer"
+              className="top-3 left-3 z-10 absolute hover:bg-white/90 p-1 bg-white/50  rounded-full w-9 h-9 cursor-pointer"
             >
               <img src={editIcon} className="w-8 h-8" alt="Edit" />
             </button>
           </Link>
-          <span className="top-3 right-3 z-10 absolute flex items-center gap-1 bg-white px-3 py-1 rounded-2xl w-fit font-semibold text-[#0050D4] text-sm">
+          <span className="top-3 right-3 z-10 absolute flex items-center gap-1 bg-white px-3 py-1 rounded-2xl w-fit font-semibold text-[#2c2a51] text-sm">
             <img src={ratingsIcon} className="w-4 h-4" />
-            {rating} ({reviewerAmount})
+            {rating} <span className="text-[#838384]">({reviewerAmount})</span>
           </span>
         </div>
         <div className="flex flex-col gap-3 bg-white p-6 border-[#ACA8D7]/15 border-x-2 border-b-2 rounded-b-2xl h-full">
           <h4 className="text-[#2C2A51] text-2xl">{title}</h4>
-          <div className="flex gap-3 mt-auto">
-            <span className="flex place-items-center gap-1 text-[#5A5781]">
-              <img src={viewsIcon} className="w-4" />
-              {views}
+         
+          <div className="flex items-end justify-between">
+          
+<div className="flex items-end w-full h-fit">
+            <span className="flex items-center gap-3 text-[#5A5781] text-sm">
+              <span className="flex items-center gap-1">
+                <img src={viewsIcon} className="w-4 h-4" alt="Views" />
+                {views}
+              </span>
+              <span className="flex items-center gap-1">
+                <img src={checkoutsIcon} className="w-4 h-4" alt="Checkouts" />
+                {checkouts}
+              </span>
             </span>
-            <span className="flex place-items-center gap-1 text-[#5A5781]">
-              <img src={checkoutsIcon} className="w-4" />
-              {checkouts}
+         
+            <span className="text-right ml-auto min-w-17.5">
+              <span className="block text-[10px] uppercase text-[#5a5781] font-bold leading-3">Starting at</span>
+              <span className="block text-[#1857f7] font-bold text-lg leading-6">${price}</span>
             </span>
-            <span className="ml-auto font-semibold text-[#0050D4]">
-              From ${price}
-            </span>
+          </div>
           </div>
         </div>
       </div>

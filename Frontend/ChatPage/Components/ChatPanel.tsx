@@ -70,8 +70,8 @@ function ChatPanel({ activeOrder, onlineList, profilePictures }: Props) {
 
   if (!activeOrder || !user) return <></>;
   return (
-    <main className="flex flex-col bg-[#F9F5FF] w-7/10 h-full">
-      <section className="flex gap-5 bg-white px-5 w-full h-20">
+    <main className="flex flex-col bg-[#F9F5FF] w-8/10 not-lg:w-full h-full not-lg:min-h-[calc(100vh-4.5rem)] not-lg:max-h-[calc(100vh-4.5rem)]">
+      <section className="flex gap-5 bg-white px-5 not-lg:px-3 py-2 w-full h-20 not-lg:h-20">
         <div className="relative flex items-center">
           <img
             src={
@@ -80,14 +80,14 @@ function ChatPanel({ activeOrder, onlineList, profilePictures }: Props) {
                 : profilePictures[activeOrder.buyerUsername]
             }
             alt=""
-            className="rounded-full h-10"
+            className="rounded-full w-10 h-auto object-contain aspect-square"
             onError={(e) => {
               e.currentTarget.src =
                 "https://res.cloudinary.com/dnpnpkqig/image/upload/c_fill,f_auto,g_auto,h_500,q_auto,w_500/v1778358513/default-profilePicture?_a=BAMAPqUs0&t=1778358700344";
             }}
           />
           <span
-            className={`right-0 bottom-4 box-content absolute border-3 border-white rounded-full w-2 h-2 ${onlineList?.find((entry: any) => entry.username === (user?.username === activeOrder?.buyerUsername ? activeOrder?.sellerUsername : activeOrder?.buyerUsername) && entry.status === "Online") ? "bg-green-500" : "bg-red-500"}`}
+            className={`right-0 bottom-1 box-content absolute border-3 border-white rounded-full w-2 h-2 ${onlineList?.find((entry: any) => entry.username === (user?.username === activeOrder?.buyerUsername ? activeOrder?.sellerUsername : activeOrder?.buyerUsername) && entry.status === "Online") ? "bg-green-500" : "bg-red-500"}`}
           />
         </div>
         <div className="flex flex-col justify-center leading-4">
@@ -103,11 +103,16 @@ function ChatPanel({ activeOrder, onlineList, profilePictures }: Props) {
               ? activeOrder.sellerUsername
               : activeOrder.buyerUsername}
           </p>
-          <p className="text-[#0050D4]">{activeOrder.gigname}</p>
+          <p className="not-lg:max-w-9/10 text-[#0050D4] text-xs truncate">
+            {activeOrder.gigname}
+          </p>
         </div>
       </section>
       {/* Chat Section */}
-      <section ref={chatRef} className="flex-1 px-20 py-5 overflow-y-auto">
+      <section
+        ref={chatRef}
+        className="px-20 not-md:px-5 py-5 h-screen overflow-y-auto"
+      >
         <div className="flex flex-col gap-10">
           {activeOrder.chathistory && activeOrder.chathistory.length > 0 ? (
             activeOrder.chathistory.map((message: Message, index) => (

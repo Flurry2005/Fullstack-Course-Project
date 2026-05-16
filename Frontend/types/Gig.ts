@@ -13,8 +13,8 @@ export type Package = {
 
 export type Review = {
   username: string;
-  content: string;
   rating: number;
+  comment?: string;
 };
 
 export type Gig = {
@@ -25,9 +25,11 @@ export type Gig = {
   primaryImagePreview?: string;
   secondaryImagePreview?: string;
   ternaryImagePreview?: string;
-  category?: Category;
-  tags?: string[];
   description?: string;
+  tags?: string[];
+  category?: Category;
+  rating?: number;
+  reviews?: Review[];
   basic?: Package;
   standard?: Package;
   premium?: Package;
