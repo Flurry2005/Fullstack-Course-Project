@@ -141,3 +141,6 @@ dist
 # Vite logs files
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
+
+# Local socket context file (project-specific ignore)
+Frontend/Context/useSocket.tsx
