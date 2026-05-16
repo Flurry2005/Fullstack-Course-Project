@@ -113,8 +113,7 @@ function SellerDashBoard() {
             ))}
           </h3>
         </section>
-     
-       
+
         {/* Statistics */}
         <section className="gap-6 grid grid-cols-1 md:grid-cols-4">
           <div className="flex flex-col bg-white p-6 border-[#ACA8D7]/15 border-2 rounded-2xl w-full">
@@ -128,9 +127,17 @@ function SellerDashBoard() {
             </span>
           </div>
           <div className="flex flex-col bg-white p-6 border-[#ACA8D7]/15 border-2 rounded-2xl w-full">
-            <span className="text-[#5A5781]">Profile Rating</span>
+            <span className="text-[#5A5781]">Seller Rating</span>
             <span className="flex gap-1 font-semibold text-3xl">
-              4.9{" "}
+              {gigs
+                ? (
+                    gigs
+                      ?.map((gig) => gig.rating || 0)
+                      .reduce((a, b) => a + b, 0) / (gigs?.length || 1)
+                  )
+                    .toFixed(1)
+                    .toString() || "0.0"
+                : "0.0"}
               <img
                 src={profileRatingsIcon}
                 className="place-self-center w-5 h-5"
@@ -295,14 +302,19 @@ function SellerDashBoard() {
                   views={13}
                   checkouts={10}
                   price={gig?.basic?.price}
-                  rating={5.3}
-                  reviewerAmount={120}
+                  rating={gig.rating?.toFixed(1).toString() || "0.0"}
+                  reviewerAmount={gig.reviews ? gig.reviews.length : 0}
                 />
               </Link>
             ))}
           </div>
         </section>
-         <Link className="bg-amber-300 w-fit p-3" to={"/services/review/6a05f0f3310a915cb83399e5"}>Test review</Link>
+        <Link
+          className="bg-amber-300 p-3 w-fit"
+          to={"/services/review/6a05f0f3310a915cb83399e5"}
+        >
+          Test review
+        </Link>
       </main>
 
       <Footer />

@@ -88,8 +88,8 @@ function mapGigToListing(gig: Gig): Listing {
     sub_slug: gig.category!.sub_slug || "Other",
     deliveryTime: getStartingDelivery(gig),
     deliveryTimes: getDeliveryTimes(gig),
-    rating: "5.0",
-    reviews: "0",
+    rating: gig.rating?.toFixed(1).toString() || "0.0",
+    reviews: gig.reviews ? gig.reviews.length.toString() : "0",
     tag: gig.tags?.[0] || gig.category?.sub || "Service",
   };
 }

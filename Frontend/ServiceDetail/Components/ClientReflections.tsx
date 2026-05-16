@@ -23,7 +23,7 @@ function ClientReflections({
         <span className="flex flex-wrap gap-1 ml-auto">
           <span className="flex font-bold text-[#2C2A51] max-sm:text-sm">
             <img src={profileRatingsIcon} className="w-6 h-6" />
-            {averageRating.toFixed(1)}
+            {averageRating ? averageRating.toFixed(1) : "0.0"}
           </span>
           <span className="text-[#5A5781] max-sm:text-sm">
             ({reviewsAmount} Reviews)
