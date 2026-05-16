@@ -46,8 +46,8 @@ const gigsSchema = new mongoose.Schema({
   reviews: {
     type: [
       {
-        reviewer: {
-          type: mongoose.Schema.Types.ObjectId,
+        username: {
+          type: String,
           ref: "User",
           required: true,
         },
@@ -78,16 +78,6 @@ const gigsSchema = new mongoose.Schema({
     price: { type: Number },
     delivery: { type: String },
     features: { type: [] },
-  },
-  reviews: {
-    type: [
-      {
-        username: { type: String, required: true },
-        content: { type: String, required: true },
-        rating: { type: Number, required: true, min: 1, max: 5 },
-      },
-    ],
-    default: [],
   },
 });
 
