@@ -63,6 +63,33 @@ function ServiceDetail({
   useEffect(() => {
     getGig();
   }, []);
+
+  const [profilePictures, setProfilePictures] = useState<
+    Record<string, string>
+  >({});
+
+  useEffect(() => {
+    const loadPictures = async () => {
+      if (!gig) return;
+
+      const uniqueUsers = [
+        ...new Set(gig.reviews?.map((review) => review.username)),
+      ];
+
+      const entries = await Promise.all(
+        uniqueUsers.map(async (username) => {
+          const profile = await fetchProfile(username);
+
+          return [username, profile?.profilePictureUrl];
+        }),
+      );
+
+      setProfilePictures(Object.fromEntries(entries));
+    };
+
+    loadPictures();
+  }, [gig]);
+
   console.log(gigId);
   return (
     <>
@@ -109,6 +136,7 @@ function ServiceDetail({
                 <AboutSeller profile={profile} />
                 <ClientReflections
                   reviews={reviews}
+                  profilePictures={profilePictures}
                   averageRating={averageRating}
                   reviewsAmount={reviewsAmount}
                 />
