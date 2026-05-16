@@ -16,31 +16,33 @@ function CustomerReview() {
   const [rating, setRating] = useState(0);
   const [success, setSuccess] = useState(false);
   const { gigId } = useParams();
-  const commentRef = useRef<HTMLTextAreaElement>(null)
+  const commentRef = useRef<HTMLTextAreaElement>(null);
   const [gig, setGig] = useState<Gig>();
   const navigator = useNavigate();
 
   const handleSubmit = async () => {
     if (rating > 0) {
-          const response = await fetch(
-      `${
-        import.meta.env.VITE_DEV === "true"
-          ? "http://localhost:3000"
-          : "https://fullstackapi.liamjorgensen.dev"
-      }/api/gig/review`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({id: gigId, rating: rating, comment: commentRef.current?.value}),
-        credentials: "include",
-      },
-
-
-    );
+      const response = await fetch(
+        `${
+          import.meta.env.VITE_DEV === "true"
+            ? "http://localhost:3000"
+            : "https://fullstackapi.liamjorgensen.dev"
+        }/api/gig/review`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            id: gigId,
+            rating: rating,
+            comment: commentRef.current?.value,
+          }),
+          credentials: "include",
+        },
+      );
 
       const data = await response.json();
-    console.log(data)
-    setSuccess(response.ok);
+      console.log(data);
+      setSuccess(response.ok);
     }
   };
 
@@ -56,9 +58,9 @@ function CustomerReview() {
     response.ok ? setGig(data) : navigator("/dashboard");
   };
 
-useEffect(() => {
-  getGig();
-}, []);
+  useEffect(() => {
+    getGig();
+  }, []);
 
   return (
     <>
@@ -72,7 +74,7 @@ useEffect(() => {
         <h2 className="p-6 font-semibold text-3xl">Review </h2>
       </div>
       <div className="bg-[#FAF8FF]">
-        <div className="flex flex-col px-3 gap-3 py-12 text-center">
+        <div className="flex flex-col gap-3 px-3 py-12 text-center">
           <h2 className="text-4xl">
             {success ? "Thank You" : "Review Your Experience"}
           </h2>
@@ -82,33 +84,36 @@ useEffect(() => {
               : "A quick review helps both buyers and sellers grow."}
           </p>
         </div>
-        <div className="h-screen  ld:w-1/3 md:w-1/2 mx-auto">
-          <div className="w-full p-6 flex flex-col gap-6">
-            <div className="flex flex-col border shadow-md/5 border-[#E2E8F0] bg-white rounded-2xl w-full px-12">
-              <div className="py-6 items-center gap-6 flex flex-wrap w-full">
+        <div className="mx-auto ld:w-1/3 md:w-1/2 h-screen">
+          <div className="flex flex-col gap-6 p-6 w-full">
+            <div className="flex flex-col bg-white shadow-md/5 px-12 border border-[#E2E8F0] rounded-2xl w-full">
+              <div className="flex flex-wrap items-center gap-6 py-6 w-full">
                 <img
                   src={me}
-                  className="w-18 h-18 border border-[#E2DFFF] md:mx-0 mx-auto flex rounded-full"
+                  className="flex mx-auto md:mx-0 border border-[#E2DFFF] rounded-full w-18 h-18"
                 />
                 <div className="flex flex-col gap-1">
-                  <span className="font-semibold md:text-2xl text-xl">
+                  <span className="font-semibold text-xl md:text-2xl">
                     {gig?.title}
                   </span>
                   <span className="font-semibold text-[#464555]">
-                    Service by <span className="text-[#3525CD]">{gig?.sellerUsername}</span>
+                    Service by{" "}
+                    <span className="text-[#3525CD]">
+                      {gig?.sellerUsername}
+                    </span>
                   </span>
                 </div>
               </div>
             </div>
             <Rate setRating={setRating} rating={rating} />
-            <span className="font-semibold text-xl text-[#131B2E]">
+            <span className="font-semibold text-[#131B2E] text-xl">
               Share you experience
             </span>
-            <div className="flex p-6 flex-col border shadow-md/5 bg-white border-[#E2E8F0] rounded-2xl w-full">
+            <div className="flex flex-col bg-white shadow-md/5 p-6 border border-[#E2E8F0] rounded-2xl w-full">
               <textarea
-              ref={commentRef}
+                ref={commentRef}
                 rows={5}
-                className="focus:outline-none md:text-xl rounded-lg w-full text-[#6B7280] resize-none"
+                className="rounded-lg focus:outline-none w-full text-[#6B7280] md:text-xl resize-none"
                 placeholder="Describe the quality of the work, communication, 
 and if the seller met your expectations..."
               />

@@ -346,10 +346,6 @@ class GigController {
   async reviewGig(req: Request, res: Response) {
     const { id, rating, comment } = req.body;
 
-    if (!res.locals.jwt?._id) {
-      return res.status(401).json({ status: false, message: "Unauthorized" });
-    }
-
     if (!id)
       return res.status(400).json({ status: false, message: "No id provided" });
 
@@ -394,7 +390,7 @@ class GigController {
             reviews: {
               comment: comment,
               rating: rating,
-              reviewer: res.locals._id,
+              username: res.locals.jwt.username,
             },
           },
           $set: {
