@@ -12,7 +12,7 @@ export type Package = {
 };
 
 export type Review = {
-  reviewer: string;
+  username: string;
   comment: string;
   rating: number;
 };
@@ -31,6 +31,7 @@ export type Gig = {
   basic?: Package;
   standard?: Package;
   premium?: Package;
+  reviews?: Review[];
   pending?: boolean;
   rating?: Number;
   reviews?: Review[];

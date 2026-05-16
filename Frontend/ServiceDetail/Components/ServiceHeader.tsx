@@ -43,7 +43,7 @@ function ServiceHeader({
           <span className="font-bold text-[#2C2A51]">{seller}</span>
           <div className="flex items-center gap-1 text-sm">
             <img src={profileRatingsIcon} className="w-3 h-3" />
-            <span className="font-bold text-[#2C2A51]">{rating}</span>
+            <span className="font-bold text-[#2C2A51]">{rating.toFixed(1)}</span>
             <span className="text-[#5A5781]">({reviewsAmount} reviews)</span>
           </div>
         </div>
