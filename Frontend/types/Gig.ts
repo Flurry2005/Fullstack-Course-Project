@@ -29,7 +29,6 @@ export type Gig = {
   tags?: string[];
   category?: Category;
   rating?: number;
-  reviews?: Review[];
   basic?: Package;
   standard?: Package;
   premium?: Package;
