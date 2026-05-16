@@ -36,10 +36,10 @@ function ServiceDetail({
 
   const reviewsAmount = reviews.length;
 
-  const averageRating =
-    reviewsAmount > 0
-      ? reviews.reduce((sum, review) => sum + review.rating, 0) / reviewsAmount
-      : 0;
+  // const averageRating =
+  //   reviewsAmount > 0
+  //     ? reviews.reduce((sum, review) => sum + review.rating, 0) / reviewsAmount
+  //     : 0;
 
   const getGig = async () => {
     const response = await fetch(
@@ -115,7 +115,7 @@ function ServiceDetail({
                     seller={gig?.sellerUsername}
                     gig={gig}
                     profile={profile}
-                    rating={averageRating}
+                    rating={gig?.rating!}
                     reviewsAmount={reviewsAmount}
                   />
                 </div>
@@ -137,7 +137,7 @@ function ServiceDetail({
                 <ClientReflections
                   reviews={reviews}
                   profilePictures={profilePictures}
-                  averageRating={averageRating}
+                  averageRating={gig?.rating!}
                   reviewsAmount={reviewsAmount}
                 />
               </div>
