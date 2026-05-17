@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import AuthButtons from "./NavbarComponents/AuthButtons";
 import Logo from "./NavbarComponents/Logo";
 import NavigationLink from "./NavbarComponents/NavigationLink";
-import { LogOut, User } from "lucide-react";
+import { LogOut, ShoppingBag, User } from "lucide-react";
 
 function NavBar() {
   const { user, logout } = useAuth();
@@ -72,7 +72,7 @@ function NavBar() {
               className="flex"
             >
               <div
-                className={`flex justify-center items-center bg-indigo-500  border rounded-full font-bold text-white hover:scale-105 transition overflow-hidden cursor-pointer w-13 h-13`}
+                className={`flex justify-center items-center border-2 bg-gray-500/20 border-gray-500/20 rounded-full font-bold text-white hover:scale-105 transition overflow-hidden cursor-pointer w-11 h-11`}
               >
                 {user?.profilePictureUrl ? (
                   <img
@@ -88,7 +88,7 @@ function NavBar() {
 
             {/* Dropdown */}
             <div
-              className={`top-15 -right-4 z-50 absolute flex flex-col bg-white shadow-xl py-1 border border-gray-100 rounded-b-xl w-44 overflow-hidden transition-all duration-150 origin-top-right border-t-0 ${
+              className={`top-14 -right-4 z-50 absolute flex flex-col bg-white shadow-xl py-1 border border-gray-100 rounded-b-xl w-44 overflow-hidden transition-all duration-150 origin-top-right border-t-0 ${
                 dropdownOpen
                   ? "opacity-100 scale-100 pointer-events-auto"
                   : "opacity-0 scale-y-75 pointer-events-none"
@@ -101,6 +101,14 @@ function NavBar() {
               >
                 <User className="w-4 h-4" />
                 Profile
+              </Link>
+              <Link
+                to={"/purchases"}
+                onClick={() => setDropdownOpen(false)}
+                className="flex items-center gap-2 hover:bg-[#f4f0fb] px-4 py-2.5 text-[#2C2A51] text-sm transition-colors"
+              >
+                <ShoppingBag className="w-4 h-4" />
+                My Purchases
               </Link>
               <div className="bg-gray-100 mx-2 h-px" />
               <button
