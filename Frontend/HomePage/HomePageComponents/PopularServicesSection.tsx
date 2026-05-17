@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import ServiceCard from "./ServiceCard";
 import type { Gig } from "../../types/Gig";
+import { fetchProfile } from "../../utils/GetProfile";
 
 const apiUrl =
   import.meta.env.VITE_DEV === "true"
@@ -9,6 +10,9 @@ const apiUrl =
 
 function PopularServicesSection() {
   const [gigs, setGigs] = useState<Gig[]>([]);
+  const [profilePictures, setProfilePictures] = useState<
+    Record<string, string>
+  >({});
   const fetchGigs = async () => {
     try {
       const response = await fetch(`${apiUrl}/api/gig`);
@@ -47,6 +51,27 @@ function PopularServicesSection() {
     fetchGigs();
   }, []);
 
+  useEffect(() => {
+    const loadPictures = async () => {
+      if (gigs.length === 0) return;
+
+      const uniqueSellers = [
+        ...new Set(gigs.map((g) => g.sellerUsername).filter(Boolean)),
+      ] as string[];
+
+      const entries = await Promise.all(
+        uniqueSellers.map(async (username) => {
+          const profile = await fetchProfile(username);
+          return [username, profile?.profilePictureUrl ?? ""];
+        }),
+      );
+
+      setProfilePictures(Object.fromEntries(entries));
+    };
+
+    loadPictures();
+  }, [gigs]);
+
   return (
     <section className="bg-[#f9f5ff] px-5 sm:px-8 md:px-10 lg:px-16 py-10 sm:py-14">
       <div className="mx-auto container">
@@ -75,6 +100,7 @@ function PopularServicesSection() {
                 name={gig.sellerUsername || "Unknown"}
                 description={gig.title || ""}
                 price={`$${startingPrice}`}
+                profilePicture={profilePictures[gig.sellerUsername ?? ""] ?? ""} // ← this line
               />
             );
           })}
