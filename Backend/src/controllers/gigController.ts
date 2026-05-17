@@ -383,6 +383,12 @@ class GigController {
             reviews.length
           : rating;
 
+      const date = new Date();
+      const year = date.getFullYear();
+      const month = date.getMonth();
+      const day = date.getDate();
+      const createdAt = `${year}-${month < 10 ? "0" + month : month}-${day < 10 ? "0" + day : day}`;
+
       await gigsModel.findByIdAndUpdate(
         { _id: id },
         {
@@ -391,6 +397,7 @@ class GigController {
               comment: comment,
               rating: rating,
               username: res.locals.jwt.username,
+              createdAt: createdAt,
             },
           },
           $set: {
