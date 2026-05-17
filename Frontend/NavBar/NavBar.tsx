@@ -103,12 +103,12 @@ function NavBar() {
                 Profile
               </Link>
               <Link
-                to={"/purchases"}
+                to={"/orders"}
                 onClick={() => setDropdownOpen(false)}
                 className="flex items-center gap-2 hover:bg-[#f4f0fb] px-4 py-2.5 text-[#2C2A51] text-sm transition-colors"
               >
                 <ShoppingBag className="w-4 h-4" />
-                My Purchases
+                My Orders
               </Link>
               <div className="bg-gray-100 mx-2 h-px" />
               <button
