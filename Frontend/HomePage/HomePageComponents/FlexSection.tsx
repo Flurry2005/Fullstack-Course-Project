@@ -1,4 +1,4 @@
-import Section4Card from "./Section4Card";
+import FlexCard from "./FlexCard";
 
 function Section2() {
   return (
@@ -10,19 +10,19 @@ function Section2() {
         </h1>
 
         <div className="flex md:flex-row flex-col justify-center gap-6 w-full">
-          <Section4Card
+          <FlexCard
             title={"Over 700 Categories"}
             icon={<i className="fa-layer-group fa-solid"></i>}
             text="Get settle for less. Find Exactly the service you need for any project, big or small."
           />
 
-          <Section4Card
+          <FlexCard
             title={"Secure Payments"}
             icon={<i className="fa-solid fa-shield-halved"></i>}
             text="Know what you'll pay upfront. Your payment isn't released until you approve the work."
           />
 
-          <Section4Card
+          <FlexCard
             title={"24/7 Support"}
             icon={<i className="fa-solid fa-headset"></i>}
             text="Our support team is available around the clock to help you with anything."

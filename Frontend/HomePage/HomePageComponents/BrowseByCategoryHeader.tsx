@@ -16,7 +16,7 @@ function Section2Header() {
       </div>
 
       <button
-        className="inline-flex items-center self-start sm:self-auto gap-2 hover:opacity-80 font-semibold text-[#1857f7] lg:text-[22px] text-base sm:text-lg  cursor-pointer"
+        className="inline-flex items-center self-start sm:self-auto gap-2 hover:opacity-80 font-semibold text-[#1857f7] lg:text-[22px] text-base sm:text-lg cursor-pointer"
         onClick={() => {
           navigate(`${"/services"}`);
         }}
