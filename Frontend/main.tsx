@@ -23,6 +23,8 @@ import Home from "./HomePage/Home.tsx";
 import ResetPassword from "./LoginPage/ResetPassword.tsx";
 import CustomerReview from "./CustomerReview/CustomerReview.tsx";
 import VerifyEmail from "./LoginPage/VerifyEmail.tsx";
+import PurchasesPage from "./PurchasesPage/PurchasesPage.tsx";
+import AdminPage from "./AdminPage/AdminPage.tsx";
 
 const router = createBrowserRouter([
   {
@@ -108,6 +110,14 @@ const router = createBrowserRouter([
       {
         path: "/reset-password",
         element: <ResetPassword />,
+      },
+      {
+        path: "/purchases",
+        element: <PurchasesPage />,
+      },
+      {
+        path: "/admin",
+        element: <AdminPage />,
       },
     ],
   },
