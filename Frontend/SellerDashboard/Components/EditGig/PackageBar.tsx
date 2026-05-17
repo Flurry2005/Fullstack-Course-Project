@@ -149,7 +149,6 @@ function PackageBar({
           }}
         >
           <img src={deleteIcon} className="w-6 h-6" />
-          Remove Plan
         </button>
       </div>
     </div>

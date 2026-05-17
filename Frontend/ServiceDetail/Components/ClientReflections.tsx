@@ -65,7 +65,7 @@ function ClientReflections({
                  <span className="text-sm text-[#838384]">({e.rating})</span>
             </div>
           </div>
-          <p className="text-[#5A5781] text-sm">{e.comment}</p>
+          <p className="text-[#5A5781]">{e.comment}</p>
         </div>
       ))}
       {reviews.length > 3 && (

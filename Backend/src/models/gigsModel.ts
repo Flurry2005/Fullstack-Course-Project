@@ -34,7 +34,17 @@ const gigsSchema = new mongoose.Schema({
     required: true,
   },
 
+  updatedAt: {
+    type: Date,
+    required: true,
+  },
+
   pending: {
+    type: Boolean,
+    required: true,
+  },
+
+  paused: {
     type: Boolean,
     required: true,
   },

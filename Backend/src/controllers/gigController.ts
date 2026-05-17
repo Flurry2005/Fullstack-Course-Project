@@ -137,6 +137,7 @@ class GigController {
           features: premFeatures,
         },
         pending: true,
+        paused: false,
       });
 
       //@ts-ignore
@@ -264,6 +265,8 @@ class GigController {
               features: premFeatures,
             },
             pending: true,
+            paused: updatedGig.paused,
+            updatedAt: new Date(),
           },
         },
       );

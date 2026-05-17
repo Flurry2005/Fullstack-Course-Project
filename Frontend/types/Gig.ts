@@ -35,4 +35,6 @@ export type Gig = {
   premium?: Package;
   reviews?: Review[];
   pending?: boolean;
+  paused?: boolean;
+  updatedAt?: Date;
 };

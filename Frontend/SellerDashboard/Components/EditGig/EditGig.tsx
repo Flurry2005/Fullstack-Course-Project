@@ -20,6 +20,23 @@ import Delete from "./Delete";
 import Description from "./Description";
 import { useNavigate } from "react-router-dom";
 import NavBar from "../../../NavBar/NavBar";
+import unpauseIcon from "../../../assets/play-icon.svg";
+
+function formatGigUpdatedAt(updatedAt: unknown) {
+  if (!updatedAt) return "Unknown";
+
+  const timestamp = updatedAt as { toDate?: () => Date; seconds?: number };
+  const date =
+    updatedAt instanceof Date
+      ? updatedAt
+      : typeof timestamp.toDate === "function"
+        ? timestamp.toDate()
+        : typeof timestamp.seconds === "number"
+          ? new Date(timestamp.seconds * 1000)
+          : new Date(updatedAt as string | number);
+
+  return Number.isNaN(date.getTime()) ? "Unknown" : date.toLocaleString();
+}
 
 function EditGig() {
   const navigate = useNavigate();
@@ -70,7 +87,15 @@ function EditGig() {
             <img src={GoBackIcon} className="w-10 h-14 cursor-pointer" />
           </Link>
           <h2 className="p-6 font-semibold text-3xl">Gig Details</h2>
+               <button
+            className={`${confirm ? "opacity-100" : "opacity-25"} ml-auto cursor-pointer py-3 rounded-lg font-semibold text-white bg-linear-to-r from-[#4F46E5] to-[#4e46e5c2] px-6`}
+            disabled={!confirm}
+            onClick={() => setConfirmConfirm(true)}
+          >
+            Save changes
+          </button>
         </div>
+        
       </div>
       <div className="relative">
         {confirmConfirm && gig && (
@@ -129,11 +154,14 @@ function EditGig() {
                   {gig?.pending ? "Pending" : "Live"}
                 </span>
               </span>
-              <span className="text-[#464555]">Last updated 2 days ago</span>
+              <span className="text-[#464555]">
+                Last updated {formatGigUpdatedAt(gig?.updatedAt)}
+              </span>
             </div>
             <h3 className="font-semibold text-[#131B2E] text-4xl">
               {gig?.title}
             </h3>
+            
           </div>
 
           <div className="flex lg:flex-row flex-col gap-6">
@@ -318,9 +346,25 @@ function EditGig() {
                   <span className="text-[#131B2E] text-xl">
                     Advanced Options
                   </span>
-                  <div className="flex gap-3 text-[#131B2E]">
-                    <img src={pauseIcon} className="w-8 h-8" />
-                    <span className="text-xl">Pause Gig</span>
+                  <div
+                    className="flex gap-3 cursor-pointer text-[#131B2E]"
+                    onClick={() => {
+                      (setGig((prev) => {
+                        if (!prev) return prev;
+                        return gig?.paused
+                          ? { ...prev, paused: false }
+                          : { ...prev, paused: true };
+                      }),
+                        setConfirm(true));
+                    }}
+                  >
+                    <img
+                      src={gig?.paused ? unpauseIcon : pauseIcon}
+                      className="w-8 h-8"
+                    />
+                    <span className="text-xl">
+                      {gig?.paused ? "Unpause Gig" : "Pause Gig"}
+                    </span>
                     <img src={nextIcon} className="ml-auto w-8 h-8" />
                   </div>
                   <div className="flex gap-3 text-[#131B2E]">
@@ -341,13 +385,7 @@ function EditGig() {
               </div>
             </div>
           </div>
-          <button
-            className={`${confirm ? "opacity-100" : "opacity-25"} ml-auto cursor-pointer py-3 rounded-lg font-semibold text-white bg-linear-to-r from-[#4F46E5] to-[#4e46e5c2] px-6`}
-            disabled={!confirm}
-            onClick={() => setConfirmConfirm(true)}
-          >
-            Save changes
-          </button>
+    
         </main>
         <Footer />
       </div>

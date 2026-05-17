@@ -55,7 +55,7 @@ function CustomerReview() {
     );
     const data = await response.json();
     console.log(data);
-    response.ok ? setGig(data) : navigator("/dashboard");
+    response.ok ? setGig(data) : navigator("/");
   };
 
   useEffect(() => {

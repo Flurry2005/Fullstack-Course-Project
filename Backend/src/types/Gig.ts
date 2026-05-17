@@ -32,6 +32,7 @@ export type Gig = {
   standard?: Package;
   premium?: Package;
   pending?: boolean;
+  paused?: boolean;
   rating?: Number;
   reviews?: Review[];
 };
