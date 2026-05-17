@@ -34,7 +34,17 @@ const gigsSchema = new mongoose.Schema({
     required: true,
   },
 
+  updatedAt: {
+    type: Date,
+    required: true,
+  },
+
   pending: {
+    type: Boolean,
+    required: true,
+  },
+
+  paused: {
     type: Boolean,
     required: true,
   },
@@ -53,6 +63,7 @@ const gigsSchema = new mongoose.Schema({
         },
         comment: { type: String, required: true },
         rating: { type: Number, required: true, min: 1, max: 5 },
+        createdAt: {type : String, required: true}
       },
     ],
     default: [],
