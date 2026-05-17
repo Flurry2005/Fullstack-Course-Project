@@ -2,7 +2,7 @@ import Users from "../models/userModel.js";
 import { Request, Response, NextFunction } from "express";
 import JWTModel from "../models/JWT.js";
 import bcrypt from "bcrypt";
-import recoverPasswordModel from "../models/recoverPasswordModel.js";
+import Token from "../models/emailTokenModel.js"; // replaces recoverPasswordModel
 import { randomBytes } from "node:crypto";
 import { Resend } from "resend";
 import { getSocketId } from "../socket/registry.js";
@@ -54,27 +54,128 @@ class UserController {
     if (!fullname || !email || !password || !username)
       return res.status(400).json({ success: false });
 
+    // Check if already a real user
     if (await Users.findOne({ email }))
       return res
         .status(409)
         .json({ success: false, error: "Email already in use!" });
 
-    const user = await Users.insertOne({
-      fullname: fullname,
-      username: username,
-      email: email,
-      passwordHash: await bcrypt.hash(password, 12),
-      createdAt: new Date(),
-      profilePictureUrl:
-        "https://res.cloudinary.com/dnpnpkqig/image/upload/c_fill,f_auto,g_auto,h_500,q_auto,w_500/default-profilePicture?_a=BAMAPqUs0",
-      coverImageUrl: "",
-      bio: "",
-      location: "",
-      languages: [],
-      skills: [],
+    if (await Users.findOne({ username }))
+      return res
+        .status(409)
+        .json({ success: false, error: "Username already in use!" });
+
+    // Delete any previous pending verification for this email
+    await Token.deleteMany({
+      "pendingUser.email": email,
+      type: "emailVerification",
     });
 
-    return res.status(200).json({ success: true, message: "User created!" });
+    const passwordHash = await bcrypt.hash(password, 12);
+    const token = randomBytes(32).toString("hex");
+    const expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24 hours
+
+    await Token.create({
+      token,
+      type: "emailVerification",
+      pendingUser: { fullname, username, email, passwordHash },
+      expiresAt,
+    });
+
+    const verifyLink = `${process.env.VITE_DEV === "true" ? "http://localhost:5173" : "https://fullstack.liamjorgensen.dev"}/verify-email?token=${token}`;
+    const resend = new Resend(process.env.RESEND_API_KEY);
+
+    await resend.emails.send({
+      from: "FullstackProject <no-reply@fullstackapi.liamjorgensen.dev>",
+      to: [email],
+      subject: "Verify your email",
+      html: `
+      <div style="font-family: sans-serif; max-width: 480px; margin: 0 auto; padding: 32px;">
+        <h2 style="color: #1a1a2e;">Verify your email</h2>
+        <p style="color: #6b6b7b; line-height: 1.6;">
+          Thanks for signing up! Click the button below to verify your email address.
+          This link expires in 24 hours.
+        </p>
+        <a href="${verifyLink}"
+           style="display: inline-block; background: #2d2b7c; color: white; padding: 12px 32px;
+                  border-radius: 8px; text-decoration: none; font-weight: bold; margin: 16px 0;">
+          Verify Email
+        </a>
+        <p style="color: #8a8a9a; font-size: 13px;">
+          If you didn't create an account, you can safely ignore this email.
+        </p>
+      </div>
+    `,
+    });
+
+    return res.status(200).json({
+      success: true,
+      message:
+        "Please check your email to verify your account before logging in.",
+    });
+  }
+
+  async verifyEmail(req: Request, res: Response) {
+    try {
+      const { token } = req.body;
+
+      if (!token)
+        return res
+          .status(400)
+          .json({ success: false, error: "Token is required." });
+
+      const verificationToken = await Token.findOne({
+        token,
+        type: "emailVerification",
+      });
+
+      if (!verificationToken || verificationToken.expiresAt < new Date()) {
+        return res.status(400).json({
+          success: false,
+          error: "Invalid or expired verification link.",
+        });
+      }
+
+      const { fullname, username, email, passwordHash } =
+        verificationToken.pendingUser!;
+
+      // Check again in case someone took the email/username in the meantime
+      if (await Users.findOne({ email }))
+        return res
+          .status(409)
+          .json({ success: false, error: "Email already in use." });
+
+      if (await Users.findOne({ username }))
+        return res
+          .status(409)
+          .json({ success: false, error: "Username already taken." });
+
+      await Users.insertOne({
+        fullname: fullname as string,
+        username: username as string,
+        email: email as string,
+        passwordHash: passwordHash as string,
+        profilePictureUrl:
+          "https://res.cloudinary.com/dnpnpkqig/image/upload/c_fill,f_auto,g_auto,h_500,q_auto,w_500/default-profilePicture?_a=BAMAPqUs0",
+        coverImageUrl: "",
+        bio: "",
+        location: "",
+        languages: [],
+        skills: [],
+      });
+
+      await Token.deleteOne({ _id: verificationToken._id });
+
+      return res.status(200).json({
+        success: true,
+        message: "Email verified! Your account is ready — you can now log in.",
+      });
+    } catch (error) {
+      console.error("Verify email error:", error);
+      return res
+        .status(500)
+        .json({ success: false, error: "Something went wrong." });
+    }
   }
 
   async resetPassword(req: Request, res: Response) {
@@ -86,7 +187,7 @@ class UserController {
           .status(400)
           .json({ success: false, error: "Token and password are required." });
 
-      const resetToken = await recoverPasswordModel.findOne({ token });
+      const resetToken = await Token.findOne({ token, type: "passwordReset" });
 
       if (!resetToken || resetToken.expiresAt < new Date()) {
         return res
@@ -101,7 +202,7 @@ class UserController {
       });
 
       // Deletes the used token
-      await recoverPasswordModel.deleteOne({ _id: resetToken._id });
+      await Token.deleteOne({ _id: resetToken._id });
 
       return res
         .status(200)
@@ -133,15 +234,16 @@ class UserController {
       if (!user) return res.status(200).json(genericResponse);
 
       // Invalidate any existing tokens for this user
-      await recoverPasswordModel.deleteMany({ userId: user._id });
+      await Token.deleteMany({ userId: user._id, type: "passwordReset" });
 
       // Generate secure token with 1-hour expiry
       const token = randomBytes(32).toString("hex");
       const expiresAt = new Date(Date.now() + 60 * 60 * 1000);
 
-      await recoverPasswordModel.create({
+      await Token.create({
         token,
         userId: user._id,
+        type: "passwordReset",
         expiresAt,
       });
 
