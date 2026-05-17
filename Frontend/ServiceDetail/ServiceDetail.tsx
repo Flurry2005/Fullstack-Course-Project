@@ -102,7 +102,7 @@ function ServiceDetail({
         <div className="bg-[#f9f5ff]">
           {/* Service category section */}
           <main className="flex flex-col gap-3 bg-[#f9f5ff] mx-auto px-6 lg:px-24 py-6 container">
-            <div className="flex flex-col place-self-center gap-6 ld:w-[75vw]">
+            <div className="flex flex-col place-self-center gap-6 md:w-[75vw]">
               <span className="flex gap-1">
                 {gig.category?.main} {">"} {gig.category?.sub}
               </span>
