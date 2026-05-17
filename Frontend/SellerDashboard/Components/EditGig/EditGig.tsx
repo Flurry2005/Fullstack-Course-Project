@@ -21,6 +21,7 @@ import Description from "./Description";
 import { useNavigate } from "react-router-dom";
 import NavBar from "../../../NavBar/NavBar";
 import unpauseIcon from "../../../assets/play-icon.svg";
+import checkIcon from "../../../assets/circle-check-req-icon.svg";
 
 function formatGigUpdatedAt(updatedAt: unknown) {
   if (!updatedAt) return "Unknown";
@@ -49,6 +50,21 @@ function EditGig() {
   const [pricing, setPricing] = useState(false);
   const [confirm, setConfirm] = useState(false);
   const [confirmConfirm, setConfirmConfirm] = useState(false);
+  const [showCopied, setShowCopied] = useState(false);
+
+  const copyLink = async () => {
+    await navigator.clipboard.writeText(
+      `${import.meta.env.VITE_DEV === "true" ? "http://localhost:5173" : "https://fullstack.liamjorgensen.dev"}/services/${gig?.category?.main_slug}/${gig?.category?.sub_slug}/${gig?._id}`,
+    );
+    setShowCopied(true);
+  };
+
+  useEffect(() => {
+    if (!showCopied) return;
+
+    const timer = window.setTimeout(() => setShowCopied(false), 1500);
+    return () => window.clearTimeout(timer);
+  }, [showCopied]);
 
   const getGig = async () => {
     const response = await fetch(
@@ -87,7 +103,7 @@ function EditGig() {
             <img src={GoBackIcon} className="w-10 h-14 cursor-pointer" />
           </Link>
           <h2 className="p-6 font-semibold text-3xl">Gig Details</h2>
-               <button
+          <button
             className={`${confirm ? "opacity-100" : "opacity-25"} ml-auto cursor-pointer py-3 rounded-lg font-semibold text-white bg-linear-to-r from-[#4F46E5] to-[#4e46e5c2] px-6`}
             disabled={!confirm}
             onClick={() => setConfirmConfirm(true)}
@@ -95,7 +111,6 @@ function EditGig() {
             Save changes
           </button>
         </div>
-        
       </div>
       <div className="relative">
         {confirmConfirm && gig && (
@@ -161,7 +176,6 @@ function EditGig() {
             <h3 className="font-semibold text-[#131B2E] text-4xl">
               {gig?.title}
             </h3>
-            
           </div>
 
           <div className="flex lg:flex-row flex-col gap-6">
@@ -367,10 +381,21 @@ function EditGig() {
                     </span>
                     <img src={nextIcon} className="ml-auto w-8 h-8" />
                   </div>
-                  <div className="flex gap-3 text-[#131B2E]">
-                    <img src={shareIcon} className="w-8 h-8" />
-                    <span className="text-xl">Share Link</span>
-                    <img src={nextIcon} className="ml-auto w-8 h-8" />
+                  <div className="relative">
+                    <div
+                      className="flex gap-3 cursor-pointer text-[#131B2E]"
+                      onClick={copyLink}
+                    >
+                      <img src={shareIcon} className="w-8 h-8" />
+                      <span className="text-xl">Share Link</span>
+                      <img src={nextIcon} className="ml-auto w-8 h-8" />
+                    </div>
+                    <span
+        className={`${showCopied ? "opacity-100 translate-y-0" : "pointer-events-none opacity-0 -translate-y-2"} font-semibold w-full absolute top-0 left-1/2 -translate-x-1/2 z-50 flex items-center gap-2 rounded-lg bg-[#d1dff9] p-3 text-[#4458f1] transition-all duration-300`}
+      >
+        <img src={checkIcon} className="w-5 h-5" alt="Success" />
+        Link copied to clipboard
+      </span>
                   </div>
                   <div className="flex gap-3 border-t border-t-[#E2E7FF] text-[#131B2E]">
                     <div
@@ -385,7 +410,6 @@ function EditGig() {
               </div>
             </div>
           </div>
-    
         </main>
         <Footer />
       </div>
