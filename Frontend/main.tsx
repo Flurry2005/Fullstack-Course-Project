@@ -22,6 +22,7 @@ import AboutPage from "./AboutPage/AboutPage.tsx";
 import Home from "./HomePage/Home.tsx";
 import ResetPassword from "./LoginPage/ResetPassword.tsx";
 import CustomerReview from "./CustomerReview/CustomerReview.tsx";
+import VerifyEmail from "./LoginPage/VerifyEmail.tsx";
 
 const router = createBrowserRouter([
   {
@@ -47,6 +48,10 @@ const router = createBrowserRouter([
       {
         path: "/register",
         element: <LoginPage registerMode={true} />,
+      },
+      {
+        path: "/verify-email",
+        element: <VerifyEmail />,
       },
       {
         path: "/forgotPassword",
@@ -77,9 +82,7 @@ const router = createBrowserRouter([
         element: <ServiceListings />,
       },
 
-      {path: "/services/review/:gigId", 
-        element: <CustomerReview/>
-      },
+      { path: "/services/review/:gigId", element: <CustomerReview /> },
       {
         path: "/services/:slug/:sub_slug/:gigId",
         element: (
@@ -106,8 +109,6 @@ const router = createBrowserRouter([
         path: "/reset-password",
         element: <ResetPassword />,
       },
-
-      
     ],
   },
 ]);

@@ -58,12 +58,11 @@ function LoginPage({ registerMode }: Props) {
 
     if (response?.success) {
       //Success Register
-      setErrorMessage(response.message);
-      setTimeout(() => {
-        navigate("/");
-      }, 1000);
+      setMessageColor(MessgaeColors[1]);
+      setErrorMessage(response.message); // Shows "Please check your email to verify..."
     } else {
       //Failed Register
+      setMessageColor(MessgaeColors[0]);
       setErrorMessage(response?.error);
     }
   };

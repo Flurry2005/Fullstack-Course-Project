@@ -10,6 +10,9 @@ userRouter.post("/login", async (req, res, next) => {
 userRouter.post("/register", async (req, res, next) => {
   userController.register(req, res, next);
 });
+userRouter.post("/verify-email", async (req, res) => {
+  userController.verifyEmail(req, res);
+});
 
 userRouter.post("/forgot-password", async (req, res) => {
   userController.forgotPassword(req, res);
