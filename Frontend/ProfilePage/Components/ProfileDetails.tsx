@@ -28,19 +28,21 @@ function ProfileDetails({
 
   return (
     <aside>
-      <div className="mb-6 flex min-h-[62px] items-end border-b border-[#E5E0F2] pb-4">
-        <h2 className="text-[28px] font-bold leading-none text-[#2C2A51]">
+      <div className="flex items-end mb-6 pb-4 border-[#E5E0F2] border-b min-h-[62px]">
+        <h2 className="font-bold text-[#2C2A51] text-[28px] leading-none">
           Profile Info
         </h2>
       </div>
 
-      <div className="space-y-0 rounded-sm border border-[#E5E0F2] bg-white shadow-[0_10px_26px_rgba(90,87,129,0.06)]">
+      <div className="space-y-0 bg-white shadow-[0_10px_26px_rgba(90,87,129,0.06)] border border-[#E5E0F2] rounded-sm">
         {/* Cover image is stored as a URL until we add a dedicated upload flow. */}
         {isEditing && (
-          <section className="border-b border-[#E5E0F2] p-5  cursor-pointer h-full">
-            <h2 className="text-base font-bold text-[#2C2A51]  cursor-pointer">Cover</h2>
-            <label className="mt-4 block  cursor-pointer">
-              <span className="text-xs font-bold uppercase text-[#6F6F9A]  cursor-pointer">
+          <section className="p-5 border-[#E5E0F2] border-b h-full cursor-pointer">
+            <h2 className="font-bold text-[#2C2A51] text-base cursor-pointer">
+              Cover
+            </h2>
+            <label className="block mt-4 cursor-pointer">
+              <span className="font-bold text-[#6F6F9A] text-xs uppercase cursor-pointer">
                 Cover Image URL
               </span>
               <input
@@ -56,23 +58,25 @@ function ProfileDetails({
         )}
 
         {/* Languages are edited as one "Language - Level" item per line. */}
-        <section className="border-b border-[#E5E0F2] p-5">
-          <h2 className="text-base font-bold text-[#2C2A51]">Languages</h2>
+        <section className="p-5 border-[#E5E0F2] border-b">
+          <h2 className="font-bold text-[#2C2A51] text-base">Languages</h2>
 
           {isEditing ? (
             <textarea
               value={draftLanguages}
               rows={5}
               onChange={(e) => onLanguagesChange(e.target.value)}
-              placeholder={"English - Fluent\nSwedish - Conversational\nChinese - Native\n Danish - Basic"}
-              className="mt-4 w-full resize-none rounded-xl border border-[#DDD9FF] bg-white px-4 py-3 text-sm leading-6 text-[#2C2A51] outline-none transition focus:border-[#0050D4] focus:ring-4 focus:ring-[#0050D4]/10"
+              placeholder={
+                "English - Fluent\nSwedish - Conversational\nChinese - Native\n Danish - Basic"
+              }
+              className="bg-white mt-4 px-4 py-3 border border-[#DDD9FF] focus:border-[#0050D4] rounded-xl outline-none focus:ring-[#0050D4]/10 focus:ring-4 w-full text-[#2C2A51] text-sm leading-6 transition resize-none"
             />
           ) : profile.languages && profile.languages.length > 0 ? (
-            <div className="mt-4 space-y-3">
+            <div className="space-y-3 mt-4">
               {profile.languages.map((language) => (
                 <p
                   key={`${language.name}-${language.level}`}
-                  className="flex justify-between gap-4 text-sm text-[#2C2A51]"
+                  className="flex justify-between gap-4 text-[#2C2A51] text-sm"
                 >
                   <span>{language.name}</span>
                   <span className="font-semibold text-[#5A5781]">
@@ -82,7 +86,7 @@ function ProfileDetails({
               ))}
             </div>
           ) : (
-            <p className="mt-4 text-sm text-[#5A5781]">
+            <p className="mt-4 text-[#5A5781] text-sm">
               No languages added yet.
             </p>
           )}
@@ -90,7 +94,7 @@ function ProfileDetails({
 
         {/* Skills are edited as one item per line or comma-separated. */}
         <section className="p-5">
-          <h2 className="text-base font-bold text-[#2C2A51]">Skills</h2>
+          <h2 className="font-bold text-[#2C2A51] text-base">Skills</h2>
 
           {isEditing ? (
             <textarea
@@ -98,21 +102,21 @@ function ProfileDetails({
               rows={5}
               onChange={(e) => onSkillsChange(e.target.value)}
               placeholder={"Branding\nLogo Design\nUI Design"}
-              className="mt-4 w-full resize-none rounded-xl border border-[#DDD9FF] bg-white px-4 py-3 text-sm leading-6 text-[#2C2A51] outline-none transition focus:border-[#0050D4] focus:ring-4 focus:ring-[#0050D4]/10"
+              className="bg-white mt-4 px-4 py-3 border border-[#DDD9FF] focus:border-[#0050D4] rounded-xl outline-none focus:ring-[#0050D4]/10 focus:ring-4 w-full text-[#2C2A51] text-sm leading-6 transition resize-none"
             />
           ) : profile.skills && profile.skills.length > 0 ? (
-            <div className="mt-4 space-y-2">
+            <div className="space-y-2 mt-4">
               {profile.skills.map((skill) => (
                 <p
                   key={skill}
-                  className="w-fit rounded-full border border-[#D8D0F5] bg-[#F8F5FF] px-3 py-1.5 text-left text-sm font-medium text-[#2C2A51]"
+                  className="bg-[#F8F5FF] px-3 py-1.5 border border-[#D8D0F5] rounded-full w-fit font-medium text-[#2C2A51] text-sm text-left"
                 >
                   {skill}
                 </p>
               ))}
             </div>
           ) : (
-            <p className="mt-4 text-sm text-[#5A5781]">No skills added yet.</p>
+            <p className="mt-4 text-[#5A5781] text-sm">No skills added yet.</p>
           )}
         </section>
       </div>

@@ -47,7 +47,7 @@ function ProfileHeader({
 
   return (
     <section
-      className="relative overflow-hidden border-b border-[#E7E2F5] bg-[#F3EEFF]"
+      className="relative bg-[#F3EEFF] border-[#E7E2F5] border-b overflow-hidden"
       style={
         hasCoverImage
           ? {
@@ -59,24 +59,24 @@ function ProfileHeader({
       }
     >
       {isLoading && !profile ? (
-        <div className="flex min-h-[220px] items-center justify-center text-sm text-[#5A5781]">
+        <div className="flex justify-center items-center min-h-[220px] text-[#5A5781] text-sm">
           Loading profile...
         </div>
       ) : !profile ? (
-        <div className="flex min-h-[220px] items-center justify-center text-sm text-[#5A5781]">
+        <div className="flex justify-center items-center min-h-[220px] text-[#5A5781] text-sm">
           Profile could not be found.
         </div>
       ) : (
         <>
           {isOwnProfile && (
-            <div className="absolute right-5 top-5 z-20 flex flex-wrap justify-end gap-2 md:right-[calc((100vw-1184px)/2+24px)]">
+            <div className="top-5 right-5 md:right-[calc((100vw-1184px)/2+24px)] z-20 absolute flex flex-wrap justify-end gap-2">
               {/* Edit buttons are only shown when viewing your own profile. */}
               {isEditing ? (
                 <>
                   <button
                     type="button"
                     onClick={onCancelEdit}
-                    className="rounded-full border border-white/50 bg-white/80 px-4 py-2 text-xs font-bold text-[#0050D4] transition hover:bg-white  cursor-pointer"
+                    className="bg-white/80 hover:bg-white px-4 py-2 border border-white/50 rounded-full font-bold text-[#0050D4] text-xs transition cursor-pointer"
                   >
                     Cancel
                   </button>
@@ -84,7 +84,7 @@ function ProfileHeader({
                     type="button"
                     onClick={onSave}
                     disabled={isSaving}
-                    className="rounded-full bg-[#0050D4] px-4 py-2 text-xs font-bold text-white shadow-[0_10px_18px_rgba(0,80,212,0.22)] transition hover:bg-[#003EAA] disabled:cursor-not-allowed disabled:opacity-60  cursor-pointer"
+                    className="bg-[#0050D4] hover:bg-[#003EAA] disabled:opacity-60 shadow-[0_10px_18px_rgba(0,80,212,0.22)] px-4 py-2 rounded-full font-bold text-white text-xs transition cursor-pointer disabled:cursor-not-allowed"
                   >
                     {isSaving ? "Saving..." : "Save"}
                   </button>
@@ -93,9 +93,9 @@ function ProfileHeader({
                 <button
                   type="button"
                   onClick={onEdit}
-                  className="cursor-pointer rounded-full bg-[#0050D4] px-4 py-2 text-xs font-bold text-white shadow-[0_10px_18px_rgba(0,80,212,0.22)] transition hover:bg-[#003EAA]"
+                  className="bg-[#0050D4] hover:bg-[#003EAA] shadow-[0_10px_18px_rgba(0,80,212,0.22)] px-4 py-2 rounded-full font-bold text-white text-xs transition cursor-pointer"
                 >
-                  <i className="fa-regular fa-pen-to-square mr-2"></i>
+                  <i className="fa-pen-to-square mr-2 fa-regular"></i>
                   Edit Profile
                 </button>
               )}
@@ -103,8 +103,8 @@ function ProfileHeader({
           )}
 
           {/* Cover hero. Edit mode swaps the text into form fields below. */}
-          <div className="mx-auto flex min-h-[300px] max-w-[1184px] flex-col justify-center gap-7 px-4 py-20 sm:px-6 md:flex-row md:items-center md:justify-start md:pr-40">
-            <div className="cursor-pointer group relative h-[132px] w-[132px] shrink-0 overflow-hidden rounded-full bg-white shadow-[0_12px_30px_rgba(17,18,45,0.22)] ring-4 ring-white md:h-[148px] md:w-[148px]">
+          <div className="flex md:flex-row flex-col justify-center md:justify-start md:items-center gap-7 mx-auto px-4 sm:px-6 py-20 md:pr-40 max-w-[1184px] min-h-[300px]">
+            <div className="group relative bg-white shadow-[0_12px_30px_rgba(17,18,45,0.22)] rounded-full ring-4 ring-white w-[132px] md:w-[148px] h-[132px] md:h-[148px] overflow-hidden cursor-pointer shrink-0">
               <input
                 type="file"
                 ref={imageInputRef}
@@ -118,7 +118,7 @@ function ProfileHeader({
               <img
                 src={profileImageUrl}
                 alt={`${profile.username}'s profile`}
-                className="h-full w-full object-cover"
+                className="w-full h-full object-cover"
               />
 
               {isOwnProfile && isEditing && (
@@ -126,16 +126,16 @@ function ProfileHeader({
                 <button
                   type="button"
                   onClick={() => imageInputRef.current?.click()}
-                  className="absolute inset-0 z-10 flex items-center justify-center bg-black/30 text-white opacity-0 transition-opacity group-hover:opacity-100  cursor-pointer"
+                  className="z-10 absolute inset-0 flex justify-center items-center bg-black/30 opacity-0 group-hover:opacity-100 text-white transition-opacity cursor-pointer"
                   disabled={isUploadingImage}
                   aria-label="Upload profile picture"
                 >
-                  <i className="fa-solid fa-upload text-3xl"></i>
+                  <i className="text-3xl fa-solid fa-upload"></i>
                 </button>
               )}
             </div>
 
-            <div className="min-w-0 flex-1 pt-0 md:pt-1">
+            <div className="flex-1 pt-0 md:pt-1 min-w-0">
               {/* Profile identity */}
               <div>
                 <div className="flex flex-wrap items-center gap-3">
@@ -148,10 +148,10 @@ function ProfileHeader({
                 <p
                   className={`mt-1 text-sm font-bold drop-shadow-sm ${secondaryTextClass}`}
                 >
-                  <i className="fa-solid fa-location-dot mr-2 text-[11px]"></i>
+                  <i className="mr-2 text-[11px] fa-solid fa-location-dot"></i>
                   {profile.location || "Location not added"}
                 </p>
-                <div className="flex gap-x-2 items-center mt-3">
+                <div className="flex items-center gap-x-2 mt-3">
                   <span
                     className={`w-3 h-3 rounded-full ${onlineStatus ? "bg-green-500" : "bg-red-500"} `}
                   ></span>
@@ -169,7 +169,7 @@ function ProfileHeader({
                 {isEditing ? (
                   <div className="space-y-4">
                     <label className="block">
-                      <span className="mb-2 block text-sm font-bold text-white">
+                      <span className="block mb-2 font-bold text-white text-sm">
                         Location
                       </span>
                       <input
@@ -177,12 +177,12 @@ function ProfileHeader({
                         maxLength={80}
                         onChange={(e) => onLocationChange(e.target.value)}
                         placeholder="London, United Kingdom"
-                        className="w-full rounded-xl border border-[#DDD9FF] bg-white px-4 py-3 text-sm text-[#2C2A51] outline-none transition focus:border-[#0050D4] focus:ring-4 focus:ring-[#0050D4]/10"
+                        className="bg-white px-4 py-3 border border-[#DDD9FF] focus:border-[#0050D4] rounded-xl outline-none focus:ring-[#0050D4]/10 focus:ring-4 w-full text-[#2C2A51] text-sm transition"
                       />
                     </label>
 
                     <label className="block">
-                      <span className="mb-2 block text-sm font-bold text-white">
+                      <span className="block mb-2 font-bold text-white text-sm">
                         Description
                       </span>
                       <textarea
@@ -191,7 +191,7 @@ function ProfileHeader({
                         rows={4}
                         onChange={(e) => onBioChange(e.target.value)}
                         placeholder="Tell clients who you are and what kind of work you do."
-                        className="w-full resize-none rounded-xl border border-[#DDD9FF] bg-white px-4 py-3 text-sm leading-6 text-[#2C2A51] outline-none transition focus:border-[#0050D4] focus:ring-4 focus:ring-[#0050D4]/10"
+                        className="bg-white px-4 py-3 border border-[#DDD9FF] focus:border-[#0050D4] rounded-xl outline-none focus:ring-[#0050D4]/10 focus:ring-4 w-full text-[#2C2A51] text-sm leading-6 transition resize-none"
                       />
                     </label>
                   </div>
@@ -213,17 +213,17 @@ function ProfileHeader({
                 : "bg-white/55 text-[#2C2A51]"
             }`}
           >
-            <div className="mx-auto grid max-w-[1184px] gap-3 px-4 py-4 sm:px-6 md:grid-cols-3">
+            <div className="gap-3 grid md:grid-cols-3 mx-auto px-4 sm:px-6 py-4 max-w-[1184px]">
               <p>
-                <i className="fa-regular fa-calendar mr-2"></i>
+                <i className="mr-2 fa-regular fa-calendar"></i>
                 {formatMemberSince(profile.createdAt)}
               </p>
               <p>
-                <i className="fa-solid fa-language mr-2"></i>
+                <i className="mr-2 fa-solid fa-language"></i>
                 {profile.languages?.length ?? 0} languages
               </p>
               <p>
-                <i className="fa-solid fa-screwdriver-wrench mr-2"></i>
+                <i className="mr-2 fa-solid fa-screwdriver-wrench"></i>
                 {profile.skills?.length ?? 0} skills
               </p>
             </div>
