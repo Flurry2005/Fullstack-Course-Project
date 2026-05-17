@@ -1,18 +1,18 @@
 import Footer from "../Footer";
 import NavBar from "../NavBar/NavBar";
-import Section1 from "./HomePageComponents/Section1";
-import Section2 from "./HomePageComponents/Section2";
-import Section3 from "./HomePageComponents/Section3";
-import Section4 from "./HomePageComponents/Section4";
+import GeneralSection from "./HomePageComponents/GeneralSection";
+import BrowseByCategorySection from "./HomePageComponents/BrowseByCategorySection";
+import PopularServicesSection from "./HomePageComponents/PopularServicesSection";
+import FlexSection from "./HomePageComponents/FlexSection";
 
 function Home() {
   return (
     <main className="bg-[#f9f5ff] w-full min-h-screen overflow-x-hidden">
       <NavBar />
-      <Section1 />
-      <Section2 />
-      <Section3 />
-      <Section4 />
+      <GeneralSection />
+      <BrowseByCategorySection />
+      <PopularServicesSection />
+      <FlexSection />
       <Footer />
     </main>
   );
