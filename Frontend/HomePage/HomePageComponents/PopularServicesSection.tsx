@@ -16,17 +16,27 @@ function PopularServicesSection() {
 
       const allGigs = (await response.json()) as Gig[];
 
-      //Sort the gigs in decending order, basically highest rated first
-      const sorted = allGigs.sort((a, b) => (b.rating ?? 0) - (a.rating ?? 0));
+      // Sort all gigs by rating (decending, highest rated first)
+      const sorted = [...allGigs].sort(
+        (a, b) => (b.rating ?? 0) - (a.rating ?? 0),
+      );
 
-      const highRated = sorted.filter((gig) => (gig.rating ?? 0) >= 4);
-      const lowRated = sorted.filter((gig) => (gig.rating ?? 0) < 4);
+      //Group the gigs by rating for shuffling later (added to prevent some previous bugs)
+      const grouped = sorted.reduce<Record<number, Gig[]>>((acc, gig) => {
+        const rating = gig.rating ?? 0;
+        if (!acc[rating]) acc[rating] = [];
+        acc[rating].push(gig);
+        return acc;
+      }, {});
 
-      //Shuffle the high rated ones randomly
-      const shuffledHighRated = [...highRated].sort(() => Math.random() - 0.5);
-
-      //Fill with 4 cards of randomly high rated cards of at least 4 stars or higher with a fallback of the next highest rated gigs available
-      const result = [...shuffledHighRated, ...lowRated].slice(0, 4);
+      //Shuffles within each rating group and then add back into decending order
+      const result = Object.keys(grouped)
+        .map(Number)
+        .sort((a, b) => b - a)
+        .flatMap((rating) =>
+          [...grouped[rating]].sort(() => Math.random() - 0.5),
+        )
+        .slice(0, 4);
 
       setGigs(result);
     } catch (error) {
