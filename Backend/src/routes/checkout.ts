@@ -127,8 +127,8 @@ checkoutRouter.post("/create-checkout-session", async (req, res) => {
     }
 
     const priceInCents = Math.round(price * 100);
-    // our 5% service fee
-    const serviceFeeInCents = Math.round(priceInCents * 0.05);
+    // our 10% service fee
+    const serviceFeeInCents = Math.round(priceInCents * 0.1);
     const serviceFee = serviceFeeInCents / 100;
     // total price with service fee
     const totalPriceInCents = priceInCents + serviceFeeInCents;
