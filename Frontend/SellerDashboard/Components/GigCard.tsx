@@ -70,7 +70,7 @@ function GigCard({
               <span className="flex items-center gap-3 text-[#5A5781] text-sm">
                 <span className="flex items-center gap-1">
                   <img src={viewsIcon} className="w-4 h-4" alt="Views" />
-                  {views}
+                  {views | 0}
                 </span>
                 <span className="flex items-center gap-1">
                   <img
