@@ -27,6 +27,8 @@ function GigCard({
   reviewerAmount,
   gig,
 }: GigCardProps) {
+
+  console.log(gig)
   return (
     <>
       <div className="flex flex-col">
