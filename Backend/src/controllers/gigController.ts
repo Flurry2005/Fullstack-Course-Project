@@ -158,10 +158,10 @@ class GigController {
 
   async getGigById(req: Request) {
     try {
-      
-      const ip = req.ip?.replace(".", "_");
-      console.log(ip);
-      await gigsModel.findByIdAndUpdate(req.params.id, { $set: { [`views.${ip}`]: new Date() }});
+      const ipKey = (req.ip ?? "unknown").replace(/[^a-zA-Z0-9_-]/g, "_");
+      await gigsModel.findByIdAndUpdate(req.params.id, {
+        $set: { [`views.${ipKey}`]: new Date() },
+      });
       return await gigsModel.findById(req.params.id).select("-sellerId -views -updatedAt").lean();
     } catch (error) {
       console.error(error);
