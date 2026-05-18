@@ -39,6 +39,15 @@ function getStartingPrice(...prices: unknown[]) {
   return validPrices.length > 0 ? Math.min(...validPrices) : 0;
 }
 
+function getClientIp(req: Request) {
+  const forwardedFor = req.headers["x-forwarded-for"];
+  const forwardedIp = Array.isArray(forwardedFor)
+    ? forwardedFor[0]
+    : forwardedFor?.split(",")[0]?.trim();
+
+  return forwardedIp || req.ip || "unknown";
+}
+
 class GigController {
   async getGigs() {
     try {
@@ -158,7 +167,8 @@ class GigController {
 
   async getGigById(req: Request) {
     try {
-      const ipKey = (req.ip ?? "unknown").replace(/[^a-zA-Z0-9_-]/g, "_");
+      const clientIp = getClientIp(req);
+      const ipKey = clientIp.replace(/[^a-zA-Z0-9_-]/g, "_");
       await gigsModel.findByIdAndUpdate(req.params.id, {
         $set: { [`views.${ipKey}`]: new Date() },
       });
