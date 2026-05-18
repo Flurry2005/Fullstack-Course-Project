@@ -299,8 +299,10 @@ function SellerDashBoard() {
                   gig={gig}
                   id={gig?._id}
                   title={gig?.title}
-                  views={13}
-                  checkouts={10}
+                  views={Object.keys(gig?.views ?? {}).length}
+                  checkouts={
+                    orders?.filter((e) => e.gigId === gig?._id).length ?? 0
+                  }
                   price={gig?.basic?.price}
                   rating={gig.rating?.toFixed(1).toString() || "0.0"}
                   reviewerAmount={gig.reviews ? gig.reviews.length : 0}
