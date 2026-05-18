@@ -5,6 +5,7 @@ import { isValidObjectId } from "mongoose";
 import { categories } from "../utils/Categories.js";
 import orderModel from "../models/orderModel.js";
 import { getSquareImage, uploadBuffer } from "../services/Cloudinary.js";
+import bcrypt from "bcrypt";
 
 type GigSearchQuery = Record<string, any>;
 
@@ -168,10 +169,13 @@ class GigController {
   async getGigById(req: Request) {
     try {
       const clientIp = getClientIp(req);
-      const ipKey = clientIp.replace(/[^a-zA-Z0-9_-]/g, "_");
-      await gigsModel.findByIdAndUpdate(req.params.id, {
-        $set: { [`views.${ipKey}`]: new Date() },
-      });
+      const salt = "$2b$10$abcdefghijklmnopqrstuv"; 
+      const hashedIp = bcrypt.hashSync(clientIp, salt);
+      const ipKey = hashedIp.replace(/[^a-zA-Z0-9_-]/g, "_");
+
+      const update = { $set: { [`views.${ipKey}`]: new Date() } };
+      await gigsModel.updateOne({ _id: req.params.id }, update);
+
       return await gigsModel.findById(req.params.id).select("-sellerId -views -updatedAt").lean();
     } catch (error) {
       console.error(error);
