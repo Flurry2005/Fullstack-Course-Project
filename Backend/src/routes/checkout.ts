@@ -38,7 +38,7 @@ checkoutRouter.post("/create-checkout-session", async (req, res) => {
     switch (tier.toLowerCase()) {
       case "basic": {
         if (gig.basic) {
-          price = gig.basic.price;
+          price = Number(gig.basic.price);
           deliveryTime = gig.basic.delivery;
         } else {
           return res.status(400).json({ error: "Tier dosent exist" });
@@ -48,7 +48,7 @@ checkoutRouter.post("/create-checkout-session", async (req, res) => {
 
       case "standard": {
         if (gig.standard) {
-          price = gig.standard.price!;
+          price = Number(gig.standard.price!);
           deliveryTime = gig.standard.delivery!;
         } else {
           return res.status(400).json({ error: "Tier dosent exist" });
@@ -58,7 +58,7 @@ checkoutRouter.post("/create-checkout-session", async (req, res) => {
 
       case "premium": {
         if (gig.premium) {
-          price = gig.premium.price!;
+          price = Number(gig.premium.price!);
           deliveryTime = gig.premium.delivery!;
         } else {
           return res.status(400).json({ error: "Tier dosent exist" });
@@ -67,31 +67,53 @@ checkoutRouter.post("/create-checkout-session", async (req, res) => {
       }
     }
 
-    if (!user.stripe_customer_id) {
-      const customer = await stripe.customers.create({
+    let stripeCustomerId = user.stripe_customer_id;
+
+    if (stripeCustomerId) {
+      try {
+        const customer = await stripe.customers.retrieve(stripeCustomerId);
+        if ("deleted" in customer && customer.deleted) {
+          stripeCustomerId = null;
+        }
+      } catch {
+        stripeCustomerId = null;
+      }
+    }
+
+    if (!stripeCustomerId) {
+      const customerData: Stripe.CustomerCreateParams = {
         email: user.email,
-        name: `${billing.firstName} ${billing.lastName}`,
-        phone: billing.phoneNumber,
-        address: {
-          line1: billing.addressLine1,
+      };
+
+      if (billing) {
+        customerData.name = [billing.firstName, billing.lastName]
+          .filter(Boolean)
+          .join(" ");
+        customerData.phone = billing.phoneNumber || undefined;
+        customerData.address = {
+          line1: billing.addressLine1 || undefined,
           line2: billing.addressLine2 || undefined,
-          city: billing.city,
-          state: billing.state,
-          postal_code: billing.zipCode,
-          country: billing.country,
-        },
-      });
-      res.locals.jwt.stripe_customer_id = customer.id;
+          city: billing.city || undefined,
+          state: billing.state || undefined,
+          postal_code: billing.zipCode || undefined,
+          country: billing.country || undefined,
+        };
+      }
+
+      const customer = await stripe.customers.create(customerData);
+      stripeCustomerId = customer.id;
+      res.locals.jwt.stripe_customer_id = stripeCustomerId;
+
       await userModel.findByIdAndUpdate(user._id, {
         $set: {
-          stripe_customer_id: customer.id,
+          stripe_customer_id: stripeCustomerId,
         },
       });
       const token = JWTModel.createJwtToken(
         user.username,
         user.email,
         user._id,
-        customer.id ?? null,
+        stripeCustomerId,
       );
       const expiry = new Date(Date.now() + 1000 * 60 * 60);
       res.cookie("token", token, {
@@ -104,16 +126,18 @@ checkoutRouter.post("/create-checkout-session", async (req, res) => {
       });
     }
 
-    // our 10% service fee
-    const serviceFee = Math.round(price * 0.1);
+    const priceInCents = Math.round(price * 100);
+    // our 5% service fee
+    const serviceFeeInCents = Math.round(priceInCents * 0.05);
+    const serviceFee = serviceFeeInCents / 100;
     // total price with service fee
-    const totalPrice = price + serviceFee;
+    const totalPriceInCents = priceInCents + serviceFeeInCents;
 
     // stripe checkout
     const session = await stripe.checkout.sessions.create({
       mode: "payment",
 
-      customer: res.locals.jwt.stripe_customer_id,
+      customer: stripeCustomerId,
 
       customer_update: {
         address: "auto",
@@ -135,7 +159,7 @@ checkoutRouter.post("/create-checkout-session", async (req, res) => {
               description: gig.description + "\n GigId: " + gig._id,
               images: gig.primaryImagePreview ? [gig.primaryImagePreview] : [],
             },
-            unit_amount: totalPrice * 100,
+            unit_amount: totalPriceInCents,
           },
           quantity: 1,
         },
@@ -159,8 +183,11 @@ checkoutRouter.post("/create-checkout-session", async (req, res) => {
     });
 
     return res.json({ url: session.url });
-  } catch (error) {
+  } catch (error: any) {
     console.log(error);
+    return res.status(500).json({
+      error: error.message || "Could not create checkout session.",
+    });
   }
 });
 
