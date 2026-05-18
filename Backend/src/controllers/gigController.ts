@@ -51,8 +51,6 @@ class GigController {
 
   async searchGigs(req: Request) {
     try {
-      await this.backfillMissingStartingPrices();
-
       const page = Math.max(1, Math.floor(getNumberQuery(req.query.page, 1)));
       const limit = Math.min(
         48,
@@ -156,32 +154,6 @@ class GigController {
       console.error(error);
       return null;
     }
-  }
-
-  async backfillMissingStartingPrices() {
-    const gigs = await gigsModel
-      .find({ startingPrice: { $exists: false } })
-      .select("basic.price standard.price premium.price")
-      .lean();
-
-    if (gigs.length === 0) return;
-
-    await gigsModel.bulkWrite(
-      gigs.map((gig) => ({
-        updateOne: {
-          filter: { _id: gig._id },
-          update: {
-            $set: {
-              startingPrice: getStartingPrice(
-                gig.basic?.price,
-                gig.standard?.price,
-                gig.premium?.price,
-              ),
-            },
-          },
-        },
-      })),
-    );
   }
 
   async getGigById(req: Request) {
