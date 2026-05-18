@@ -90,6 +90,12 @@ const gigsSchema = new mongoose.Schema({
     delivery: { type: String },
     features: { type: [] },
   },
+  startingPrice: {
+    type: Number,
+    required: true,
+    default: 0,
+    index: true,
+  },
 });
 
 export default mongoose.model("Gigs", gigsSchema);

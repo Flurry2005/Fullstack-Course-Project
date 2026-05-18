@@ -1,0 +1,32 @@
+export const serviceCategories = [
+  "Automotive Services",
+  "Beauty & Personal Care",
+  "Childcare & Family",
+  "Cleaning & Maintenance",
+  "Education & Tutoring",
+  "Events & Entertainment",
+  "Fitness & Sports",
+  "Home Improvement & Repair",
+  "IT & Tech Support",
+  "Jobs & Errands",
+  "Language & Translation",
+  "Lifestyle & Personal Services",
+  "Pet Services",
+  "Online & Digital Services",
+  "Professional Services",
+  "Creative & Media Production",
+  "Health & Wellness",
+  "Moving & Storage",
+  "Transportation",
+  "Miscellaneous / On-Demand",
+];
+
+export const deliveryTimes = [
+  "1 Day",
+  "2 Days",
+  "3 Days",
+  "5 Days",
+  "1 Week",
+  "10 Days",
+  "2 Weeks",
+];

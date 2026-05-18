@@ -2,16 +2,20 @@ type ListingsHeaderProps = {
   searchQuery: string;
   sortBy: string;
   resultsCount: number;
+  currentPage: number;
+  totalPages: number;
   onSearchChange: (value: string) => void;
   onSortChange: (value: string) => void;
 };
 
-const sortOptions = ["Most Relevant", "Price Low to High", "Price High to Low"];
+const sortOptions = ["Most Recent", "Price Low to High", "Price High to Low"];
 
 function ListingsHeader({
   searchQuery,
   sortBy,
   resultsCount,
+  currentPage,
+  totalPages,
   onSearchChange,
   onSortChange,
 }: ListingsHeaderProps) {
@@ -44,9 +48,12 @@ function ListingsHeader({
         </label>
       </div>
 
-      <p className="font-medium text-[#6f6f9a] text-sm">
-        Showing {resultsCount} services
-      </p>
+      <div className="flex items-center justify-between gap-4 font-medium text-[#6f6f9a] text-sm">
+        <p>Showing {resultsCount} services</p>
+        <p>
+          Page {Math.max(1, currentPage)}/{Math.max(1, totalPages)}
+        </p>
+      </div>
     </div>
   );
 }
