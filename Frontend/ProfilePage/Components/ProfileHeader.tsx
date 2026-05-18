@@ -1,9 +1,11 @@
 import type { ChangeEvent, RefObject } from "react";
 import type { PublicProfile } from "../types";
 import { FALLBACK_BIO, formatMemberSince } from "../profileUtils";
+import type { Gig } from "../../types/Gig";
 
 type ProfileHeaderProps = {
   profile: PublicProfile | null;
+  gigs: Gig[];
   profileImageUrl: string;
   isLoading: boolean;
   isOwnProfile: boolean;
@@ -24,6 +26,7 @@ type ProfileHeaderProps = {
 
 function ProfileHeader({
   profile,
+  gigs,
   profileImageUrl,
   isLoading,
   isOwnProfile,
@@ -213,7 +216,7 @@ function ProfileHeader({
                 : "bg-white/55 text-[#2C2A51]"
             }`}
           >
-            <div className="gap-3 grid md:grid-cols-3 mx-auto px-4 sm:px-6 py-4 max-w-[1184px]">
+            <div className="flex flex-wrap justify-between gap-2 mx-auto px-4 sm:px-6 py-4 max-w-[1184px]">
               <p>
                 <i className="mr-2 fa-regular fa-calendar"></i>
                 {formatMemberSince(profile.createdAt)}
@@ -225,6 +228,19 @@ function ProfileHeader({
               <p>
                 <i className="mr-2 fa-solid fa-screwdriver-wrench"></i>
                 {profile.skills?.length ?? 0} skills
+              </p>
+              <p>
+                <i className="mr-2 text-yellow-400 text-xs fa-solid fa-star"></i>
+                {gigs
+                  ? (
+                      gigs
+                        ?.map((gig) => gig.rating || 0)
+                        .reduce((a, b) => a + b, 0) / (gigs?.length || 1)
+                    )
+                      .toFixed(1)
+                      .toString() || "0.0"
+                  : "0.0"}{" "}
+                Seller Rating
               </p>
             </div>
           </div>
