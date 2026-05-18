@@ -6,6 +6,7 @@ import AuthButtons from "./NavbarComponents/AuthButtons";
 import Logo from "./NavbarComponents/Logo";
 import NavigationLink from "./NavbarComponents/NavigationLink";
 import { LogOut, ShoppingBag, User } from "lucide-react";
+import { useLocation } from "react-router-dom";
 
 function NavBar() {
   const { user, logout } = useAuth();
@@ -13,6 +14,7 @@ function NavBar() {
   const [navOpen, setNavOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const location = useLocation();
 
   const toggleNav = () => {
     setNavOpen((prev) => {
@@ -20,6 +22,11 @@ function NavBar() {
       return !prev;
     });
   };
+
+  useEffect(() => {
+    setNavOpen(false);
+    document.body.classList.remove("overflow-hidden");
+  }, [location.pathname]);
 
   // Close dropdown when clicking outside
   useEffect(() => {
