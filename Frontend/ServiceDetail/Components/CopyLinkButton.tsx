@@ -22,11 +22,11 @@ function QuoteButton() {
     <div className="relative">
       <button
         onClick={copyLink}
-        className="border text-sm rounded-lg py-3 w-full font-bold flex gap-3 justify-center items-center text-[#0050D4] border-[#0050D4]/30
+        className="border text-sm rounded-lg py-3 w-full font-bold flex gap-1 justify-center items-center text-[#0050D4] border-[#0050D4]/30
       hover: cursor-pointer hover:bg-[#0050D4]/30"
       >
         <img src={copyLinkIcon} className="w-5 h-5" />
-        Copy link
+        Copy Link
       </button>
 
       <span
