@@ -53,6 +53,12 @@ const gigsSchema = new mongoose.Schema({
     type: Number,
   },
 
+  views: {
+    type: Map,
+    of: Date,
+    default: () => new Map(),
+  },
+
   reviews: {
     type: [
       {
@@ -89,6 +95,12 @@ const gigsSchema = new mongoose.Schema({
     price: { type: Number },
     delivery: { type: String },
     features: { type: [] },
+  },
+  startingPrice: {
+    type: Number,
+    required: true,
+    default: 0,
+    index: true,
   },
 });
 

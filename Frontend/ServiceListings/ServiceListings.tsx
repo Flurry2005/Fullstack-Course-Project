@@ -1,13 +1,13 @@
-import { useEffect, useMemo, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import Footer from "../Footer";
-import fishImage from "../assets/fish.jpg";
 import type { Gig } from "../types/Gig";
 import ListingsHeader from "./Components/ListingsHeader";
 import Sidebar from "./Components/Sidebar";
 import { fetchProfile } from "../utils/GetProfile";
 import NavBar from "../NavBar/NavBar";
 import ServiceListingCard from "./Components/ServiceListingCard";
+import { deliveryTimes, serviceCategories } from "./serviceListingFilters";
 
 export type Listing = {
   id: string;
@@ -35,9 +35,13 @@ const apiUrl =
     ? "http://localhost:3000"
     : "https://fullstackapi.liamjorgensen.dev";
 
-function getListingPrice(listing: Listing) {
-  return Number(listing.price.replace(/[$,]/g, ""));
-}
+type GigSearchResponse = {
+  gigs: Gig[];
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
+};
 
 function getPackagePrices(gig: Gig) {
   return [gig.basic?.price, gig.standard?.price, gig.premium?.price].filter(
@@ -97,30 +101,91 @@ function mapGigToListing(gig: Gig): Listing {
 
 function ServiceListings() {
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
   const [listings, setListings] = useState<Listing[]>([]);
+  const [totalResults, setTotalResults] = useState(0);
+  const [totalPages, setTotalPages] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const [fetchError, setFetchError] = useState("");
-  const [searchQuery, setSearchQuery] = useState("");
-  const [sortBy, setSortBy] = useState("Most Relevant");
-  const [currentPage, setCurrentPage] = useState(1);
-  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
-  const [minPrice, setMinPrice] = useState("");
-  const [maxPrice, setMaxPrice] = useState("");
-  const [selectedRating, setSelectedRating] = useState(0);
-  const [selectedDeliveryTime, setSelectedDeliveryTime] = useState("");
+  const searchParamsString = searchParams.toString();
+
+  const searchQuery = searchParams.get("search") ?? "";
+  const sortBy =
+    searchParams.get("sortBy") === "Most Relevant"
+      ? "Most Recent"
+      : (searchParams.get("sortBy") ?? "Most Recent");
+  const currentPage = Math.max(1, Number(searchParams.get("page")) || 1);
+  const selectedCategories =
+    searchParams
+      .get("categories")
+      ?.split(",")
+      .map((category) => category.trim())
+      .filter(Boolean) ?? [];
+  const minPrice = searchParams.get("minPrice") ?? "";
+  const maxPrice = searchParams.get("maxPrice") ?? "";
+  const selectedRating = Number(searchParams.get("rating")) || 0;
+  const selectedDeliveryTime = searchParams.get("deliveryTime") ?? "";
+
+  const updateSearchParams = (
+    updates: Record<string, string | number | null>,
+    resetPage = true,
+  ) => {
+    setSearchParams((currentParams) => {
+      const nextParams = new URLSearchParams(currentParams);
+
+      Object.entries(updates).forEach(([key, value]) => {
+        if (value === null || value === "") {
+          nextParams.delete(key);
+          return;
+        }
+
+        nextParams.set(key, String(value));
+      });
+
+      if (resetPage) {
+        nextParams.delete("page");
+      }
+
+      return nextParams;
+    });
+  };
 
   useEffect(() => {
+    const controller = new AbortController();
+
     const fetchGigs = async () => {
       try {
-        const response = await fetch(`${apiUrl}/api/gig`);
+        setIsLoading(true);
+        setFetchError("");
+
+        const requestParams = new URLSearchParams(searchParamsString);
+        requestParams.set("page", String(currentPage));
+        requestParams.set("limit", String(itemsPerPage));
+
+        const response = await fetch(
+          `${apiUrl}/api/gig/search?${requestParams.toString()}`,
+          { signal: controller.signal },
+        );
 
         if (!response.ok) {
           throw new Error("Could not fetch gigs");
         }
 
-        const gigs = (await response.json()) as Gig[];
-        setListings(gigs.map(mapGigToListing));
+        const data = (await response.json()) as GigSearchResponse;
+
+        if (data.totalPages > 0 && data.page > data.totalPages) {
+          updateSearchParams({ page: data.totalPages }, false);
+          return;
+        }
+
+        setListings(data.gigs.map(mapGigToListing));
+        setTotalResults(data.total);
+        setTotalPages(data.totalPages);
       } catch (error) {
+        if (error instanceof DOMException && error.name === "AbortError") {
+          return;
+        }
+
         console.error(error);
         setFetchError("Could not load services right now.");
       } finally {
@@ -129,7 +194,9 @@ function ServiceListings() {
     };
 
     fetchGigs();
-  }, []);
+
+    return () => controller.abort();
+  }, [currentPage, searchParamsString]);
 
   const [profilePictures, setProfilePictures] = useState<
     Record<string, string>
@@ -156,142 +223,66 @@ function ServiceListings() {
   }, [listings]);
 
   const toggleCategory = (category: string) => {
-    setSelectedCategories((currentCategories) =>
-      currentCategories.includes(category)
-        ? currentCategories.filter(
-            (currentCategory) => currentCategory !== category,
-          )
-        : [...currentCategories, category],
-    );
+    const nextCategories = selectedCategories.includes(category)
+      ? selectedCategories.filter(
+          (currentCategory) => currentCategory !== category,
+        )
+      : [...selectedCategories, category];
+
+    updateSearchParams({
+      categories: nextCategories.length > 0 ? nextCategories.join(",") : null,
+    });
   };
 
   const clearFilters = () => {
-    setSelectedCategories([]);
-    setMinPrice("");
-    setMaxPrice("");
-    setSelectedRating(0);
-    setSelectedDeliveryTime("");
+    updateSearchParams({
+      categories: null,
+      minPrice: null,
+      maxPrice: null,
+      rating: null,
+      deliveryTime: null,
+    });
   };
 
   const toggleRating = (rating: number) => {
-    setSelectedRating((currentRating) =>
-      currentRating === rating ? 0 : rating,
-    );
+    updateSearchParams({
+      rating: selectedRating === rating ? null : rating,
+    });
   };
 
   const toggleDeliveryTime = (time: string) => {
-    setSelectedDeliveryTime((currentTime) =>
-      currentTime === time ? "" : time,
-    );
+    updateSearchParams({
+      deliveryTime: selectedDeliveryTime === time ? null : time,
+    });
   };
 
-  const filteredListings = useMemo(() => {
-    const normalizedQuery = searchQuery.trim().toLowerCase();
-    const minPriceNumber = minPrice === "" ? 0 : Number(minPrice);
-    const maxPriceNumber = maxPrice === "" ? Infinity : Number(maxPrice);
+  const goToPage = (page: number) => {
+    updateSearchParams({ page }, false);
+  };
 
-    const matchingListings = listings.filter((listing) => {
-      const listingPrice = getListingPrice(listing);
-      const matchesSearch =
-        !normalizedQuery ||
-        [
-          listing.seller,
-          listing.title,
-          listing.level,
-          listing.tag,
-          listing.category,
-          listing.deliveryTime,
-          listing.deliveryTimes.join(" "),
-          listing.rating,
-        ]
-          .join(" ")
-          .toLowerCase()
-          .includes(normalizedQuery);
-      const matchesCategory =
-        selectedCategories.length === 0 ||
-        selectedCategories.includes(listing.category);
-      const matchesPrice =
-        listingPrice >= minPriceNumber && listingPrice <= maxPriceNumber;
-      const matchesRating =
-        selectedRating === 0 || Number(listing.rating) >= selectedRating;
-      const matchesDeliveryTime =
-        !selectedDeliveryTime ||
-        listing.deliveryTimes.includes(selectedDeliveryTime);
-
-      return (
-        matchesSearch &&
-        matchesCategory &&
-        matchesPrice &&
-        matchesRating &&
-        matchesDeliveryTime
-      );
-    });
-
-    return [...matchingListings].sort((a, b) => {
-      if (sortBy === "Price Low to High") {
-        return getListingPrice(a) - getListingPrice(b);
-      }
-
-      if (sortBy === "Price High to Low") {
-        return getListingPrice(b) - getListingPrice(a);
-      }
-
-      return 0;
-    });
-  }, [
-    maxPrice,
-    minPrice,
-    listings,
-    searchQuery,
-    selectedCategories,
-    selectedDeliveryTime,
-    selectedRating,
-    sortBy,
-  ]);
-
-  const totalPages = Math.ceil(filteredListings.length / itemsPerPage);
-  const paginatedListings = filteredListings.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage,
-  );
-  const categoryOptions = Array.from(
-    new Set(listings.map((listing) => listing.category)),
-  );
-  const deliveryOptions = Array.from(
-    new Set(
-      listings
-        .flatMap((listing) => listing.deliveryTimes)
-        .filter((deliveryTime) => deliveryTime.length > 0),
-    ),
-  );
-
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [
-    maxPrice,
-    minPrice,
-    searchQuery,
-    selectedCategories,
-    selectedDeliveryTime,
-    selectedRating,
-    sortBy,
-  ]);
+  const visiblePages = Array.from({ length: totalPages }, (_, index) => index + 1)
+    .filter(
+      (page) =>
+        page === 1 ||
+        page === totalPages ||
+        Math.abs(page - currentPage) <= 2,
+    );
 
   return (
     <main className="bg-[#f9f5ff] min-h-screen">
       <NavBar />
       <section className="flex lg:flex-row flex-col gap-8 px-6 md:px-10 py-8">
         <Sidebar
-          categories={categoryOptions}
-          deliveryTimes={deliveryOptions}
+          categories={serviceCategories}
+          deliveryTimes={deliveryTimes}
           selectedCategories={selectedCategories}
           minPrice={minPrice}
           maxPrice={maxPrice}
           selectedRating={selectedRating}
           selectedDeliveryTime={selectedDeliveryTime}
           onCategoryChange={toggleCategory}
-          onMinPriceChange={setMinPrice}
-          onMaxPriceChange={setMaxPrice}
+          onMinPriceChange={(value) => updateSearchParams({ minPrice: value })}
+          onMaxPriceChange={(value) => updateSearchParams({ maxPrice: value })}
           onRatingChange={toggleRating}
           onDeliveryTimeChange={toggleDeliveryTime}
           onClearFilters={clearFilters}
@@ -301,9 +292,11 @@ function ServiceListings() {
           <ListingsHeader
             searchQuery={searchQuery}
             sortBy={sortBy}
-            resultsCount={filteredListings.length}
-            onSearchChange={setSearchQuery}
-            onSortChange={setSortBy}
+            resultsCount={totalResults}
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onSearchChange={(value) => updateSearchParams({ search: value })}
+            onSortChange={(value) => updateSearchParams({ sortBy: value })}
           />
 
           {isLoading ? (
@@ -318,9 +311,9 @@ function ServiceListings() {
               </h2>
               <p className="mt-2 max-w-md text-[#6f6f9a]">{fetchError}</p>
             </div>
-          ) : filteredListings.length > 0 ? (
+          ) : listings.length > 0 ? (
             <div className="gap-6 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 mt-8">
-              {paginatedListings.map((listing) => (
+              {listings.map((listing) => (
                 <ServiceListingCard
                   key={listing.id}
                   listing={listing}
@@ -348,11 +341,13 @@ function ServiceListings() {
 
           {totalPages > 1 && (
             <nav className="flex justify-center items-center gap-4 py-14 font-bold text-[#5a5781]">
-              {Array.from({ length: totalPages }, (_, index) => index + 1).map(
-                (page) => (
+              {visiblePages.map((page, index) => (
+                <div key={page} className="flex items-center gap-4">
+                  {index > 0 && page - visiblePages[index - 1] > 1 && (
+                    <span className="px-1">...</span>
+                  )}
                   <button
-                    key={page}
-                    onClick={() => setCurrentPage(page)}
+                    onClick={() => goToPage(page)}
                     className={`rounded-full w-12 h-12 cursor-pointer ${
                       currentPage === page
                         ? "bg-[#efe9ff] text-[#1857f7]"
@@ -361,13 +356,11 @@ function ServiceListings() {
                   >
                     {page}
                   </button>
-                ),
-              )}
+                </div>
+              ))}
 
               <button
-                onClick={() =>
-                  setCurrentPage((page) => Math.min(page + 1, totalPages))
-                }
+                onClick={() => goToPage(Math.min(currentPage + 1, totalPages))}
                 disabled={currentPage === totalPages}
                 className="hover:bg-[#efe9ff] disabled:opacity-40 rounded-full w-12 h-12 cursor-pointer disabled:cursor-not-allowed"
               >

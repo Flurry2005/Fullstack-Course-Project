@@ -37,4 +37,5 @@ export type Gig = {
   pending?: boolean;
   paused?: boolean;
   updatedAt?: Date;
+  views?: Record<string, Date>
 };
