@@ -257,6 +257,7 @@ function ProfilePage() {
 
       <ProfileHeader
         profile={visibleProfile}
+        gigs={gigs}
         profileImageUrl={profileImageUrl}
         isLoading={isLoadingProfile}
         isOwnProfile={isOwnProfile}
