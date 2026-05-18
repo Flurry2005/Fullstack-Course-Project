@@ -31,6 +31,7 @@ export type Gig = {
   basic?: Package;
   standard?: Package;
   premium?: Package;
+  startingPrice?: number;
   pending?: boolean;
   paused?: boolean;
   rating?: Number;

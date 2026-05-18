@@ -13,6 +13,14 @@ gigRouter.get("/", async (_req, res) => {
     : res.status(500).json("Could not fetch gigs");
 });
 
+gigRouter.get("/search", async (req, res) => {
+  const result = await gigController.searchGigs(req);
+
+  return result
+    ? res.status(200).json(result)
+    : res.status(500).json("Could not fetch gigs");
+});
+
 gigRouter.get("/seller/:username", async (req, res) => {
   const gigs = await gigController.getGigsBySellerUsername(req);
 

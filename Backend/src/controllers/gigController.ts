@@ -6,6 +6,39 @@ import { categories } from "../utils/Categories.js";
 import orderModel from "../models/orderModel.js";
 import { getSquareImage, uploadBuffer } from "../services/Cloudinary.js";
 
+type GigSearchQuery = Record<string, any>;
+
+function getQueryValue(value: unknown) {
+  return Array.isArray(value) ? value[0] : value;
+}
+
+function getStringQuery(value: unknown) {
+  const queryValue = getQueryValue(value);
+  return typeof queryValue === "string" ? queryValue.trim() : "";
+}
+
+function getNumberQuery(value: unknown, fallback: number) {
+  const stringValue = getStringQuery(value);
+  if (!stringValue) return fallback;
+
+  const numberValue = Number(stringValue);
+  return Number.isFinite(numberValue) ? numberValue : fallback;
+}
+
+function escapeRegExp(value: string) {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+function parsePrice(value: unknown) {
+  const price = Number(value);
+  return Number.isFinite(price) ? price : 0;
+}
+
+function getStartingPrice(...prices: unknown[]) {
+  const validPrices = prices.map(parsePrice).filter((price) => price > 0);
+  return validPrices.length > 0 ? Math.min(...validPrices) : 0;
+}
+
 class GigController {
   async getGigs() {
     try {
@@ -14,6 +47,141 @@ class GigController {
       console.error(error);
       return null;
     }
+  }
+
+  async searchGigs(req: Request) {
+    try {
+      await this.backfillMissingStartingPrices();
+
+      const page = Math.max(1, Math.floor(getNumberQuery(req.query.page, 1)));
+      const limit = Math.min(
+        48,
+        Math.max(1, Math.floor(getNumberQuery(req.query.limit, 6))),
+      );
+      const search = getStringQuery(req.query.search);
+      const categoriesQuery = getStringQuery(req.query.categories);
+      const minPrice = getNumberQuery(req.query.minPrice, 0);
+      const maxPrice = getNumberQuery(
+        req.query.maxPrice,
+        Number.POSITIVE_INFINITY,
+      );
+      const hasMinPrice = getStringQuery(req.query.minPrice) !== "";
+      const hasMaxPrice = getStringQuery(req.query.maxPrice) !== "";
+      const rating = getNumberQuery(req.query.rating, 0);
+      const deliveryTime = getStringQuery(req.query.deliveryTime);
+      const sortBy = getStringQuery(req.query.sortBy);
+      const skip = (page - 1) * limit;
+
+      const match: GigSearchQuery = {};
+
+      if (search) {
+        const searchRegex = new RegExp(escapeRegExp(search), "i");
+        match.$or = [
+          { title: searchRegex },
+          { sellerUsername: searchRegex },
+          { tags: searchRegex },
+          { "category.main": searchRegex },
+          { "category.sub": searchRegex },
+          { "basic.delivery": searchRegex },
+          { "standard.delivery": searchRegex },
+          { "premium.delivery": searchRegex },
+        ];
+      }
+
+      const selectedCategories = categoriesQuery
+        .split(",")
+        .map((category) => category.trim())
+        .filter(Boolean);
+
+      if (selectedCategories.length > 0) {
+        match["category.main"] = { $in: selectedCategories };
+      }
+
+      if (rating > 0) {
+        match.rating = { $gte: rating };
+      }
+
+      if (hasMinPrice || hasMaxPrice) {
+        match.startingPrice = {};
+
+        if (hasMinPrice) {
+          match.startingPrice.$gte = Math.max(0, minPrice);
+        }
+
+        if (hasMaxPrice && Number.isFinite(maxPrice)) {
+          match.startingPrice.$lte = Math.max(0, maxPrice);
+        }
+      }
+
+      if (deliveryTime) {
+        match.$and = [
+          ...(match.$and ?? []),
+          {
+            $or: [
+              { "basic.delivery": deliveryTime },
+              { "standard.delivery": deliveryTime },
+              { "premium.delivery": deliveryTime },
+            ],
+          },
+        ];
+      }
+
+      const sort: Record<string, 1 | -1> =
+        sortBy === "Price Low to High"
+          ? { startingPrice: 1, _id: 1 }
+          : sortBy === "Price High to Low"
+            ? { startingPrice: -1, _id: 1 }
+            : { _id: -1 };
+
+      const [gigs, total] = await Promise.all([
+        gigsModel
+          .find(match)
+          .sort(sort)
+          .skip(skip)
+          .limit(limit)
+          .select("-sellerId")
+          .lean(),
+        gigsModel.countDocuments(match),
+      ]);
+      const totalPages = Math.ceil(total / limit);
+
+      return {
+        gigs,
+        total,
+        page,
+        limit,
+        totalPages,
+      };
+    } catch (error) {
+      console.error(error);
+      return null;
+    }
+  }
+
+  async backfillMissingStartingPrices() {
+    const gigs = await gigsModel
+      .find({ startingPrice: { $exists: false } })
+      .select("basic.price standard.price premium.price")
+      .lean();
+
+    if (gigs.length === 0) return;
+
+    await gigsModel.bulkWrite(
+      gigs.map((gig) => ({
+        updateOne: {
+          filter: { _id: gig._id },
+          update: {
+            $set: {
+              startingPrice: getStartingPrice(
+                gig.basic?.price,
+                gig.standard?.price,
+                gig.premium?.price,
+              ),
+            },
+          },
+        },
+      })),
+    );
   }
 
   async getGigById(req: Request) {
@@ -101,12 +269,14 @@ class GigController {
     }
 
     try {
-      const parsePrice = (val: any) => {
-        const n = Number(val);
-        return isNaN(n) ? 0 : n;
-      };
       const stdFeatures = newGig.standard?.features ?? [];
       const premFeatures = newGig.premium?.features ?? [];
+      const basicPrice = parsePrice(newGig.basic?.price);
+      const standardPrice =
+        stdFeatures.length === 0 ? 0 : parsePrice(newGig.standard?.price);
+      const premiumPrice =
+        premFeatures.length === 0 ? 0 : parsePrice(newGig.premium?.price);
+
       const createdGig = await gigsModel.create({
         sellerUsername: res.locals.jwt.username,
         sellerId: res.locals.jwt._id,
@@ -120,22 +290,21 @@ class GigController {
         tags: newGig.tags,
         description: newGig.description,
         basic: {
-          price: parsePrice(newGig.basic?.price),
+          price: basicPrice,
           delivery: newGig.basic?.delivery ?? "",
           features: newGig.basic?.features ?? [],
         },
         standard: {
-          price:
-            stdFeatures.length === 0 ? 0 : parsePrice(newGig.standard?.price),
+          price: standardPrice,
           delivery: newGig.standard?.delivery ?? "",
           features: stdFeatures,
         },
         premium: {
-          price:
-            premFeatures.length === 0 ? 0 : parsePrice(newGig.premium?.price),
+          price: premiumPrice,
           delivery: newGig.premium?.delivery ?? "",
           features: premFeatures,
         },
+        startingPrice: getStartingPrice(basicPrice, standardPrice, premiumPrice),
         pending: true,
         paused: false,
       });
@@ -222,12 +391,14 @@ class GigController {
     }
 
     try {
-      const parsePrice = (val: any) => {
-        const n = Number(val);
-        return isNaN(n) ? 0 : n;
-      };
       const stdFeatures = updatedGig.standard?.features ?? [];
       const premFeatures = updatedGig.premium?.features ?? [];
+      const basicPrice = parsePrice(updatedGig.basic?.price);
+      const standardPrice =
+        stdFeatures.length === 0 ? 0 : parsePrice(updatedGig.standard?.price);
+      const premiumPrice =
+        premFeatures.length === 0 ? 0 : parsePrice(updatedGig.premium?.price);
+
       const targetGig = await gigsModel.findOneAndUpdate(
         { _id: updatedGig._id, sellerId: res.locals.jwt._id },
         {
@@ -244,26 +415,25 @@ class GigController {
             tags: updatedGig.tags,
             description: updatedGig.description,
             basic: {
-              price: parsePrice(updatedGig.basic?.price),
+              price: basicPrice,
               delivery: updatedGig.basic?.delivery ?? "",
               features: updatedGig.basic?.features ?? [],
             },
             standard: {
-              price:
-                stdFeatures.length === 0
-                  ? 0
-                  : parsePrice(updatedGig.standard?.price),
+              price: standardPrice,
               delivery: updatedGig.standard?.delivery ?? "",
               features: stdFeatures,
             },
             premium: {
-              price:
-                premFeatures.length === 0
-                  ? 0
-                  : parsePrice(updatedGig.premium?.price),
+              price: premiumPrice,
               delivery: updatedGig.premium?.delivery ?? "",
               features: premFeatures,
             },
+            startingPrice: getStartingPrice(
+              basicPrice,
+              standardPrice,
+              premiumPrice,
+            ),
             pending: true,
             paused: updatedGig.paused,
             updatedAt: new Date(),

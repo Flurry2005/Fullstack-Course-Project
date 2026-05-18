@@ -1,7 +1,18 @@
 import InputField from "../../Components/General/InputField";
 import MiniButton from "./MiniButtonLink";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { getServicesSearchLink } from "./serviceLinks";
 
 function Section1() {
+  const navigate = useNavigate();
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const submitSearch = () => {
+    const trimmedSearch = searchQuery.trim();
+    navigate(trimmedSearch ? getServicesSearchLink(trimmedSearch) : "/services");
+  };
+
   return (
     <section className="z-0 flex lg:flex-row flex-col bg-[#f9f5ff] mx-auto max-sm:px-4 pt-10 sm:pt-20 pb-6 sm:pb-8 w-full min-h-[90vh] lg:min-h-[70vh] container">
       {/* LEFT SIDE */}
@@ -21,22 +32,42 @@ function Section1() {
 
         <div className="flex mb-5 pb-5 w-full h-14 sm:h-16 md:h-18">
           <InputField
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            onKeyDown="Enter"
+            onKeyDownFunc={submitSearch}
             placeholder="What are you looking for today?"
             additionalClasses="bg-[#e3dfff] px-4 w-full sm:w-[70%] md:w-[50%] h-full !rounded-r-none !rounded-md outline-none border-none focus:border-indigo-500 text-sm"
           />
-          <span className="flex justify-center items-center bg-[#e3dfff] px-3 rounded-md rounded-l-none h-full text-gray-600">
+          <button
+            type="button"
+            onClick={submitSearch}
+            className="flex justify-center items-center bg-[#e3dfff] px-3 rounded-md rounded-l-none h-full text-gray-600 cursor-pointer"
+          >
             <i className="fa-solid fa-magnifying-glass"></i>
-          </span>
+          </button>
         </div>
 
         <div className="mb-10">
           <h2 className="pb-5 text-lg sm:text-xl md:text-2xl">POPULAR:</h2>
 
           <div className="flex flex-wrap gap-3 sm:gap-5">
-            <MiniButton to={"/services"} text={"Graphic Design"} />
-            <MiniButton to={"/services"} text={"Writing"} />
-            <MiniButton to={"/services"} text={"Video Editing"} />
-            <MiniButton to={"/services"} text={"SEO"} />
+            <MiniButton
+              to={getServicesSearchLink("Graphic Design")}
+              text={"Graphic Design"}
+            />
+            <MiniButton
+              to={getServicesSearchLink("Content Writing")}
+              text={"Content Writing"}
+            />
+            <MiniButton
+              to={getServicesSearchLink("Video Editing")}
+              text={"Video Editing"}
+            />
+            <MiniButton
+              to={getServicesSearchLink("Web Development")}
+              text={"Web Development"}
+            />
           </div>
         </div>
       </div>
