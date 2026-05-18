@@ -53,6 +53,12 @@ const gigsSchema = new mongoose.Schema({
     type: Number,
   },
 
+  views: {
+    type: Map,
+    of: Date,
+    default: () => new Map(),
+  },
+
   reviews: {
     type: [
       {

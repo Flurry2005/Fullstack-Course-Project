@@ -158,7 +158,11 @@ class GigController {
 
   async getGigById(req: Request) {
     try {
-      return await gigsModel.findById(req.params.id).select("-sellerId").lean();
+      
+      const ip = req.ip?.replace(".", "_");
+      console.log(ip);
+      await gigsModel.findByIdAndUpdate(req.params.id, { $set: { [`views.${ip}`]: new Date() }});
+      return await gigsModel.findById(req.params.id).select("-sellerId -views -updatedAt").lean();
     } catch (error) {
       console.error(error);
       return null;
@@ -279,6 +283,7 @@ class GigController {
         startingPrice: getStartingPrice(basicPrice, standardPrice, premiumPrice),
         pending: true,
         paused: false,
+        updatedAt: new Date(),
       });
 
       //@ts-ignore
