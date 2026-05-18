@@ -37,5 +37,4 @@ export type Gig = {
   pending?: boolean;
   paused?: boolean;
   updatedAt?: Date;
-  views: number,
 };

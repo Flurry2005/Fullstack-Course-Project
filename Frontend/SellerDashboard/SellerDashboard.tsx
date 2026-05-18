@@ -145,7 +145,7 @@ function SellerDashBoard() {
             </span>
           </div>
           <div className="flex flex-col bg-white p-6 border-[#ACA8D7]/15 border-2 rounded-2xl w-full">
-            <span className="text-[#5A5781]">Total Views</span>
+            <span className="text-[#5A5781]">Response Time</span>
             <span className="font-semibold text-3xl">1 hour</span>
           </div>
         </section>
@@ -299,7 +299,7 @@ function SellerDashBoard() {
                   gig={gig}
                   id={gig?._id}
                   title={gig?.title}
-                  views={gig?.views}
+                  views={13}
                   checkouts={10}
                   price={gig?.basic?.price}
                   rating={gig.rating?.toFixed(1).toString() || "0.0"}
