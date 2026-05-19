@@ -10,6 +10,8 @@ import { useAuth } from "../Context/useAuth";
 import { useRef } from "react";
 import type { Gig } from "../types/Gig";
 import { useNavigate } from "react-router-dom";
+import { fetchProfile } from "../utils/GetProfile";
+import type { PublicProfile } from "../ProfilePage/types";
 
 function CustomerReview() {
   const { user } = useAuth();
@@ -18,7 +20,8 @@ function CustomerReview() {
   const { gigId } = useParams();
   const commentRef = useRef<HTMLTextAreaElement>(null);
   const [gig, setGig] = useState<Gig>();
-  const navigator = useNavigate();
+  const [canSendReview, setCanSendReview] = useState(true);
+  const navigate = useNavigate();
 
   const handleSubmit = async () => {
     if (rating > 0) {
@@ -42,7 +45,13 @@ function CustomerReview() {
 
       const data = await response.json();
       console.log(data);
+      if (!response.ok) {
+        setCanSendReview(true);
+      }
       setSuccess(response.ok);
+      setTimeout(() => {
+        navigate("/services");
+      }, 2000);
     }
   };
 
@@ -55,12 +64,21 @@ function CustomerReview() {
     );
     const data = await response.json();
     console.log(data);
-    response.ok ? setGig(data) : navigator("/");
+    response.ok ? setGig(data) : navigate("/");
   };
 
   useEffect(() => {
     getGig();
   }, []);
+
+  const [profile, setProfile] = useState<PublicProfile | null>(null);
+
+  useEffect(() => {
+    (async () => {
+      const userProfile = await fetchProfile(gig!.sellerUsername!);
+      setProfile(userProfile!);
+    })();
+  }, [gig]);
 
   return (
     <>
@@ -89,7 +107,7 @@ function CustomerReview() {
             <div className="flex flex-col bg-white shadow-md/5 px-12 border border-[#E2E8F0] rounded-2xl w-full">
               <div className="flex flex-wrap items-center gap-6 py-6 w-full">
                 <img
-                  src={me}
+                  src={profile?.profilePictureUrl || me}
                   className="flex mx-auto md:mx-0 border border-[#E2DFFF] rounded-full w-18 h-18"
                 />
                 <div className="flex flex-col gap-1">
@@ -120,9 +138,13 @@ and if the seller met your expectations..."
             </div>
 
             <button
-              className={`${rating < 1 ? "opacity-50" : ""} cursor-pointer bg-linear-to-r from-[#4F46E5] to-[#a081e8] py-3 text-white font-semibold rounded-lg`}
-              disabled={rating < 1}
-              onClick={() => handleSubmit()}
+              className={`${rating < 1 || !canSendReview ? "opacity-50" : ""} cursor-pointer bg-linear-to-r from-[#4F46E5] to-[#a081e8] py-3 text-white font-semibold rounded-lg`}
+              disabled={rating < 1 || !canSendReview}
+              onClick={() => {
+                if (!canSendReview) return;
+                setCanSendReview(false);
+                handleSubmit();
+              }}
             >
               Submit Review
             </button>

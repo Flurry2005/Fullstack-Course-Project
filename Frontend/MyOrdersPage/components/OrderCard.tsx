@@ -200,6 +200,7 @@ function OrderCard({
                 onClick={(e) => {
                   e.stopPropagation();
                   patchOrder("confirm-buyer");
+                  navigate(`/services/review/${order.gigId}`);
                 }}
                 className="flex items-center gap-1.5 bg-green-500 hover:bg-green-600 disabled:opacity-50 px-3 py-1.5 rounded-lg font-semibold text-white text-xs transition-colors cursor-pointer"
               >
