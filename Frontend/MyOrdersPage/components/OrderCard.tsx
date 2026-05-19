@@ -15,7 +15,7 @@ const tierColors = {
   premium: "bg-[#fef3c7] text-[#d97706]",
 };
 
-export const statusConfig: Record<
+const statusConfig: Record<
   OrderStatus,
   { label: string; icon: React.ReactNode; classes: string }
 > = {
