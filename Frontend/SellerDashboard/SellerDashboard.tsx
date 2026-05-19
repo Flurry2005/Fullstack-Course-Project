@@ -18,7 +18,7 @@ function SellerDashBoard() {
   const { setActiveOrder } = useSocket();
   const [active, setActive] = useState(false);
   const navigate = useNavigate();
-  const { orders } = useOrders();
+  const { orders, setOrders } = useOrders();
   const { user } = useAuth();
   const [gigs, setGigs] = useState<Gig[]>();
   const [gigsLoaded, setGigsLoaded] = useState(false);
@@ -204,6 +204,15 @@ function SellerDashBoard() {
                     gig={gigs?.find(
                       (gig) => String(gig._id) === String(order.gigId),
                     )}
+                    currentUsername={user?.username ?? ""}
+                    onOrderUpdated={(updatedOrder) =>
+                      setOrders((prev) => {
+                        if (!prev) return prev;
+                        return prev.map((o) =>
+                          o._id === updatedOrder._id ? updatedOrder : o,
+                        );
+                      })
+                    }
                   />
                 ))}
               {orders?.filter(

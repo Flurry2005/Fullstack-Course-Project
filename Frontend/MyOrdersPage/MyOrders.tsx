@@ -4,6 +4,9 @@ import NavBar from "../NavBar/NavBar";
 import Footer from "../Footer";
 import { ShoppingBag, Store, History } from "lucide-react";
 import OrderCard from "./components/OrderCard";
+import { useOrders } from "../Context/useOrders";
+import type { Order } from "../types/Order";
+import { pre } from "framer-motion/client";
 
 export type OrderStatus =
   | "In Progress"
@@ -11,19 +14,6 @@ export type OrderStatus =
   | "Revision"
   | "Completed"
   | "Cancelled";
-
-export type Order = {
-  _id: string;
-  gigId: string;
-  gigname: string;
-  gigTier: "basic" | "standard" | "premium";
-  buyerUsername: string;
-  sellerUsername: string;
-  dueDate: string;
-  delivered: OrderStatus;
-  reviewed: boolean;
-  createdAt: string;
-};
 
 const apiUrl =
   import.meta.env.VITE_DEV === "true"
@@ -36,32 +26,13 @@ const isHistorical = (order: Order) =>
 
 function MyOrders() {
   const { user } = useAuth();
-  const [orders, setOrders] = useState<Order[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState("");
+  const { orders, setOrders } = useOrders();
+  const isLoading = orders === null;
   const [activeTab, setActiveTab] = useState<
     "all" | "buying" | "selling" | "history"
   >("all");
 
-  useEffect(() => {
-    const fetchOrders = async () => {
-      try {
-        const res = await fetch(`${apiUrl}/api/orders`, {
-          credentials: "include",
-        });
-        if (!res.ok) throw new Error("Failed to fetch orders");
-        const data = await res.json();
-        setOrders(data.data);
-      } catch (err) {
-        setError("Could not load your orders right now.");
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    fetchOrders();
-  }, []);
-
-  const roleFilteredOrders = orders.filter((order) => {
+  const roleFilteredOrders = orders?.filter((order) => {
     if (activeTab === "buying") return order.buyerUsername === user?.username;
     if (activeTab === "selling") return order.sellerUsername === user?.username;
     return true;
@@ -70,20 +41,20 @@ function MyOrders() {
   // History tab shows Completed/Cancelled, all other tabs show active orders
   const filteredOrders =
     activeTab === "history"
-      ? orders.filter(isHistorical)
-      : roleFilteredOrders.filter((o) => !isHistorical(o));
+      ? orders?.filter(isHistorical)
+      : roleFilteredOrders?.filter((o) => !isHistorical(o));
 
   const getTabCount = (tab: typeof activeTab) => {
-    if (tab === "history") return orders.filter(isHistorical).length;
+    if (tab === "history") return orders?.filter(isHistorical).length;
     if (tab === "buying")
-      return orders.filter(
+      return orders?.filter(
         (o) => o.buyerUsername === user?.username && !isHistorical(o),
       ).length;
     if (tab === "selling")
-      return orders.filter(
+      return orders?.filter(
         (o) => o.sellerUsername === user?.username && !isHistorical(o),
       ).length;
-    return orders.filter((o) => !isHistorical(o)).length;
+    return orders?.filter((o) => !isHistorical(o)).length;
   };
 
   const tabs = [
@@ -136,18 +107,11 @@ function MyOrders() {
           ))}
         </div>
 
-        {isLoading ? (
+        {!orders ? (
           <div className="flex justify-center items-center bg-white p-16 rounded-2xl text-[#6f6f9a]">
             Loading orders...
           </div>
-        ) : error ? (
-          <div className="flex flex-col justify-center items-center bg-white p-16 rounded-2xl text-center">
-            <h2 className="font-bold text-[#2c2a51] text-xl">
-              Could not load orders
-            </h2>
-            <p className="mt-2 text-[#6f6f9a]">{error}</p>
-          </div>
-        ) : filteredOrders.length === 0 ? (
+        ) : filteredOrders?.length === 0 ? (
           <div className="flex flex-col justify-center items-center bg-white p-16 rounded-2xl text-center">
             <ShoppingBag className="mb-4 text-[#c4bdf4]" size={48} />
             <h2 className="font-bold text-[#2c2a51] text-xl">No orders yet</h2>
@@ -163,18 +127,19 @@ function MyOrders() {
           </div>
         ) : (
           <div className="flex flex-col gap-4">
-            {filteredOrders.map((order) => (
+            {filteredOrders?.map((order) => (
               <OrderCard
                 key={order._id}
                 order={order}
                 currentUsername={user?.username ?? ""}
                 showCompleteButton={activeTab !== "history"}
                 onOrderUpdated={(updatedOrder) =>
-                  setOrders((prev) =>
-                    prev.map((o) =>
+                  setOrders((prev) => {
+                    if (!prev) return prev;
+                    return prev.map((o) =>
                       o._id === updatedOrder._id ? updatedOrder : o,
-                    ),
-                  )
+                    );
+                  })
                 }
               />
             ))}

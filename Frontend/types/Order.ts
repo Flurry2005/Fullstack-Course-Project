@@ -11,6 +11,8 @@ export type Order = {
   sellerUsername: string;
   buyerUsername: string;
   chathistory: Message[];
+  createdAt: Date;
+  updatedAt: Date;
 };
 
 export type Message = {

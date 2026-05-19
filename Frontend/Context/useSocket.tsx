@@ -228,9 +228,21 @@ export function SocketProvider({ children }: { children: React.ReactNode }) {
       logout();
     };
 
+    const handleOrderUpdate = (data: any) => {
+      setOrders(
+        (prev) =>
+          prev?.map((order) =>
+            order._id === data._id
+              ? { ...order, delivered: data.delivered }
+              : order,
+          ) ?? null,
+      );
+    };
+
     socket.on("message_received", handleMessage);
     socket.on("online_status", handleStatus);
     socket.on("purchase_received", handlePurchaseReceived);
+    socket.on("order_update", handleOrderUpdate);
     socket.on("disconnect", handleDisconnect);
     socket.on("reconnect_failed", handleReconnectFailed);
 

@@ -1,7 +1,8 @@
 import { Clock, CheckCircle, Package, RotateCcw, XCircle } from "lucide-react";
-import type { Order, OrderStatus } from "../MyOrders";
+import type { OrderStatus } from "../MyOrders";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import type { Order } from "../../types/Order";
 
 const apiUrl =
   import.meta.env.VITE_DEV === "true"
@@ -45,17 +46,19 @@ const statusConfig: Record<
   },
 };
 
+interface props {
+  order: Order;
+  currentUsername: string;
+  showCompleteButton: boolean;
+  onOrderUpdated: (updatedOrder: Order) => void;
+}
+
 function OrderCard({
   order,
   currentUsername,
   showCompleteButton,
   onOrderUpdated,
-}: {
-  order: Order;
-  currentUsername: string;
-  showCompleteButton: boolean;
-  onOrderUpdated: (updatedOrder: Order) => void;
-}) {
+}: props) {
   const navigate = useNavigate();
   const isBuyer = order.buyerUsername === currentUsername;
   const isSeller = order.sellerUsername === currentUsername;
@@ -69,7 +72,17 @@ function OrderCard({
   );
   const [loading, setLoading] = useState(false);
 
-  const status = statusConfig[order.delivered] ?? statusConfig["In Progress"];
+  const [currentStatus, setCurrentStatus] = useState<OrderStatus>(
+    (order.delivered ?? "In Progress") as OrderStatus,
+  );
+
+  useEffect(() => {
+    if (order.delivered) {
+      setCurrentStatus(order.delivered as OrderStatus);
+    }
+  }, [order.delivered]);
+
+  const status = statusConfig[currentStatus];
 
   const patchOrder = async (endpoint: string) => {
     setLoading(true);
@@ -89,7 +102,9 @@ function OrderCard({
 
   // Which action buttons to show
   const showSellerConfirm =
-    showCompleteButton && isSeller && order.delivered === "In Progress";
+    showCompleteButton &&
+    isSeller &&
+    (order.delivered === "In Progress" || order.delivered === "Revision");
 
   const showBuyerActions =
     showCompleteButton && isBuyer && order.delivered === "Confirmed By Seller";
@@ -109,7 +124,7 @@ function OrderCard({
         >
           <div className="flex flex-wrap items-center gap-2 mb-1">
             <span
-              className={`px-2.5 py-0.5 rounded-full text-xs font-semibold capitalize ${tierColors[order.gigTier]}`}
+              className={`px-2.5 py-0.5 rounded-full text-xs font-semibold capitalize ${tierColors[order.gigTier as keyof typeof tierColors]}`}
             >
               {order.gigTier}
             </span>

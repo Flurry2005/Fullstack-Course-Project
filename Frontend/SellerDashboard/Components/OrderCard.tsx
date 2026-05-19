@@ -9,12 +9,45 @@ interface props {
   order: Order;
   gig: Gig | undefined;
   profilePictures: Record<string, string>;
+  currentUsername: string;
+  onOrderUpdated: (updatedOrder: Order) => void;
 }
 
-function OrderCard({ order, gig, profilePictures }: props) {
+function OrderCard({
+  order,
+  gig,
+  profilePictures,
+  currentUsername,
+  onOrderUpdated,
+}: props) {
   const [toggleInfo, setToggleInfo] = useState(false);
   const { user } = useAuth();
   const [dueDateLabel, setDueDateLabel] = useState("");
+  const isSeller = order.sellerUsername === currentUsername;
+  const apiUrl =
+    import.meta.env.VITE_DEV === "true"
+      ? "http://localhost:3000"
+      : "https://fullstackapi.liamjorgensen.dev";
+  const showSellerConfirm =
+    isSeller &&
+    (order.delivered === "In Progress" || order.delivered === "Revision");
+
+  const [loading, setLoading] = useState(false);
+  const patchOrder = async (endpoint: string) => {
+    setLoading(true);
+    try {
+      const res = await fetch(`${apiUrl}/api/${order._id}/${endpoint}`, {
+        method: "PATCH",
+        credentials: "include",
+      });
+      const data = await res.json();
+      if (res.ok) onOrderUpdated(data.data);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
     const update = () => {
@@ -144,13 +177,21 @@ function OrderCard({ order, gig, profilePictures }: props) {
                   </span>
                 </div>
               </div>
-              <div className="flex flex-wrap justify-between gap-3 font-semibold">
-                <span className="flex items-center gap-1 bg-white mt-3 px-3 py-1 border border-red-400 rounded-lg text-red-400 text-sm cursor-pointer">
-                  Cancel order
-                </span>{" "}
-                <span className="flex items-center gap-1 bg-white mt-3 px-3 py-1 border border-[#4F46E5] rounded-lg text-[#4F46E5] text-sm cursor-pointer">
-                  Finish order
-                </span>
+              <div className="flex flex-wrap justify-end gap-3 font-semibold">
+                {showSellerConfirm ? (
+                  <button
+                    className="flex items-center gap-1.5 bg-green-500 hover:bg-green-600 disabled:opacity-50 px-3 py-2 rounded-lg font-semibold text-white text-xs transition-colors cursor-pointer"
+                    disabled={loading}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      patchOrder("confirm-seller");
+                    }}
+                  >
+                    Mark as delivered
+                  </button>
+                ) : (
+                  <></>
+                )}
               </div>
             </>
           )}
