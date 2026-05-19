@@ -208,7 +208,8 @@ function EditGig() {
             <div className="flex flex-col gap-6 w-full lg:w-2/3">
               <div className="flex flex-col bg-white shadow-md border-[#ACA8D7]/15 border-2 rounded-2xl">
                 <div className="flex items-center border-b border-b-[#E2E7FF] w-full">
-                  <div className="flex items-center gap-6 p-6 w-full">
+                  <div className="flex flex-wrap items-center gap-6 p-6 w-full">
+                    <div className="flex gap-3">
                     <div className="flex justify-center items-center bg-[#E2E7FF] rounded-2xl w-16 h-16">
                       <img src={overViewIcon} className="w-8 h-8" />
                     </div>
@@ -217,6 +218,7 @@ function EditGig() {
                       <span className="text-[#464555]">
                         Title, Category, Search Tags
                       </span>
+                    </div>
                     </div>
                     <span
                       className="ml-auto"
@@ -233,7 +235,8 @@ function EditGig() {
                 </div>
 
                 <div className="flex items-center border-b border-b-[#E2E7FF] w-full">
-                  <div className="flex items-center gap-6 p-6 w-full">
+                  <div className="flex flex-wrap items-center gap-6 p-6 w-full">
+                    <div className="flex gap-3">
                     <div className="flex justify-center items-center bg-[#E2E7FF] rounded-2xl w-16 h-16">
                       <img src={packageIcon} className="w-8 h-8" />
                     </div>
@@ -244,6 +247,7 @@ function EditGig() {
                       <span className="text-[#464555]">
                         3-tier pricing strategy defined
                       </span>
+                    </div>
                     </div>
                     <span
                       className="ml-auto"
@@ -260,7 +264,8 @@ function EditGig() {
                 </div>
 
                 <div className="flex items-center w-full">
-                  <div className="flex items-center gap-6 p-6 w-full">
+                  <div className="flex flex-wrap items-center gap-6 p-6 w-full">
+                          <div className="flex gap-3">
                     <div className="flex justify-center items-center bg-[#E2E7FF] rounded-2xl w-16 h-16">
                       <img src={descIcon} className="w-8 h-8" />
                     </div>
@@ -269,6 +274,7 @@ function EditGig() {
                         Description
                       </span>
                       <span className="text-[#464555]">Detailed brief</span>
+                    </div>
                     </div>
                     <span
                       className="ml-auto"
@@ -295,7 +301,7 @@ function EditGig() {
                   {/* Image 1*/}
                   <div className="md:flex justify-center gap-6 grid">
                     <div
-                      className={`relative flex flex-col justify-center items-center border-[#C7C4D8] border-2 border-dashed rounded-lg w-80 h-48 ${primaryImagePreview ? "" : "cursor-pointer"} `}
+                      className={`relative flex flex-col justify-center items-center border-[#C7C4D8] border-2 border-dashed rounded-lg w-48 md:w-full  ${primaryImagePreview ? "" : "cursor-pointer"} `}
                       onClick={() => {
                         if (!primaryImagePreview)
                           primaryImageRef.current!.click();
@@ -335,7 +341,7 @@ function EditGig() {
                               ? primaryImagePreview
                               : galleryIcon
                         }
-                        className={`grayscale-100 rounded-lg  object-cover ${primaryImagePreview ? "w-full h-full" : "w-24 h-24"} `}
+                        className={` rounded-lg  object-cover ${primaryImagePreview ? "w-full h-full" : "w-24 h-24"} `}
                       />
                       <span
                         className={`text-[#131B2E] ${primaryImagePreview ? "hidden" : "block"}`}
@@ -351,7 +357,7 @@ function EditGig() {
                     </div>
                     {/* Image 2*/}
                     <div
-                      className={`relative flex flex-col justify-center items-center border-[#C7C4D8] border-2 border-dashed rounded-lg w-80 h-48 ${secondaryImagePreview ? "" : "cursor-pointer"} `}
+                      className={`relative flex flex-col justify-center items-center border-[#C7C4D8] border-2 border-dashed rounded-lg w-48 md:w-full mx-auto h-48 ${secondaryImagePreview ? "" : "cursor-pointer"} `}
                       onClick={() => {
                         if (!secondaryImagePreview) {
                           secondaryImageRef.current!.click();
@@ -392,10 +398,10 @@ function EditGig() {
                               ? secondaryImagePreview
                               : galleryIcon
                         }
-                        className={`grayscale-100 rounded-lg  object-cover ${secondaryImagePreview ? "w-full h-full" : "w-24 h-24"} `}
+                        className={`rounded-lg  object-cover ${secondaryImagePreview ? "w-full h-full" : "w-24 h-24"} `}
                       />
                       <span
-                        className={`text-[#131B2E] ${secondaryImagePreview ? "hidden" : "block"}`}
+                        className={`text-[#131B2E] text-center ${secondaryImagePreview ? "hidden" : "block"}`}
                       >
                         Secondary Showcase Image
                       </span>
@@ -408,7 +414,7 @@ function EditGig() {
                     </div>
                     {/* Image 3*/}
                     <div
-                      className={`relative flex flex-col justify-center items-center border-[#C7C4D8] border-2 border-dashed rounded-lg w-80 h-48 ${ternaryImagePreview ? "" : "cursor-pointer"} `}
+                      className={`relative flex flex-col justify-center items-center border-[#C7C4D8] border-2 border-dashed rounded-lg w-48 md:w-full h-48 ${ternaryImagePreview ? "" : "cursor-pointer"} `}
                       onClick={() => {
                         if (!ternaryImagePreview)
                           ternaryImageRef.current!.click();
@@ -448,7 +454,7 @@ function EditGig() {
                               ? ternaryImagePreview
                               : galleryIcon
                         }
-                        className={`grayscale-100 rounded-lg  object-cover ${ternaryImagePreview ? "w-full h-full" : "w-24 h-24"} `}
+                        className={`rounded-lg  object-cover ${ternaryImagePreview ? "w-full h-full" : "w-24 h-24"} `}
                       />
                       <span
                         className={`text-[#131B2E] ${ternaryImagePreview ? "hidden" : "block"}`}

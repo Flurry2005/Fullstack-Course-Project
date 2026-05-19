@@ -79,9 +79,11 @@ function Overview({ setEditState, gig, setGig, setConfirm }: OverviewProps) {
           </div>
           <input
             type="text"
-            className="p-6 border border-[#C7C4D8] rounded-lg text-[#6B7280] text-xl"
+            className="focus:outline-none p-6 border border-[#C7C4D8]/15 rounded-lg text-[#6B7280] text-xl"
             value={title}
+            placeholder="Title"
             onChange={(e) => setTitle(e.target.value)}
+            
           />
         </div>
         <div className="flex flex-col gap-6 bg-white shadow-md p-6 border border-[#ACA8D7]/15 rounded-2xl">
@@ -93,7 +95,7 @@ function Overview({ setEditState, gig, setGig, setConfirm }: OverviewProps) {
           </div>
           <div className="flex flex-col gap-6 md:grid md:grid-cols-2">
             <select
-              className="p-3 border border-[#C7C4D8] rounded-lg text-[#6B7280]"
+              className="p-3 border border-[#C7C4D8]/15 rounded-lg text-[#6B7280]"
               value={mainCategory}
               onChange={(e) => {
                 setMainCategory(e.target.value);
@@ -111,7 +113,7 @@ function Overview({ setEditState, gig, setGig, setConfirm }: OverviewProps) {
               ))}
             </select>
             <select
-              className="p-3 border border-[#C7C4D8] rounded-lg text-[#6B7280]"
+              className="p-3 border border-[#C7C4D8]/15 rounded-lg text-[#6B7280]"
               value={subCategory}
               onChange={(e) => setSubCategory(e.target.value)}
               disabled={!mainCategory}
@@ -156,8 +158,9 @@ function Overview({ setEditState, gig, setGig, setConfirm }: OverviewProps) {
             <input
               type="text"
               ref={tagRef}
-              className={`text-[#6B7280] p-3 rounded-lg border border-[#C7C4D8]`}
+              className={`text-[#6B7280] p-3 rounded-lg focus:outline-none border border-[#C7C4D8]/15`}
               disabled={tags.length === 5}
+              placeholder="Tag"
               onKeyDown={(e) => {
                 if (e.key === "Enter") addTag();
               }}
@@ -171,13 +174,13 @@ function Overview({ setEditState, gig, setGig, setConfirm }: OverviewProps) {
             </button>
           </div>
         </div>
-        <span className="flex">
+        <span className="flex flex-wrap gap-6 justify-center md:justify-between">
           <span onClick={() => setEditState(false)}>
             {" "}
             <CancelButton />
           </span>
           <span
-            className={`${everythingOK ? "opacity-100" : "opacity-50"} ml-auto`}
+            className={`${everythingOK ? "opacity-100" : "opacity-50"}`}
             onClick={everythingOK ? handleUpdate : () => {}}
           >
             <UpdateButton text={"Update"} />

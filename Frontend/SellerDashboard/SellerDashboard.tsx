@@ -221,7 +221,7 @@ function SellerDashBoard() {
                 ?.filter(
                   (order) =>
                     order.sellerUsername === user?.username &&
-                    order.delivered !== "Completed",
+                    order.delivered !== "Completed" && order.delivered !== "Cancelled"
                 )
                 .slice(0, maxOrders)
                 ?.map((order) => (
@@ -243,7 +243,8 @@ function SellerDashBoard() {
                   />
                 ))}
               {orders?.filter(
-                (order) => order.sellerUsername === user?.username,
+                (order) => order.sellerUsername === user?.username &&
+                    order.delivered !== "Completed" && order.delivered !== "Cancelled"
               ).length === 0 && (
                 <p className="px-3 font-light">You have no orders</p>
               )}

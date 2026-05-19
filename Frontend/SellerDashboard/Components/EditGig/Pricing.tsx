@@ -109,12 +109,12 @@ function Pricing({ gig, setGig, setEditState, setConfirm }: Pricing) {
             )}
           </div>
         </div>
-        <span className="flex">
+                <span className="flex flex-wrap gap-6 justify-center md:justify-between">
           <span onClick={() => setEditState(false)}>
             {" "}
             <CancelButton />
           </span>
-          <span className="ml-auto" onClick={handleUpdate}>
+          <span className="" onClick={handleUpdate}>
             <UpdateButton text={"Update"} />
           </span>
         </span>

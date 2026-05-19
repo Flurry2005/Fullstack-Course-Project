@@ -79,7 +79,7 @@ function PackageBar({
             <span className="ml-1">Price ($)</span>
             <input
               type="text"
-              className="bg-[#FFFFFF] p-3 border border-[#C7C4D8] rounded-lg w-20 text-[#6B7280] text-xl"
+              className="bg-[#FFFFFF] p-3 focus:outline-none border border-[#C7C4D8]/15 rounded-lg w-20 text-[#6B7280] text-xl"
               value={price}
               onChange={(e) => setPrice(e.target.value)}
               min={0}
@@ -88,7 +88,7 @@ function PackageBar({
           <div className="flex flex-col gap-1 md:ml-auto">
             <span className="ml-1">Delivery</span>
             <select
-              className="bg-[#FFFFFF] p-3 border border-[#C7C4D8] rounded-lg w-fit text-[#6B7280] text-xl"
+              className="bg-[#FFFFFF] p-3 border border-[#C7C4D8]/15 rounded-lg w-fit text-[#6B7280] text-xl"
               value={delivery ?? ""}
               onChange={(e) => setDelivery(e.target.value)}
             >
@@ -126,7 +126,7 @@ function PackageBar({
           <input
             type="text"
             ref={featureRef}
-            className="flex-1 bg-[#FFFFFF] p-3 border border-[#bfbdc6] rounded-lg w-full text-[#6B7280] text-xl"
+            className="flex-1 bg-[#FFFFFF] p-3 focus:outline-none border border-[#C7C4D8]/15 rounded-lg w-full text-[#6B7280] text-xl"
             value={featureInput}
             onChange={(e) => setFeatureInput(e.target.value)}
             placeholder="Add a feature..."
