@@ -9,6 +9,12 @@ const userSchema = new mongoose.Schema(
       minlength: 3,
       maxlength: 20,
     },
+    role: {
+      type: String,
+      enum: ["admin", "user"],
+      default: "user",
+      required: true,
+    },
     profilePictureUrl: {
       type: String,
     },
@@ -60,7 +66,7 @@ const userSchema = new mongoose.Schema(
       required: true,
       unique: true,
       match:
-        /^(?:[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:(?:\\[\x00-\x7F]|[^\\"]))*")@(?:(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?\.)+[a-zA-Z]{2,}|(?:\[(?:\d{1,3}\.){3}\d{1,3}\]))$/,
+        /^(?:[a-zA-Z0-9!#$%&'*+/=?^{|}~-]+(?:\.[a-zA-Z0-9!#$%&'*+/=?^_{|}~-]+)|"(?:(?:\[\x00-\x7F]|[^\"]))")@(?:(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?.)+[a-zA-Z]{2,}|(?:[(?:\d{1,3}.){3}\d{1,3}]))$/,
     },
     passwordHash: {
       type: String,
