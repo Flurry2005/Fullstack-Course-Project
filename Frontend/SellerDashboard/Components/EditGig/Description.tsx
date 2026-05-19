@@ -54,16 +54,16 @@ function Description({
           <textarea
             onChange={(e) => setDesc(e.target.value)}
             rows={10}
-            className="p-6 border border-[#C7C4D8] rounded-lg w-full text-[#6B7280] resize-none"
+            className="p-6 focus:outline-none border border-[#C7C4D8]/15 rounded-lg w-full text-[#6B7280] resize-none"
             value={desc}
           />
         </div>
-        <span className="flex">
+          <span className="flex flex-wrap gap-6 justify-center md:justify-between">
           <span onClick={() => setEditState(false)}>
             <CancelButton />
           </span>
           <span
-            className={`${everythingOK ? "opacity-100" : "opacity-50"} ml-auto`}
+            className={`${everythingOK ? "opacity-100" : "opacity-50"}`}
             onClick={everythingOK ? handleUpdate : () => {}}
           >
             <UpdateButton text={"Update"} />

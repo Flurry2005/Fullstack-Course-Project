@@ -32,9 +32,9 @@ function Delete({ gig, setDeleteState, getGig }: OverviewProps) {
               <h3 className="font-bold text-xl">Delete Gig</h3>
             </span>
             <p>Warning! This action cannot be undone.</p>
-            <span className="flex mt-6">
+            <span className="flex md:justify-between justify-center gap-12 flex-wrap mt-6">
               <span
-                className="mr-auto"
+                className=""
                 onClick={() => {
                   setDeleteState(false);
                 }}
@@ -42,7 +42,7 @@ function Delete({ gig, setDeleteState, getGig }: OverviewProps) {
                 <CancelButton />
               </span>
               <span
-                className="ml-auto"
+                className=""
                 onClick={() => {
                   deleteGig();
                   setDeleteState(false);
