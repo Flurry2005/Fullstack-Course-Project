@@ -97,7 +97,7 @@ function CheckoutPage() {
   // set service fee when price is updated
   useEffect(() => {
     const priceInCents = Math.round(price * 100);
-    const serviceFeeInCents = Math.round(priceInCents * 0.05);
+    const serviceFeeInCents = Math.round(priceInCents * 0.1);
     setServiceFee(serviceFeeInCents / 100);
   }, [price]);
 
@@ -361,8 +361,8 @@ function CheckoutPage() {
                     >
                       <CircleHelp className="w-4 h-4" />
                     </button>
-                    <div className="bottom-full left-1/2 z-20 absolute bg-[#1f1b4d] opacity-0 group-focus-within:opacity-100 group-hover:opacity-100 shadow-lg mb-2 px-3 py-2 rounded-lg w-56 font-medium text-white text-xs leading-5 transition-opacity -translate-x-1/2 pointer-events-none">
-                      Our platform takes a 5% service fee to support secure
+                    <div className="pointer-events-none absolute bottom-full left-1/2 z-20 mb-2 w-56 -translate-x-1/2 rounded-lg bg-[#1f1b4d] px-3 py-2 text-xs font-medium leading-5 text-white opacity-0 shadow-lg transition-opacity group-hover:opacity-100 group-focus-within:opacity-100">
+                      Our platform takes a 10% service fee to support secure
                       payments, hosting, and buyer protection.
                     </div>
                   </div>

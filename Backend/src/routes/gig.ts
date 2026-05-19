@@ -45,9 +45,13 @@ gigRouter.get("/edit/:id", jwtMiddleware.jwtTokenIsValid, async (req, res) => {
     : res.status(404).json({ status: "404", message: "Gig not found" });
 });
 
-gigRouter.get("/review/:id", jwtMiddleware.jwtTokenIsValid, async (req, res) => {
-  await gigController.getGigToReview(req, res);
-});
+gigRouter.get(
+  "/review/:id",
+  jwtMiddleware.jwtTokenIsValid,
+  async (req, res) => {
+    await gigController.getGigToReview(req, res);
+  },
+);
 
 gigRouter.post(
   "/",
@@ -60,15 +64,20 @@ gigRouter.post(
   },
 );
 
-gigRouter.post("/review", jwtMiddleware.jwtTokenIsValid, async(req, res) => {
+gigRouter.post("/review", jwtMiddleware.jwtTokenIsValid, async (req, res) => {
   await gigController.reviewGig(req, res);
 });
 
-gigRouter.put("/", jwtMiddleware.jwtTokenIsValid, async (req, res, next) => {
-  return (await gigController.updateGig(req, res, next))
-    ? res.status(200).json("Updated Gig")
-    : res.status(400).json("Could not update gig");
-});
+gigRouter.put(
+  "/",
+  jwtMiddleware.jwtTokenIsValid,
+  upload.array("images", 3),
+  async (req, res, next) => {
+    return (await gigController.updateGig(req, res, next))
+      ? res.status(200).json("Updated Gig")
+      : res.status(400).json("Could not update gig");
+  },
+);
 
 gigRouter.delete("/", jwtMiddleware.jwtTokenIsValid, async (req, res, next) => {
   return (await gigController.deleteGig(req, res, next))

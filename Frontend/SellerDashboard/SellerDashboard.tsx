@@ -23,6 +23,7 @@ function SellerDashBoard() {
   const [gigs, setGigs] = useState<Gig[]>();
   const [gigsLoaded, setGigsLoaded] = useState(false);
   const timeOfDay = new Date().getHours();
+  const [views, setViews] = useState(0);
   const [profilePictures, setProfilePictures] = useState<
     Record<string, string>
   >({});
@@ -63,11 +64,17 @@ function SellerDashBoard() {
       `${import.meta.env.VITE_DEV === "true" ? "http://localhost:3000" : "https://fullstackapi.liamjorgensen.dev"}/api${"/gig/seller/"}${user?.username}`,
     );
     const data = await response.json();
-    console.log(data);
     response.ok && setGigs(data);
     setGigsLoaded(true);
   };
 
+  useEffect(() => {
+    if (gigs) {
+      gigs?.forEach((gig) =>
+        setViews((prev) => prev + Object.keys(gig.views ?? {}).length),
+      );
+    }
+  }, [gigs]);
   useEffect(() => {
     if (!user?.username) return;
     getGigs();
@@ -145,8 +152,10 @@ function SellerDashBoard() {
             </span>
           </div>
           <div className="flex flex-col bg-white p-6 border-[#ACA8D7]/15 border-2 rounded-2xl w-full">
-            <span className="text-[#5A5781]">Response Time</span>
-            <span className="font-semibold text-3xl">1 hour</span>
+            <span className="text-[#5A5781]">Total Views</span>
+            <span className="flex items-center gap-1 font-semibold text-3xl">
+              {views}
+            </span>
           </div>
         </section>
 

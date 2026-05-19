@@ -5,6 +5,7 @@ import { isValidObjectId } from "mongoose";
 import { categories } from "../utils/Categories.js";
 import orderModel from "../models/orderModel.js";
 import { getSquareImage, uploadBuffer } from "../services/Cloudinary.js";
+import bcrypt from "bcrypt";
 
 type GigSearchQuery = Record<string, any>;
 
@@ -168,11 +169,17 @@ class GigController {
   async getGigById(req: Request) {
     try {
       const clientIp = getClientIp(req);
-      const ipKey = clientIp.replace(/[^a-zA-Z0-9_-]/g, "_");
-      await gigsModel.findByIdAndUpdate(req.params.id, {
-        $set: { [`views.${ipKey}`]: new Date() },
-      });
-      return await gigsModel.findById(req.params.id).select("-sellerId -views -updatedAt").lean();
+      const salt = "$2b$10$abcdefghijklmnopqrstuv";
+      const hashedIp = bcrypt.hashSync(clientIp, salt);
+      const ipKey = hashedIp.replace(/[^a-zA-Z0-9_-]/g, "_");
+
+      const update = { $set: { [`views.${ipKey}`]: new Date() } };
+      await gigsModel.updateOne({ _id: req.params.id }, update);
+
+      return await gigsModel
+        .findById(req.params.id)
+        .select("-sellerId -views -updatedAt")
+        .lean();
     } catch (error) {
       console.error(error);
       return null;
@@ -290,7 +297,11 @@ class GigController {
           delivery: newGig.premium?.delivery ?? "",
           features: premFeatures,
         },
-        startingPrice: getStartingPrice(basicPrice, standardPrice, premiumPrice),
+        startingPrice: getStartingPrice(
+          basicPrice,
+          standardPrice,
+          premiumPrice,
+        ),
         pending: true,
         paused: false,
         updatedAt: new Date(),
@@ -329,9 +340,8 @@ class GigController {
   }
 
   async updateGig(req: Request, res: Response, next: NextFunction) {
-    const updatedGig: Gig = req.body;
+    const updatedGig: Gig = JSON.parse(req.body.gig);
 
-    console.log(updatedGig);
     if (
       !updatedGig.title ||
       !updatedGig.category?.main ||
@@ -386,6 +396,20 @@ class GigController {
       const premiumPrice =
         premFeatures.length === 0 ? 0 : parsePrice(updatedGig.premium?.price);
 
+      //@ts-ignore
+      const files = req.files as Express.Multer.File[];
+
+      const uploadedImages: string[] = [];
+
+      for (const file of files) {
+        const resultUpload: any = await uploadBuffer(
+          file.buffer,
+          `${updatedGig._id}-${files.indexOf(file) + 1}`,
+          "gigPreviewImages",
+        );
+        uploadedImages.push(resultUpload.secure_url);
+      }
+
       const targetGig = await gigsModel.findOneAndUpdate(
         { _id: updatedGig._id, sellerId: res.locals.jwt._id },
         {
@@ -421,6 +445,18 @@ class GigController {
               standardPrice,
               premiumPrice,
             ),
+            ...(uploadedImages[0] && {
+              primaryImagePreview: uploadedImages[0],
+            }),
+
+            ...(uploadedImages[1] && {
+              secondaryImagePreview: uploadedImages[1],
+            }),
+
+            ...(uploadedImages[2] && {
+              ternaryImagePreview: uploadedImages[2],
+            }),
+
             pending: true,
             paused: updatedGig.paused,
             updatedAt: new Date(),
