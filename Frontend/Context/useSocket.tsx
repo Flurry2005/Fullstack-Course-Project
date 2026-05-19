@@ -7,6 +7,17 @@ import { useAuth } from "./useAuth";
 import { createRoot } from "react-dom/client";
 import { useNavigate } from "react-router-dom";
 import type { ObjectId } from "mongodb";
+import type { OrderStatus } from "../MyOrdersPage/MyOrders";
+import {
+  Check,
+  CheckCircle,
+  CircleCheck,
+  Loader,
+  Package,
+  RefreshCw,
+  RotateCcw,
+  XCircle,
+} from "lucide-react";
 const SocketContext = createContext<SocketContextType | undefined>(undefined);
 
 export function SocketProvider({ children }: { children: React.ReactNode }) {
@@ -19,6 +30,53 @@ export function SocketProvider({ children }: { children: React.ReactNode }) {
   const { user, logout } = useAuth();
   const audioRef = useRef(new Audio("/message_sound.mp3"));
   const popupMessageRef = useRef<HTMLDivElement>(null);
+
+  const statusConfig: Record<
+    OrderStatus,
+    {
+      label: string;
+      icon: React.ReactNode;
+      bg: string;
+      text: string;
+      bar: string;
+    }
+  > = {
+    "In Progress": {
+      label: "In Progress",
+      icon: <Loader size={11} />,
+      bg: "bg-[#EEEDFE]",
+      text: "text-[#534AB7]",
+      bar: "bg-[#534AB7]",
+    },
+    "Confirmed By Seller": {
+      label: "Confirmed",
+      icon: <Check size={11} />,
+      bg: "bg-[#E6F1FB]",
+      text: "text-[#185FA5]",
+      bar: "bg-[#185FA5]",
+    },
+    Revision: {
+      label: "Revision",
+      icon: <RefreshCw size={11} />,
+      bg: "bg-[#FAEEDA]",
+      text: "text-[#854F0B]",
+      bar: "bg-[#BA7517]",
+    },
+    Completed: {
+      label: "Completed",
+      icon: <CircleCheck size={11} />,
+      bg: "bg-[#EAF3DE]",
+      text: "text-[#3B6D11]",
+      bar: "bg-[#639922]",
+    },
+    Cancelled: {
+      label: "Cancelled",
+      icon: <XCircle size={11} />,
+      bg: "bg-[#FCEBEB]",
+      text: "text-[#A32D2D]",
+      bar: "bg-[#E24B4A]",
+    },
+  };
 
   useEffect(() => {
     ordersRef.current = orders;
@@ -48,21 +106,14 @@ export function SocketProvider({ children }: { children: React.ReactNode }) {
     const order = ordersRef.current?.find((order) => order._id === orderId);
     root.render(
       <div
-        className="right-5 bottom-5 z-100 fixed flex flex-col justify-center gap-1 bg-[#DDD9FF]/90 shadow-lg px-5 rounded-2xl rounded-br-none w-100 h-25 transition-transform animate-[slideIn_0.3s_ease-out] cursor-pointer"
+        className="right-5 bottom-5 z-100 fixed flex flex-col bg-white shadow-lg border border-gray-100 rounded-2xl rounded-br-none w-100 h-25 overflow-hidden animate-[slideIn_0.3s_ease-out] cursor-pointer"
         onClick={async () => {
           navigate("/messages");
-          console.log(ordersRef.current);
-          await getSocket().emitWithAck("read_chat", {
-            orderId: order!._id,
-          });
+          await getSocket().emitWithAck("read_chat", { orderId: order!._id });
           setOrders((prev) => {
             if (!prev) return null;
-
             return prev.map((orderTemp) => {
-              if (orderTemp._id !== order!._id) {
-                return orderTemp;
-              }
-
+              if (orderTemp._id !== order!._id) return orderTemp;
               return {
                 ...orderTemp,
                 chathistory: orderTemp.chathistory.map((message) => ({
@@ -74,26 +125,29 @@ export function SocketProvider({ children }: { children: React.ReactNode }) {
               };
             });
           });
-          setActiveOrder((prev) => {
-            if (!order) {
-              console.log(order);
-              return prev;
-            }
-
-            return order;
-          });
+          setActiveOrder((prev) => (!order ? prev : order));
           popupMessageRef.current!.remove();
         }}
       >
-        <div className="flex items-center gap-2">
-          <p className="font-bold text-[#4338CA]">{username} -</p>
-          <p className="truncate">{order?.gigname}</p>
-          <p className="top-3 right-5 absolute text-xs">Sent you a message!</p>
+        <div className="bg-[#534AB7] w-full h-1" />
+        <div className="flex flex-col justify-center gap-1 px-5 py-3 h-full">
+          <div className="flex items-center gap-2">
+            <span className="bg-[#EEEDFE] px-2 py-0.5 rounded font-semibold text-[#534AB7] text-[10px] uppercase tracking-wider">
+              {username}
+            </span>
+            <p className="text-[#6f6f9a] text-[13px] truncate">
+              {order?.gigname}
+            </p>
+            <p className="top-3 right-5 absolute text-[#8a8a9a] text-[11px]">
+              Sent you a message!
+            </p>
+          </div>
+          <p className="font-medium text-[#2c2a51] text-[15px] truncate">
+            <span className="font-normal text-[#6f6f9a]">{message}</span>
+          </p>
         </div>
-
-        <p className="max-w-9/10 truncate">{message}</p>
-        <span className="right-2 bottom-2 absolute self-center font-black text-black">
-          <i className="fa-arrow-right shadow-2xl fa-solid"></i>
+        <span className="right-3 bottom-3 absolute">
+          <i className="fa-arrow-right text-[#8a8a9a] text-sm fa-solid"></i>
         </span>
       </div>,
     );
@@ -114,18 +168,82 @@ export function SocketProvider({ children }: { children: React.ReactNode }) {
 
     const root = createRoot(popupMessageRef.current);
     root.render(
-      <div className="right-5 bottom-5 z-100 fixed flex flex-col justify-center gap-1 bg-green-200/90 shadow-lg px-5 rounded-2xl rounded-br-none w-100 h-25 animate-[slideIn_0.3s_ease-out] cursor-pointer">
-        <div className="flex items-center gap-2">
-          <p className="font-bold text-[#4338CA]">{buyerUsername} -</p>
-          <p className="truncate">{gigname}</p>
-          <p className="top-3 right-5 absolute text-xs">
-            Purchased your {tier} package!
+      <div
+        className="right-5 bottom-5 z-100 fixed flex flex-col bg-white shadow-lg border border-gray-100 rounded-2xl rounded-br-none w-100 h-25 overflow-hidden animate-[slideIn_0.3s_ease-out] cursor-pointer"
+        onClick={() => navigate("/orders")}
+      >
+        <div className="bg-[#534AB7] w-full h-1" />
+        <div className="flex flex-col justify-center gap-1 px-5 py-3 h-full">
+          <div className="flex items-center gap-2">
+            <span className="bg-[#EAF3DE] px-2 py-0.5 rounded font-semibold text-[#534AB7] text-[10px] uppercase tracking-wider">
+              New Order
+            </span>
+            <p className="text-[#6f6f9a] text-[13px] truncate">{gigname}</p>
+            <p className="top-3 right-5 absolute text-[#8a8a9a] text-[11px]">
+              {tier} package
+            </p>
+          </div>
+          <p className="font-medium text-[#2c2a51] text-[15px] truncate">
+            <span className="font-normal text-[#6f6f9a]">{buyerUsername}</span>{" "}
+            purchased your service
           </p>
         </div>
+        <span className="right-3 bottom-3 absolute">
+          <i className="fa-arrow-right text-[#8a8a9a] text-sm fa-solid"></i>
+        </span>
+      </div>,
+    );
+  };
 
-        <p className="max-w-9/10 truncate">You have got a new purchase!</p>
-        <span className="right-2 bottom-2 absolute self-center font-black text-black">
-          <i className="fa-arrow-right shadow-2xl fa-solid"></i>
+  const createOrderUpdatePopup = (
+    username: string,
+    deliveryStatus: string,
+    orderName: string,
+    seller: boolean,
+  ) => {
+    if (popupMessageRef.current) popupMessageRef.current.remove();
+    popupMessageRef.current = document.createElement("div");
+    document.body.appendChild(popupMessageRef.current);
+
+    setTimeout(() => {
+      popupMessageRef.current!.remove();
+    }, 5_000);
+
+    const root = createRoot(popupMessageRef.current);
+    const status =
+      statusConfig[deliveryStatus as OrderStatus] ??
+      statusConfig["In Progress"];
+
+    root.render(
+      <div
+        className="right-5 bottom-5 z-100 fixed flex flex-col bg-white shadow-lg border border-gray-100 rounded-2xl rounded-br-none w-100 h-25 overflow-hidden animate-[slideIn_0.3s_ease-out] cursor-pointer"
+        onClick={() => {
+          navigate("/orders");
+        }}
+      >
+        <div className={`h-1 w-full ${status.bar}`} />
+        <div className="flex flex-col justify-center gap-1 px-5 py-3 h-full">
+          <div className="flex items-center gap-2">
+            <span
+              className={`text-[10px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded ${status.bg} ${status.text}`}
+            >
+              {status.label}
+            </span>
+            <p className="text-[#6f6f9a] text-[13px] truncate">{orderName}</p>
+            <p className="top-3 right-5 absolute text-[#8a8a9a] text-[11px]">
+              Status updated
+            </p>
+          </div>
+          <p className="font-medium text-[#2c2a51] text-[15px] truncate">
+            <span className="font-normal text-[#6f6f9a]">
+              {seller ? "Seller: " : "Buyer: "}
+              {username}
+            </span>{" "}
+            updated this order
+          </p>
+        </div>
+        <span className="right-3 bottom-3 absolute">
+          <i className="fa-arrow-right text-[#8a8a9a] text-sm fa-solid"></i>
         </span>
       </div>,
     );
@@ -236,6 +354,12 @@ export function SocketProvider({ children }: { children: React.ReactNode }) {
               ? { ...order, delivered: data.delivered }
               : order,
           ) ?? null,
+      );
+      createOrderUpdatePopup(
+        data.username,
+        data.delivered,
+        data.orderName,
+        data.seller,
       );
     };
 
