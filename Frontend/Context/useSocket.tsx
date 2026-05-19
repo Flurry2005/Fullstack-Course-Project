@@ -7,6 +7,17 @@ import { useAuth } from "./useAuth";
 import { createRoot } from "react-dom/client";
 import { useNavigate } from "react-router-dom";
 import type { ObjectId } from "mongodb";
+import type { OrderStatus } from "../MyOrdersPage/MyOrders";
+import {
+  Check,
+  CheckCircle,
+  CircleCheck,
+  Loader,
+  Package,
+  RefreshCw,
+  RotateCcw,
+  XCircle,
+} from "lucide-react";
 const SocketContext = createContext<SocketContextType | undefined>(undefined);
 
 export function SocketProvider({ children }: { children: React.ReactNode }) {
@@ -19,6 +30,53 @@ export function SocketProvider({ children }: { children: React.ReactNode }) {
   const { user, logout } = useAuth();
   const audioRef = useRef(new Audio("/message_sound.mp3"));
   const popupMessageRef = useRef<HTMLDivElement>(null);
+
+  const statusConfig: Record<
+    OrderStatus,
+    {
+      label: string;
+      icon: React.ReactNode;
+      bg: string;
+      text: string;
+      bar: string;
+    }
+  > = {
+    "In Progress": {
+      label: "In Progress",
+      icon: <Loader size={11} />,
+      bg: "bg-[#EEEDFE]",
+      text: "text-[#534AB7]",
+      bar: "bg-[#534AB7]",
+    },
+    "Confirmed By Seller": {
+      label: "Confirmed",
+      icon: <Check size={11} />,
+      bg: "bg-[#E6F1FB]",
+      text: "text-[#185FA5]",
+      bar: "bg-[#185FA5]",
+    },
+    Revision: {
+      label: "Revision",
+      icon: <RefreshCw size={11} />,
+      bg: "bg-[#FAEEDA]",
+      text: "text-[#854F0B]",
+      bar: "bg-[#BA7517]",
+    },
+    Completed: {
+      label: "Completed",
+      icon: <CircleCheck size={11} />,
+      bg: "bg-[#EAF3DE]",
+      text: "text-[#3B6D11]",
+      bar: "bg-[#639922]",
+    },
+    Cancelled: {
+      label: "Cancelled",
+      icon: <XCircle size={11} />,
+      bg: "bg-[#FCEBEB]",
+      text: "text-[#A32D2D]",
+      bar: "bg-[#E24B4A]",
+    },
+  };
 
   useEffect(() => {
     ordersRef.current = orders;
@@ -131,6 +189,60 @@ export function SocketProvider({ children }: { children: React.ReactNode }) {
     );
   };
 
+  const createOrderUpdatePopup = (
+    username: string,
+    deliveryStatus: string,
+    orderName: string,
+    seller: boolean,
+  ) => {
+    if (popupMessageRef.current) popupMessageRef.current.remove();
+    popupMessageRef.current = document.createElement("div");
+    document.body.appendChild(popupMessageRef.current);
+
+    setTimeout(() => {
+      popupMessageRef.current!.remove();
+    }, 500_000);
+
+    const root = createRoot(popupMessageRef.current);
+    const status =
+      statusConfig[deliveryStatus as OrderStatus] ??
+      statusConfig["In Progress"];
+
+    root.render(
+      <div
+        className="right-5 bottom-5 z-100 fixed flex flex-col bg-white shadow-lg border border-gray-100 rounded-2xl rounded-br-none w-100 h-25 overflow-hidden animate-[slideIn_0.3s_ease-out] cursor-pointer"
+        onClick={() => {
+          navigate("/orders");
+        }}
+      >
+        <div className={`h-1 w-full ${status.bar}`} />
+        <div className="flex flex-col justify-center gap-1 px-5 py-3 h-full">
+          <div className="flex items-center gap-2">
+            <span
+              className={`text-[10px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded ${status.bg} ${status.text}`}
+            >
+              {status.label}
+            </span>
+            <p className="text-[#6f6f9a] text-[13px] truncate">{orderName}</p>
+            <p className="top-3 right-5 absolute text-[#8a8a9a] text-[11px]">
+              Status updated
+            </p>
+          </div>
+          <p className="font-medium text-[#2c2a51] text-[15px] truncate">
+            <span className="font-normal text-[#6f6f9a]">
+              {seller ? "Seller: " : "Buyer: "}
+              {username}
+            </span>{" "}
+            updated this order
+          </p>
+        </div>
+        <span className="right-3 bottom-3 absolute">
+          <i className="fa-arrow-right text-[#8a8a9a] text-sm fa-solid"></i>
+        </span>
+      </div>,
+    );
+  };
+
   const updateUnreadMessagesCount = () => {
     if (user) {
       const unreadMessages = orders?.reduce((count, order) => {
@@ -236,6 +348,12 @@ export function SocketProvider({ children }: { children: React.ReactNode }) {
               ? { ...order, delivered: data.delivered }
               : order,
           ) ?? null,
+      );
+      createOrderUpdatePopup(
+        data.username,
+        data.delivered,
+        data.orderName,
+        data.seller,
       );
     };
 
