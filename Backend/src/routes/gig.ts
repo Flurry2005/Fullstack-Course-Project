@@ -71,7 +71,11 @@ gigRouter.post("/review", jwtMiddleware.jwtTokenIsValid, async (req, res) => {
 gigRouter.put(
   "/",
   jwtMiddleware.jwtTokenIsValid,
-  upload.array("images", 3),
+  upload.fields([
+    { name: "primaryImage", maxCount: 1 },
+    { name: "secondaryImage", maxCount: 1 },
+    { name: "ternaryImage", maxCount: 1 },
+  ]),
   async (req, res, next) => {
     return (await gigController.updateGig(req, res, next))
       ? res.status(200).json("Updated Gig")
