@@ -25,6 +25,155 @@ class OrderController {
 
     return res.status(200).json({ success: true, data: orders });
   }
+
+  async confirmBySeller(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { orderId } = req.params;
+      const user = await Users.findOne({ username: res.locals.jwt.username });
+
+      if (!user) {
+        return res.status(500).json({ success: false, error: "Unknown User" });
+      }
+
+      const order = await orderModel.findById(orderId);
+
+      if (!order) {
+        return res
+          .status(404)
+          .json({ success: false, error: "Order not found" });
+      }
+
+      if (order.sellerId.toString() !== user._id.toString()) {
+        return res.status(403).json({
+          success: false,
+          error: "Only the seller can confirm this order",
+        });
+      }
+      if (order.delivered !== "In Progress") {
+        return res.status(400).json({
+          success: false,
+          error: "Order cannot be confirmed at this stage",
+        });
+      }
+      order.delivered = "Confirmed By Seller";
+      await order.save();
+
+      return res.status(200).json({ success: true, data: order });
+    } catch (error) {
+      console.error("confirmBySeller error:", error);
+      return res
+        .status(500)
+        .json({ success: false, error: "Something went wrong" });
+    }
+  }
+
+  async confirmByBuyer(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { orderId } = req.params;
+      const user = await Users.findOne({ username: res.locals.jwt.username });
+
+      if (!user) {
+        return res.status(500).json({ success: false, error: "Unknown User" });
+      }
+      const order = await orderModel.findById(orderId);
+      if (!order) {
+        return res
+          .status(404)
+          .json({ success: false, error: "Order not found" });
+      }
+
+      if (order.buyerId.toString() !== user._id.toString()) {
+        return res.status(403).json({
+          success: false,
+          error: "Only the buyer can confirm this order",
+        });
+      }
+
+      if (order.delivered !== "Confirmed By Seller") {
+        return res.status(400).json({
+          success: false,
+          error: "Order must be confirmed by seller first",
+        });
+      }
+
+      order.delivered = "Completed";
+      await order.save();
+
+      return res.status(200).json({ success: true, data: order });
+    } catch (error) {}
+  }
+  async reviseOrder(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { orderId } = req.params;
+      const user = await Users.findOne({ username: res.locals.jwt.username });
+      if (!user) {
+        return res.status(500).json({ success: false, error: "Unknown User" });
+      }
+      const order = await orderModel.findById(orderId);
+      if (!order) {
+        return res
+          .status(404)
+          .json({ success: false, error: "Order not found" });
+      }
+      if (order.buyerId.toString() !== user._id.toString()) {
+        return res.status(403).json({
+          success: false,
+          error: "Only the buyer can request a revision",
+        });
+      }
+
+      if (order.delivered !== "Confirmed By Seller") {
+        return res.status(400).json({
+          success: false,
+          error: "Order must be confirmed by seller to request revision",
+        });
+      }
+
+      order.delivered = "Revision";
+      await order.save();
+      return res.status(200).json({ success: true, data: order });
+    } catch (error) {
+      console.error("reviseOrder error: ", error);
+      return res
+        .status(500)
+        .json({ success: false, error: "Something went wrong :)" });
+    }
+  }
+
+  async cancelOrder(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { orderId } = req.params;
+      const user = await Users.findOne({ username: res.locals.jwt.username });
+      if (!user) {
+        return res.status(500).json({ success: false, error: "Unknown User" });
+      }
+      const order = await orderModel.findById(orderId);
+      if (!order) {
+        return res
+          .status(404)
+          .json({ success: false, error: "Order not found" });
+      }
+      if (order.buyerId.toString() !== user._id.toString()) {
+        return res.status(403).json({
+          success: false,
+          error: "Only the buyer can cancel the order",
+        });
+      }
+      if (order.delivered === "Completed" || order.delivered === "Cancelled") {
+        return res
+          .status(400)
+          .json({ success: false, error: "Order is already closed" });
+      }
+      order.delivered = "Cancelled";
+      await order.save();
+      return res.status(200).json({ success: true, data: order });
+    } catch (error) {
+      console.error("cancelOrder error: ", error);
+      return res
+        .status(500)
+        .json({ success: false, error: "Something went wrong :)" });
+    }
+  }
 }
 
 export default new OrderController();

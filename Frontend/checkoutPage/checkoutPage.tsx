@@ -102,16 +102,19 @@ function CheckoutPage() {
   }, [price]);
 
   const selectedTier = searchParams.get("tier") || "Basic";
-  const tierKey = selectedTier.toLowerCase() as "basic" | "standard" | "premium";
+  const tierKey = selectedTier.toLowerCase() as
+    | "basic"
+    | "standard"
+    | "premium";
   const selectedPackage = gig?.[tierKey];
   const includedFeatures = selectedPackage?.features?.length
     ? selectedPackage.features.slice(0, 4)
     : [
-      "High-resolution renders",
-      `${selectedPackage?.delivery || "24-hour"} delivery`,
-      "Commercial license",
-      "Source files included",
-    ];
+        "High-resolution renders",
+        `${selectedPackage?.delivery || "24-hour"} delivery`,
+        "Commercial license",
+        "Source files included",
+      ];
   const totalPrice = price + serviceFee;
   const formatCurrency = (value: number) =>
     new Intl.NumberFormat("en-US", {
@@ -156,42 +159,42 @@ function CheckoutPage() {
     <div className="flex flex-col bg-[#fbf7ff] min-h-screen text-[#1f1b4d]">
       <NavBar />
 
-      <main className="mx-auto flex w-full max-w-7xl flex-1 flex-col gap-8 px-6 py-10 lg:px-10">
+      <main className="flex flex-col flex-1 gap-8 mx-auto px-6 lg:px-10 py-10 w-full max-w-7xl">
         <section>
-          <h1 className="text-3xl font-semibold tracking-normal md:text-4xl">
+          <h1 className="font-semibold text-3xl md:text-4xl tracking-normal">
             Finalize your order
           </h1>
-          <p className="mt-2 text-base font-medium text-[#77718a]">
+          <p className="mt-2 font-medium text-[#77718a] text-base">
             Review your details and complete your purchase.
           </p>
         </section>
 
-        <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_380px]">
+        <div className="items-start gap-6 grid lg:grid-cols-[minmax(0,1fr)_380px]">
           <div className="flex flex-col gap-8">
-            <section className="rounded-xl border border-[#eadfff] bg-white p-6 shadow-sm">
-              <div className="grid gap-6 md:grid-cols-[190px_minmax(0,1fr)]">
+            <section className="bg-white shadow-sm p-6 border border-[#eadfff] rounded-xl">
+              <div className="gap-6 grid md:grid-cols-[190px_minmax(0,1fr)]">
                 <img
                   src={
                     gig?.primaryImagePreview ||
                     "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRDiuac9hOFukYa8yTFGqKoezMiDw89NQG6KQ&s"
                   }
-                  className="h-36 w-full rounded-lg object-cover md:h-36"
+                  className="rounded-lg w-full h-36 md:h-36 object-cover"
                   alt="Gig preview"
                 />
 
                 <div className="flex flex-col justify-center">
-                  <h2 className="text-2xl font-semibold">
+                  <h2 className="font-semibold text-2xl">
                     {gig?.title || "Custom 3D Low-Poly Asset"}
                   </h2>
-                  <p className="mt-2 max-w-2xl text-sm font-medium leading-6 text-[#696477]">
+                  <p className="mt-2 max-w-2xl font-medium text-[#696477] text-sm leading-6">
                     {gig?.description ||
                       "High-quality, optimized low-poly models tailored for digital environments and game engines."}
                   </p>
 
-                  <div className="mt-4 grid gap-2 text-sm font-semibold text-[#595371] sm:grid-cols-2">
+                  <div className="gap-2 grid sm:grid-cols-2 mt-4 font-semibold text-[#595371] text-sm">
                     {includedFeatures.map((feature) => (
                       <div className="flex items-start gap-2" key={feature}>
-                        <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-[#8651ec]" />
+                        <CheckCircle2 className="mt-0.5 w-4 h-4 text-[#8651ec] shrink-0" />
                         <span>{feature}</span>
                       </div>
                     ))}
@@ -199,10 +202,10 @@ function CheckoutPage() {
                 </div>
               </div>
 
-              <div className="my-8 h-px bg-[#eee6ff]" />
+              <div className="bg-[#eee6ff] my-8 h-px" />
 
-              <h3 className="text-lg font-semibold">How it works</h3>
-              <div className="mt-8 grid gap-8 text-center md:grid-cols-3">
+              <h3 className="font-semibold text-lg">How it works</h3>
+              <div className="gap-8 grid md:grid-cols-3 mt-8 text-center">
                 {[
                   {
                     step: "1",
@@ -221,11 +224,11 @@ function CheckoutPage() {
                   },
                 ].map((item) => (
                   <div className="flex flex-col items-center" key={item.step}>
-                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#eadcff] text-base font-bold text-[#6f3be3]">
+                    <div className="flex justify-center items-center bg-[#eadcff] rounded-full w-10 h-10 font-bold text-[#6f3be3] text-base">
                       {item.step}
                     </div>
-                    <h4 className="mt-4 text-sm font-bold">{item.title}</h4>
-                    <p className="mt-2 max-w-56 text-sm font-medium leading-5 text-[#7c7689]">
+                    <h4 className="mt-4 font-bold text-sm">{item.title}</h4>
+                    <p className="mt-2 max-w-56 font-medium text-[#7c7689] text-sm leading-5">
                       {item.text}
                     </p>
                   </div>
@@ -234,13 +237,14 @@ function CheckoutPage() {
             </section>
 
             <section>
-              <h3 className="text-xl font-semibold">Client reflections</h3>
+              <h3 className="font-semibold text-xl">Client reflections</h3>
               {reviews.length ? (
-                <div className="mt-6 grid items-start gap-6 md:grid-cols-2">
+                <div className="items-start gap-6 grid md:grid-cols-2 mt-6">
                   {reviews.map((review, index) => {
                     const reviewKey = `${review.username}-${index}`;
                     const isExpanded = expandedReviews[reviewKey];
-                    const shouldShowToggle = (review.comment?.length ?? 0) > 150;
+                    const shouldShowToggle =
+                      (review.comment?.length ?? 0) > 150;
                     const rating = Math.max(
                       0,
                       Math.min(5, Number(review.rating) || 0),
@@ -248,37 +252,36 @@ function CheckoutPage() {
 
                     return (
                       <article
-                        className="flex min-h-40 self-start rounded-lg border border-[#eadfff] bg-[#f8f3ff] p-5 flex-col"
+                        className="flex flex-col self-start bg-[#f8f3ff] p-5 border border-[#eadfff] rounded-lg min-h-40"
                         key={reviewKey}
                       >
                         <div className="flex gap-1 text-[#ffb21c]">
                           {Array.from({ length: rating }).map((_, index) => (
                             <Star
-                              className="h-4 w-4 fill-current"
+                              className="fill-current w-4 h-4"
                               key={index}
                             />
                           ))}
                         </div>
                         <p
-                          className={`mt-2 break-words text-sm font-semibold italic leading-6 text-[#777082] ${isExpanded
-                              ? "flex-none"
-                              : "flex-1 overflow-hidden"
-                            }`}
+                          className={`mt-2 break-words text-sm font-semibold italic leading-6 text-[#777082] ${
+                            isExpanded ? "flex-none" : "flex-1 overflow-hidden"
+                          }`}
                           style={
                             isExpanded
                               ? undefined
                               : {
-                                display: "-webkit-box",
-                                WebkitBoxOrient: "vertical",
-                                WebkitLineClamp: 3,
-                              }
+                                  display: "-webkit-box",
+                                  WebkitBoxOrient: "vertical",
+                                  WebkitLineClamp: 3,
+                                }
                           }
                         >
                           {review.comment || ""}
                         </p>
                         {shouldShowToggle && (
                           <button
-                            className="mt-2 w-fit cursor-pointer text-sm font-bold text-[#8759f2] transition-colors hover:text-[#6f36e2]"
+                            className="mt-2 w-fit font-bold text-[#8759f2] hover:text-[#6f36e2] text-sm transition-colors cursor-pointer"
                             onClick={() =>
                               setExpandedReviews((current) => ({
                                 ...current,
@@ -291,12 +294,12 @@ function CheckoutPage() {
                           </button>
                         )}
                         <Link
-                          className="mt-auto flex w-fit items-center gap-3 rounded-lg pr-2 pt-4 text-sm font-bold text-[#8759f2] transition-colors hover:text-[#6f36e2]"
+                          className="flex items-center gap-3 mt-auto pt-4 pr-2 rounded-lg w-fit font-bold text-[#8759f2] hover:text-[#6f36e2] text-sm transition-colors"
                           to={`/profile/${review.username}`}
                         >
                           <img
                             alt={review.username}
-                            className="h-9 w-9 rounded-full object-cover"
+                            className="rounded-full w-9 h-9 object-cover"
                             src={
                               profilePictures[review.username] ||
                               DEFAULT_PROFILE_IMAGE
@@ -309,32 +312,32 @@ function CheckoutPage() {
                   })}
                 </div>
               ) : (
-                <div className="mt-6 rounded-lg border border-[#eadfff] bg-[#f8f3ff] px-5 py-6 text-sm font-medium text-[#77718a]">
+                <div className="bg-[#f8f3ff] mt-6 px-5 py-6 border border-[#eadfff] rounded-lg font-medium text-[#77718a] text-sm">
                   No reviews have been submitted for this service yet.
                 </div>
               )}
             </section>
 
-            <section className="flex flex-wrap justify-center gap-8 pb-6 text-sm font-semibold text-[#8b8794]">
+            <section className="flex flex-wrap justify-center gap-8 pb-6 font-semibold text-[#8b8794] text-sm">
               <div className="flex items-center gap-2">
-                <Shield className="h-5 w-5" />
+                <Shield className="w-5 h-5" />
                 SSL Secure
               </div>
               <div className="flex items-center gap-2">
-                <Shield className="h-5 w-5" />
+                <Shield className="w-5 h-5" />
                 Privacy Protected
               </div>
               <div className="flex items-center gap-2">
-                <LockKeyhole className="h-5 w-5" />
+                <LockKeyhole className="w-5 h-5" />
                 Encrypted Payment
               </div>
             </section>
           </div>
 
-          <aside className="rounded-xl bg-[#f0eaff] p-8 shadow-md lg:sticky lg:top-24">
-            <h2 className="text-xl font-semibold">Order Summary</h2>
+          <aside className="lg:top-24 lg:sticky bg-[#f0eaff] shadow-md p-8 rounded-xl">
+            <h2 className="font-semibold text-xl">Order Summary</h2>
 
-            <div className="mt-5 flex flex-col gap-3 text-sm font-medium text-[#716b82]">
+            <div className="flex flex-col gap-3 mt-5 font-medium text-[#716b82] text-sm">
               <section className="flex justify-between gap-5">
                 <h4>Service Tier</h4>
                 <h4 className="font-semibold text-[#302a5e]">{selectedTier}</h4>
@@ -353,10 +356,10 @@ function CheckoutPage() {
                   <div className="group relative flex">
                     <button
                       aria-label="What is the service fee?"
-                      className="flex h-4 w-4 items-center justify-center rounded-full text-[#7b7193] transition-colors hover:text-[#6f36e2] focus:text-[#6f36e2] focus:outline-none"
+                      className="flex justify-center items-center rounded-full focus:outline-none w-4 h-4 text-[#7b7193] hover:text-[#6f36e2] focus:text-[#6f36e2] transition-colors"
                       type="button"
                     >
-                      <CircleHelp className="h-4 w-4" />
+                      <CircleHelp className="w-4 h-4" />
                     </button>
                     <div className="pointer-events-none absolute bottom-full left-1/2 z-20 mb-2 w-56 -translate-x-1/2 rounded-lg bg-[#1f1b4d] px-3 py-2 text-xs font-medium leading-5 text-white opacity-0 shadow-lg transition-opacity group-hover:opacity-100 group-focus-within:opacity-100">
                       Our platform takes a 10% service fee to support secure
@@ -370,13 +373,13 @@ function CheckoutPage() {
               </section>
             </div>
 
-            <div className="my-5 h-px bg-[#d9cfff]" />
+            <div className="bg-[#d9cfff] my-5 h-px" />
 
             <section>
-              <h3 className="text-xs font-semibold uppercase text-[#746d83]">
+              <h3 className="font-semibold text-[#746d83] text-xs uppercase">
                 Total Amount
               </h3>
-              <p className="mt-1 text-4xl font-semibold text-[#6f36e2]">
+              <p className="mt-1 font-semibold text-[#6f36e2] text-4xl">
                 {formatCurrency(totalPrice)}
               </p>
             </section>
@@ -387,19 +390,19 @@ function CheckoutPage() {
                 onClick={handlePay}
                 additionalClasses="w-full! h-13! mx-auto rounded-lg! shadow-md font-semibold gap-2"
               >
-                Confirm and Pay <ArrowRight className="h-5 w-5" />
+                Confirm and Pay <ArrowRight className="w-5 h-5" />
               </GlowingButton>
             </section>
 
-            <section className="mt-6 rounded-lg bg-white/70 p-4">
+            <section className="bg-white/70 mt-6 p-4 rounded-lg">
               <div className="flex items-center gap-4">
-                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-[#19c7f3] text-white">
-                  <i className="fa-solid fa-shield-halved text-xl"></i>
+                <div className="flex justify-center items-center bg-[#19c7f3] rounded-lg w-10 h-10 text-white">
+                  <i className="text-xl fa-solid fa-shield-halved"></i>
                 </div>
 
                 <div className="flex flex-col justify-center">
-                  <p className="text-sm font-bold">Secure Stripe checkout</p>
-                  <p className="text-xs font-semibold text-[#8b8497]">
+                  <p className="font-bold text-sm">Secure Stripe checkout</p>
+                  <p className="font-semibold text-[#8b8497] text-xs">
                     Encrypted payment processing
                   </p>
                 </div>
@@ -407,7 +410,7 @@ function CheckoutPage() {
             </section>
 
             <section className="pt-6">
-              <p className="text-center text-xs font-medium leading-5 text-[#776f84]">
+              <p className="font-medium text-[#776f84] text-xs text-center leading-5">
                 By confirming your payment, you agree to the OurStore Terms of
                 Service and Privacy Policy. Digital deliverables will be
                 transferred upon completion.

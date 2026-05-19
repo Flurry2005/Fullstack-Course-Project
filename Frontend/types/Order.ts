@@ -2,6 +2,7 @@ import type { ObjectId } from "mongodb";
 import type { Dispatch, SetStateAction } from "react";
 
 export type Order = {
+  delivered: any;
   _id: any;
   gigname: string;
   gigId: string;
