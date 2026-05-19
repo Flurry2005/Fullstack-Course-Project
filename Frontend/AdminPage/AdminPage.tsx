@@ -32,7 +32,7 @@ function AdminPage() {
     const fetchGigs = async () => {
       try {
         const response = await fetch(
-          "http://localhost:3000/api/admin/get-gigs",
+          `${import.meta.env.VITE_DEV === "true" ? "http://localhost:3000" : "https://fullstackapi.liamjorgensen.dev"}/api/admin/get-gigs`,
           {
             method: "GET",
             headers: {
@@ -50,7 +50,7 @@ function AdminPage() {
     const fetchUsers = async () => {
       try {
         const response = await fetch(
-          "http://localhost:3000/api/admin/get-users",
+          `${import.meta.env.VITE_DEV === "true" ? "http://localhost:3000" : "https://fullstackapi.liamjorgensen.dev"}/api/admin/get-users`,
           {
             method: "GET",
             headers: {
@@ -68,7 +68,7 @@ function AdminPage() {
     const fetchTotalSales = async () => {
       try {
         const response = await fetch(
-          "http://localhost:3000/api/admin/get-total-sales",
+          `${import.meta.env.VITE_DEV === "true" ? "http://localhost:3000" : "https://fullstackapi.liamjorgensen.dev"}/api/admin/get-total-sales`,
           {
             method: "GET",
             headers: {
@@ -81,7 +81,7 @@ function AdminPage() {
         setTotalSales(data.totalSales);
         console.log("Total Sales:", data.totalSales);
       } catch (error) {
-        console.error("Error fetching users:", error);
+        console.error("Error fetching total sales:", error);
       }
     };
     fetchTotalSales();
