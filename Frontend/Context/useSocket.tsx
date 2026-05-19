@@ -257,6 +257,7 @@ export function SocketProvider({ children }: { children: React.ReactNode }) {
       socket.off("online_status", handleStatus);
       socket.off("server_ready", requestStatus);
       socket.off("purchase_received", handlePurchaseReceived);
+      socket.off("order_update", handleOrderUpdate);
       socket.off("disconnect", handleDisconnect);
       socket.off("reconnect_failed", handleDisconnect);
     };
