@@ -7,15 +7,43 @@ type ConfirmProps = {
   setConfirmConfirm: React.Dispatch<React.SetStateAction<boolean>>;
   setConfirm: React.Dispatch<React.SetStateAction<boolean>>;
   gig: Gig;
+  primaryImagePreview: File | null;
+  secondaryImagePreview: File | null;
+  ternaryImagePreview: File | null;
   getGig: () => void;
 };
-function Confirm({ setConfirmConfirm, setConfirm, getGig, gig }: ConfirmProps) {
+function Confirm({
+  setConfirmConfirm,
+  setConfirm,
+  getGig,
+  primaryImagePreview,
+  secondaryImagePreview,
+  ternaryImagePreview,
+  gig,
+}: ConfirmProps) {
   const updateGig = async () => {
-    const header = { "Content-type": "Application/json" };
-    const body = JSON.stringify(gig);
+    const formData = new FormData();
+
+    formData.append("gig", JSON.stringify(gig));
+
+    if (primaryImagePreview && typeof primaryImagePreview === "object") {
+      formData.append("images", primaryImagePreview);
+    }
+
+    if (secondaryImagePreview && typeof secondaryImagePreview === "object") {
+      formData.append("images", secondaryImagePreview);
+    }
+
+    if (ternaryImagePreview && typeof ternaryImagePreview === "object") {
+      formData.append("images", ternaryImagePreview);
+    }
     const response = await fetch(
       `${import.meta.env.VITE_DEV === "true" ? "http://localhost:3000" : "https://fullstackapi.liamjorgensen.dev"}/api${"/gig"}`,
-      { method: "PUT", headers: header, body: body, credentials: "include" },
+      {
+        method: "PUT",
+        body: formData,
+        credentials: "include",
+      },
     );
     const data = await response.json();
     console.log(data);
