@@ -89,7 +89,9 @@ function OrderCard({
 
   // Which action buttons to show
   const showSellerConfirm =
-    showCompleteButton && isSeller && order.delivered === "In Progress";
+    showCompleteButton &&
+    isSeller &&
+    (order.delivered === "In Progress" || order.delivered === "Revision");
 
   const showBuyerActions =
     showCompleteButton && isBuyer && order.delivered === "Confirmed By Seller";
