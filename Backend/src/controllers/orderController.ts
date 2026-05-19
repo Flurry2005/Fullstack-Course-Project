@@ -60,6 +60,9 @@ class OrderController {
       await order.save();
       SocketHandler.emitToUser(order.buyerUsername, "order_update", {
         _id: orderId,
+        username: user.username,
+        orderName: order.gigname,
+        seller: user._id.toString() === order.sellerId.toString(),
         delivered: "Confirmed By Seller",
       });
       return res.status(200).json({ success: true, data: order });
@@ -104,6 +107,9 @@ class OrderController {
       await order.save();
       SocketHandler.emitToUser(order.sellerUsername, "order_update", {
         _id: orderId,
+        username: user.username,
+        orderName: order.gigname,
+        seller: user._id.toString() === order.sellerId.toString(),
         delivered: "Completed",
       });
       return res.status(200).json({ success: true, data: order });
@@ -140,6 +146,9 @@ class OrderController {
       await order.save();
       SocketHandler.emitToUser(order.sellerUsername, "order_update", {
         _id: orderId,
+        username: user.username,
+        orderName: order.gigname,
+        seller: user._id.toString() === order.sellerId.toString(),
         delivered: "Revision",
       });
       return res.status(200).json({ success: true, data: order });
@@ -179,6 +188,9 @@ class OrderController {
       await order.save();
       SocketHandler.emitToUser(order.sellerUsername, "order_update", {
         _id: orderId,
+        username: user.username,
+        orderName: order.gigname,
+        seller: user._id.toString() === order.sellerId.toString(),
         delivered: "Cancelled",
       });
       return res.status(200).json({ success: true, data: order });
