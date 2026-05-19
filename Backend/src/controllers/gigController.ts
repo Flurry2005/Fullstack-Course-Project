@@ -308,17 +308,22 @@ class GigController {
       });
 
       //@ts-ignore
-      const files = req.files as Express.Multer.File[];
+      const files = req.files as {
+        [fieldname: string]: Express.Multer.File[];
+      };
 
-      const uploadedImages: string[] = [];
+      const uploadedImages: Record<string, string> = {};
 
-      for (const file of files) {
+      for (const fieldName in files) {
+        const file = files[fieldName][0];
+
         const resultUpload: any = await uploadBuffer(
           file.buffer,
-          `${createdGig._id}-${files.indexOf(file) + 1}`,
+          `${createdGig._id}-${fieldName}`,
           "gigPreviewImages",
         );
-        uploadedImages.push(resultUpload.secure_url);
+
+        uploadedImages[fieldName] = resultUpload.secure_url;
       }
 
       await gigsModel.updateOne(
@@ -397,17 +402,22 @@ class GigController {
         premFeatures.length === 0 ? 0 : parsePrice(updatedGig.premium?.price);
 
       //@ts-ignore
-      const files = req.files as Express.Multer.File[];
+      const files = req.files as {
+        [fieldname: string]: Express.Multer.File[];
+      };
 
-      const uploadedImages: string[] = [];
+      const uploadedImages: Record<string, string> = {};
 
-      for (const file of files) {
+      for (const fieldName in files) {
+        const file = files[fieldName][0];
+
         const resultUpload: any = await uploadBuffer(
           file.buffer,
-          `${updatedGig._id}-${files.indexOf(file) + 1}`,
+          `${updatedGig._id}-${fieldName}`,
           "gigPreviewImages",
         );
-        uploadedImages.push(resultUpload.secure_url);
+
+        uploadedImages[fieldName] = resultUpload.secure_url;
       }
 
       const targetGig = await gigsModel.findOneAndUpdate(
@@ -445,18 +455,17 @@ class GigController {
               standardPrice,
               premiumPrice,
             ),
-            ...(uploadedImages[0] && {
-              primaryImagePreview: uploadedImages[0],
+            ...(uploadedImages.primaryImage && {
+              primaryImagePreview: uploadedImages.primaryImage,
             }),
 
-            ...(uploadedImages[1] && {
-              secondaryImagePreview: uploadedImages[1],
+            ...(uploadedImages.secondaryImage && {
+              secondaryImagePreview: uploadedImages.secondaryImage,
             }),
 
-            ...(uploadedImages[2] && {
-              ternaryImagePreview: uploadedImages[2],
+            ...(uploadedImages.ternaryImage && {
+              ternaryImagePreview: uploadedImages.ternaryImage,
             }),
-
             pending: true,
             paused: updatedGig.paused,
             updatedAt: new Date(),

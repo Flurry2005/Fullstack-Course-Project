@@ -26,30 +26,36 @@ function Confirm({
 
     formData.append("gig", JSON.stringify(gig));
 
-    if (primaryImagePreview && typeof primaryImagePreview === "object") {
-      formData.append("images", primaryImagePreview);
+    if (primaryImagePreview instanceof File) {
+      formData.append("primaryImage", primaryImagePreview);
     }
 
-    if (secondaryImagePreview && typeof secondaryImagePreview === "object") {
-      formData.append("images", secondaryImagePreview);
+    if (secondaryImagePreview instanceof File) {
+      formData.append("secondaryImage", secondaryImagePreview);
     }
 
-    if (ternaryImagePreview && typeof ternaryImagePreview === "object") {
-      formData.append("images", ternaryImagePreview);
+    if (ternaryImagePreview instanceof File) {
+      formData.append("ternaryImage", ternaryImagePreview);
     }
+
     const response = await fetch(
-      `${import.meta.env.VITE_DEV === "true" ? "http://localhost:3000" : "https://fullstackapi.liamjorgensen.dev"}/api${"/gig"}`,
+      `${
+        import.meta.env.VITE_DEV === "true"
+          ? "http://localhost:3000"
+          : "https://fullstackapi.liamjorgensen.dev"
+      }/api/gig`,
       {
         method: "PUT",
         body: formData,
         credentials: "include",
       },
     );
+
     const data = await response.json();
     console.log(data);
+
     getGig();
   };
-
   return (
     <div className="left-1/2 z-100 absolute flex justify-center items-center bg-[#f9f5ff]/50 p-6 rounded-2xl w-full md:w-[50vw] h-fit -translate-x-1/2">
       <div className="flex flex-col gap-6 bg-[#4F46E5] shadow-md p-6 border border-[#ACA8D7]/15 rounded-2xl w-full text-white">
