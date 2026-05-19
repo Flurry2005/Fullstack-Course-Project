@@ -1,14 +1,24 @@
 import React, { useEffect, useState } from "react";
 import NavBar from "../NavBar/NavBar";
-import { Calendar, UserSearch } from "lucide-react";
+import {
+  BanknoteArrowUp,
+  Calendar,
+  ClipboardList,
+  OctagonAlert,
+  User as UserSymbol,
+  Users,
+  UserSearch,
+} from "lucide-react";
 import QueueCard from "./queueCard";
 import type { User } from "../types/User";
 import type { Order } from "../types/Order";
+import { number } from "framer-motion";
 
 function AdminPage() {
   const [gigs, setGigs] = useState<Order[] | null>([]);
   const [users, setUsers] = useState<User[] | null>([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const [totalSales, setTotalSales] = useState<number>(0);
 
   function getTodaysDate() {
     return new Date().toLocaleDateString("en-US", {
@@ -55,6 +65,26 @@ function AdminPage() {
         console.error("Error fetching users:", error);
       }
     };
+    const fetchTotalSales = async () => {
+      try {
+        const response = await fetch(
+          "http://localhost:3000/api/admin/get-total-sales",
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            credentials: "include",
+          },
+        );
+        const data = await response.json();
+        setTotalSales(data.totalSales);
+        console.log("Total Sales:", data.totalSales);
+      } catch (error) {
+        console.error("Error fetching users:", error);
+      }
+    };
+    fetchTotalSales();
     fetchGigs();
     fetchUsers();
   }, []);
@@ -83,18 +113,33 @@ function AdminPage() {
           </header>
 
           <div className="flex justify-center shadow">
-            <div className="flex-col bg-white shadow m-10 rounded-2xl w-70 h-50">
-              <div className="flex justify-center items-center bg-blue-50 m-4 rounded-2xl w-15 h-15">
-                <img
-                  className="p-3 w-fit h-fit"
-                  src="/admin1.png"
-                  alt="money"
-                />
+            <div className="flex-col bg-white shadow m-10 p-4 rounded-2xl w-70 h-50">
+              <div className="flex justify-center items-center bg-[#0050D4]/10 rounded-2xl w-15 h-15">
+                <BanknoteArrowUp className="text-[#0050D4]" />
               </div>
+              <p className="mt-4 text-[#5A5781] text-xl">Total Sales</p>
+              <p className="mt-2 font-semibold text-[#2C2A51] text-3xl">
+                ${totalSales}
+              </p>
             </div>
-            <div className="bg-white shadow m-10 rounded-2xl w-70 h-50"></div>
-            <div className="bg-white shadow m-10 rounded-2xl w-70 h-50"></div>
-            <div className="bg-white shadow m-10 rounded-2xl w-70 h-50"></div>
+            <div className="bg-white shadow m-10 p-4 rounded-2xl w-70 h-50">
+              <div className="flex justify-center items-center bg-[#702AE1]/10 rounded-2xl w-15 h-15">
+                <ClipboardList className="text-[#702AE1]" />
+              </div>
+              <p className="mt-4 text-[#5A5781] text-xl">New Listnings</p>
+            </div>
+            <div className="bg-white shadow m-10 p-4 rounded-2xl w-70 h-50">
+              <div className="flex justify-center items-center bg-[#3d4c72]/10 rounded-2xl w-15 h-15">
+                <UserSymbol className="text-[#3d4c72]" />
+              </div>
+              <p className="mt-4 text-[#5A5781] text-xl">Total Users</p>
+            </div>
+            <div className="bg-white shadow m-10 p-4 rounded-2xl w-70 h-50">
+              <div className="flex justify-center items-center bg-[#00675E]/10 rounded-2xl w-15 h-15">
+                <Users className="text-[#00675E]" />
+              </div>
+              <p className="mt-4 text-[#5A5781] text-xl">Active Users</p>
+            </div>
           </div>
 
           <div className="flex gap-35 mt-10 w-full h-full">

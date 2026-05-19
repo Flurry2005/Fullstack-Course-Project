@@ -9,3 +9,6 @@ adminRouter.get("/get-gigs", async (req, res) => {
 adminRouter.get("/get-users", async (req, res) => {
   adminController.GetAllUsers(req, res);
 });
+adminRouter.get("/get-total-sales", async (req, res) => {
+  adminController.GetTotalSales(req, res);
+});
