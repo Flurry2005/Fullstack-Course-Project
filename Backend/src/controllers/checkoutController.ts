@@ -103,7 +103,7 @@ class CheckoutController {
       }
 
       const priceInCents = Math.round(price * 100);
-      const serviceFeeInCents = Math.round(priceInCents * 0.05);
+      const serviceFeeInCents = Math.round(priceInCents * 0.1);
       const serviceFee = serviceFeeInCents / 100;
       const totalPriceInCents = priceInCents + serviceFeeInCents;
 
