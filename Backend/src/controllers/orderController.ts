@@ -2,6 +2,7 @@ import Users from "../models/userModel.js";
 import Orders from "../models/orderModel.js";
 import { Request, Response, NextFunction } from "express";
 import orderModel from "../models/orderModel.js";
+import SocketHandler from "../socket/SocketHandler.js";
 
 class OrderController {
   async getOrders(req: Request, res: Response, next: NextFunction) {
@@ -49,7 +50,7 @@ class OrderController {
           error: "Only the seller can confirm this order",
         });
       }
-      if (order.delivered !== "In Progress") {
+      if (order.delivered !== "In Progress" && order.delivered !== "Revision") {
         return res.status(400).json({
           success: false,
           error: "Order cannot be confirmed at this stage",
@@ -57,7 +58,10 @@ class OrderController {
       }
       order.delivered = "Confirmed By Seller";
       await order.save();
-
+      SocketHandler.emitToUser(order.buyerUsername, "order_update", {
+        _id: orderId,
+        delivered: "Confirmed By Seller",
+      });
       return res.status(200).json({ success: true, data: order });
     } catch (error) {
       console.error("confirmBySeller error:", error);
@@ -98,7 +102,10 @@ class OrderController {
 
       order.delivered = "Completed";
       await order.save();
-
+      SocketHandler.emitToUser(order.buyerUsername, "order_update", {
+        _id: orderId,
+        delivered: "Completed",
+      });
       return res.status(200).json({ success: true, data: order });
     } catch (error) {}
   }
@@ -131,6 +138,10 @@ class OrderController {
 
       order.delivered = "Revision";
       await order.save();
+      SocketHandler.emitToUser(order.buyerUsername, "order_update", {
+        _id: orderId,
+        delivered: "Revision",
+      });
       return res.status(200).json({ success: true, data: order });
     } catch (error) {
       console.error("reviseOrder error: ", error);
@@ -166,6 +177,10 @@ class OrderController {
       }
       order.delivered = "Cancelled";
       await order.save();
+      SocketHandler.emitToUser(order.buyerUsername, "order_update", {
+        _id: orderId,
+        delivered: "Cancelled",
+      });
       return res.status(200).json({ success: true, data: order });
     } catch (error) {
       console.error("cancelOrder error: ", error);
