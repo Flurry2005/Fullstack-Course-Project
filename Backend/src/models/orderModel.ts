@@ -62,11 +62,17 @@ const orderSchema = new mongoose.Schema(
     },
 
     delivered: {
-      type: Boolean,
+      enum: [
+        "In Progress",
+        "Confirmed By Seller",
+        "Revision",
+        "Completed",
+        "Cancelled",
+      ],
+      type: String,
       required: true,
-      default: false,
+      default: "In Progress",
     },
-
     reviewed: {
       type: Boolean,
       required: true,
