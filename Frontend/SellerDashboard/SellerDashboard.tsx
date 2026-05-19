@@ -70,7 +70,9 @@ function SellerDashBoard() {
 
   useEffect(() => {
     if (gigs) {
-      gigs?.forEach((gig) => setViews(Object.keys(gig?.views ?? {}).length));
+      gigs?.forEach((gig) =>
+        setViews((prev) => prev + Object.keys(gig.views ?? {}).length),
+      );
     }
   }, [gigs]);
   useEffect(() => {
@@ -151,7 +153,7 @@ function SellerDashBoard() {
           </div>
           <div className="flex flex-col bg-white p-6 border-[#ACA8D7]/15 border-2 rounded-2xl w-full">
             <span className="text-[#5A5781]">Total Views</span>
-            <span className="font-semibold gap-1 flex items-center text-3xl">
+            <span className="flex items-center gap-1 font-semibold text-3xl">
               {views}
             </span>
           </div>
