@@ -12,6 +12,7 @@ export type User = {
   location?: string;
   languages?: ProfileLanguage[];
   skills?: string[];
+  role: "user" | "admin";
   online?: boolean;
 };
 

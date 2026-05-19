@@ -25,3 +25,27 @@ middleware.jwtTokenIsValid = (
     return res.status(403).json({ message: "Invalid token" });
   }
 };
+middleware.jwtTokenIsAdmin = (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  const token = req.cookies.token;
+
+  if (!token) {
+    return res.status(401).json({ message: "Missing token" });
+  }
+
+  try {
+    res.locals.jwt = JWTModel.verify(token);
+    if (res.locals.jwt.role !== "admin") {
+      return res.status(403).json({ message: "Access denied" });
+    }
+    next();
+  } catch (err: any) {
+    if (err.name === "TokenExpiredError") {
+      return res.status(401).json({ message: "Token expired" });
+    }
+    return res.status(403).json({ message: "Invalid token" });
+  }
+};

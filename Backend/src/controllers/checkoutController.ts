@@ -89,6 +89,7 @@ class CheckoutController {
           user.email,
           user._id,
           stripeCustomerId,
+          user.role,
         );
         const expiry = new Date(Date.now() + 1000 * 60 * 60);
         res.cookie("token", token, {
@@ -214,7 +215,6 @@ class CheckoutController {
       const deliveryTime = session.metadata?.deliveryTime ?? "1 Day";
       const gigPrice = Number(session.metadata?.gigPrice ?? 0);
       console.log(gigPrice);
-      
 
       const match = deliveryTime.match(/(\d+)\s*(Day|Days|Week|Weeks)/i);
       let totalDays = 1;
@@ -242,7 +242,7 @@ class CheckoutController {
         sellerUsername,
         delivered: "In Progress",
         reviewed: false,
-        total: gigPrice
+        total: gigPrice,
       });
 
       SocketHandler.emitToUser(sellerUsername!, "purchase_received", {

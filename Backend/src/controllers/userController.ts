@@ -32,6 +32,7 @@ class UserController {
         email,
         user._id,
         user.stripe_customer_id ?? null,
+        user.role,
       );
       const expiry = new Date(Date.now() + 1000 * 60 * 60);
       res.cookie("token", token, {
@@ -162,6 +163,7 @@ class UserController {
         location: "",
         languages: [],
         skills: [],
+        role: "user",
       });
 
       await Token.deleteOne({ _id: verificationToken._id });

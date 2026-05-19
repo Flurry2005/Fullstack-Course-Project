@@ -6,6 +6,7 @@ import { gigRouter as gigRouter } from "./gig.js";
 import { uploadRouter } from "./upload.js";
 import { jwtMiddleware } from "../middleware/jwtMiddleware.js";
 import { checkoutRouter } from "../routes/checkout.js";
+import { adminRouter } from "./admin.js";
 
 export const routerr = router();
 
@@ -18,3 +19,5 @@ routerr.use("/api", jwtMiddleware.jwtTokenIsValid, orderRouter);
 routerr.use("/api", jwtMiddleware.jwtTokenIsValid, uploadRouter);
 
 routerr.use("/api", jwtMiddleware.jwtTokenIsValid, checkoutRouter);
+
+routerr.use("/api/admin", jwtMiddleware.jwtTokenIsAdmin, adminRouter);
