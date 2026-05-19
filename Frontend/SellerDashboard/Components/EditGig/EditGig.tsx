@@ -1,10 +1,11 @@
 import Footer from "../../../Footer";
 import { useParams, Link } from "react-router-dom";
 import GoBackIcon from "../../../assets/go-back-arrow.svg";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { Gig } from "../../../types/Gig";
 import overViewIcon from "../../../assets/info-icon.svg";
 import packageIcon from "../../../assets/package-icon.svg";
+import removeImageicon from "../../../assets/x-icon.svg";
 import descIcon from "../../../assets/description-icon.svg";
 import EditButton from "./EditButton";
 import PackageBar from "./PackageBar";
@@ -51,6 +52,19 @@ function EditGig() {
   const [confirm, setConfirm] = useState(false);
   const [confirmConfirm, setConfirmConfirm] = useState(false);
   const [showCopied, setShowCopied] = useState(false);
+  const primaryImageRef = useRef<HTMLInputElement>(null);
+  const secondaryImageRef = useRef<HTMLInputElement>(null);
+  const ternaryImageRef = useRef<HTMLInputElement>(null);
+
+  const [primaryImagePreview, setPrimaryImagePreview] = useState<
+    File | null | string
+  >(null);
+  const [secondaryImagePreview, setSecondaryImagePreview] = useState<
+    File | null | string
+  >(null);
+  const [ternaryImagePreview, setTernaryImagePreview] = useState<
+    File | null | string
+  >(null);
 
   const copyLink = async () => {
     await navigator.clipboard.writeText(
@@ -71,7 +85,16 @@ function EditGig() {
       `${import.meta.env.VITE_DEV === "true" ? "http://localhost:3000" : "https://fullstackapi.liamjorgensen.dev"}/api${"/gig/edit/"}${gigId}`,
       { credentials: "include" },
     );
-    const data = await response.json();
+    const data = (await response.json()) as Gig;
+    setPrimaryImagePreview(
+      data.primaryImagePreview ? data.primaryImagePreview : null,
+    );
+    setSecondaryImagePreview(
+      data.secondaryImagePreview ? data.secondaryImagePreview : null,
+    );
+    setTernaryImagePreview(
+      data.ternaryImagePreview ? data.ternaryImagePreview : null,
+    );
     response.ok ? setGig(data) : navigate("/dashboard");
   };
 
@@ -116,6 +139,9 @@ function EditGig() {
         {confirmConfirm && gig && (
           <Confirm
             getGig={getGig}
+            primaryImagePreview={primaryImagePreview as File | null}
+            secondaryImagePreview={secondaryImagePreview as File | null}
+            ternaryImagePreview={ternaryImagePreview as File | null}
             gig={gig}
             setConfirm={setConfirm}
             setConfirmConfirm={setConfirmConfirm}
@@ -258,46 +284,183 @@ function EditGig() {
                   </div>
                 </div>
               </div>
+
+              {/* Change pictures */}
               <div className="flex flex-col bg-white shadow-md border-[#ACA8D7]/15 border-2 rounded-2xl">
                 <div className="flex flex-col gap-6 p-6">
                   <span className="flex items-center gap-3 text-[#131B2E] text-xl">
                     <img src={galleryIcon} className="w-10 h-10" />
                     Media gallery
                   </span>
+                  {/* Image 1*/}
                   <div className="md:flex justify-center gap-6 grid">
-                    <div className="flex justify-center items-center border-[#C7C4D8] border-2 border-dashed rounded-lg w-80 h-48">
-                      <div className="flex flex-col items-center">
+                    <div
+                      className={`relative flex flex-col justify-center items-center border-[#C7C4D8] border-2 border-dashed rounded-lg w-80 h-48 ${primaryImagePreview ? "" : "cursor-pointer"} `}
+                      onClick={() => {
+                        if (!primaryImagePreview)
+                          primaryImageRef.current!.click();
+                      }}
+                    >
+                      {primaryImagePreview && (
                         <img
-                          src={galleryIcon}
-                          className="grayscale-100 w-24 h-24"
+                          src={removeImageicon}
+                          className="top-3 right-3 z-10 absolute bg-transparent shadow-md invert-50 ml-auto rounded-full w-5 h-5 cursor-pointer contrast-100"
+                          onClick={() => {
+                            setPrimaryImagePreview(null);
+                            setConfirm(true);
+                          }}
                         />
-                        <span className="text-[#131B2E]">
-                          Primary Showcase Image
-                        </span>
-                        <span className="text-sm">Click to browse</span>
-                      </div>
+                      )}
+                      <input
+                        type="file"
+                        ref={primaryImageRef}
+                        id="SetImage"
+                        accept="image/*"
+                        className="hidden"
+                        onChange={(e) => {
+                          const file = e.target.files?.[0];
+                          if (file) {
+                            setPrimaryImagePreview(file);
+                            setConfirm(true);
+                          }
+                        }}
+                      />
+
+                      <img
+                        src={
+                          primaryImagePreview &&
+                          typeof primaryImagePreview === "object"
+                            ? URL.createObjectURL(primaryImagePreview)
+                            : typeof primaryImagePreview === "string"
+                              ? primaryImagePreview
+                              : galleryIcon
+                        }
+                        className={`grayscale-100 rounded-lg  object-cover ${primaryImagePreview ? "w-full h-full" : "w-24 h-24"} `}
+                      />
+                      <span
+                        className={`text-[#131B2E] ${primaryImagePreview ? "hidden" : "block"}`}
+                      >
+                        Primary Showcase Image
+                      </span>
+                      <label
+                        htmlFor="SetImage"
+                        className="text-[#464555] cursor-pointer"
+                      >
+                        {!primaryImagePreview && "Click to browse"}
+                      </label>
                     </div>
-                    <div className="flex justify-center items-center border-[#C7C4D8] border-2 border-dashed rounded-lg w-80 h-48">
-                      <div className="flex flex-col items-center">
+                    {/* Image 2*/}
+                    <div
+                      className={`relative flex flex-col justify-center items-center border-[#C7C4D8] border-2 border-dashed rounded-lg w-80 h-48 ${secondaryImagePreview ? "" : "cursor-pointer"} `}
+                      onClick={() => {
+                        if (!secondaryImagePreview) {
+                          secondaryImageRef.current!.click();
+                        }
+                      }}
+                    >
+                      {secondaryImagePreview && (
                         <img
-                          src={galleryIcon}
-                          className="grayscale-100 w-24 h-24"
+                          src={removeImageicon}
+                          className="top-3 right-3 z-10 absolute bg-transparent shadow-md invert-50 ml-auto rounded-full w-5 h-5 cursor-pointer contrast-100"
+                          onClick={() => {
+                            setSecondaryImagePreview(null);
+                            setConfirm(true);
+                          }}
                         />
-                        <span className="text-[#464555] text-sm cursor-pointer">
-                          Click to browse
-                        </span>
-                      </div>
+                      )}
+                      <input
+                        type="file"
+                        ref={secondaryImageRef}
+                        id="SetImage"
+                        accept="image/*"
+                        className="hidden"
+                        onChange={(e) => {
+                          const file = e.target.files?.[0];
+                          if (file) {
+                            setSecondaryImagePreview(file);
+                            setConfirm(true);
+                          }
+                        }}
+                      />
+
+                      <img
+                        src={
+                          secondaryImagePreview &&
+                          typeof secondaryImagePreview === "object"
+                            ? URL.createObjectURL(secondaryImagePreview)
+                            : typeof secondaryImagePreview === "string"
+                              ? secondaryImagePreview
+                              : galleryIcon
+                        }
+                        className={`grayscale-100 rounded-lg  object-cover ${secondaryImagePreview ? "w-full h-full" : "w-24 h-24"} `}
+                      />
+                      <span
+                        className={`text-[#131B2E] ${secondaryImagePreview ? "hidden" : "block"}`}
+                      >
+                        Secondary Showcase Image
+                      </span>
+                      <label
+                        htmlFor="SetImage"
+                        className="text-[#464555] cursor-pointer"
+                      >
+                        {!secondaryImagePreview && "Click to browse"}
+                      </label>
                     </div>
-                    <div className="flex justify-center items-center border-[#C7C4D8] border-2 border-dashed rounded-lg w-80 h-48">
-                      <div className="flex flex-col items-center">
+                    {/* Image 3*/}
+                    <div
+                      className={`relative flex flex-col justify-center items-center border-[#C7C4D8] border-2 border-dashed rounded-lg w-80 h-48 ${ternaryImagePreview ? "" : "cursor-pointer"} `}
+                      onClick={() => {
+                        if (!ternaryImagePreview)
+                          ternaryImageRef.current!.click();
+                      }}
+                    >
+                      {ternaryImagePreview && (
                         <img
-                          src={galleryIcon}
-                          className="grayscale-100 w-24 h-24"
+                          src={removeImageicon}
+                          className="top-3 right-3 z-10 absolute bg-transparent shadow-md invert-50 ml-auto rounded-full w-5 h-5 cursor-pointer contrast-100"
+                          onClick={() => {
+                            setTernaryImagePreview(null);
+                            setConfirm(true);
+                          }}
                         />
-                        <span className="text-[#464555] text-sm cursor-pointer">
-                          Click to browse
-                        </span>
-                      </div>
+                      )}
+                      <input
+                        type="file"
+                        ref={ternaryImageRef}
+                        id="SetImage"
+                        accept="image/*"
+                        className="hidden"
+                        onChange={(e) => {
+                          const file = e.target.files?.[0];
+                          if (file) {
+                            setTernaryImagePreview(file);
+                            setConfirm(true);
+                          }
+                        }}
+                      />
+
+                      <img
+                        src={
+                          ternaryImagePreview &&
+                          typeof ternaryImagePreview === "object"
+                            ? URL.createObjectURL(ternaryImagePreview)
+                            : typeof ternaryImagePreview === "string"
+                              ? ternaryImagePreview
+                              : galleryIcon
+                        }
+                        className={`grayscale-100 rounded-lg  object-cover ${ternaryImagePreview ? "w-full h-full" : "w-24 h-24"} `}
+                      />
+                      <span
+                        className={`text-[#131B2E] ${ternaryImagePreview ? "hidden" : "block"}`}
+                      >
+                        Third Showcase Image
+                      </span>
+                      <label
+                        htmlFor="SetImage"
+                        className="text-[#464555] cursor-pointer"
+                      >
+                        {!ternaryImagePreview && "Click to browse"}
+                      </label>
                     </div>
                   </div>
                 </div>
@@ -361,7 +524,7 @@ function EditGig() {
                     Advanced Options
                   </span>
                   <div
-                    className="flex gap-3 cursor-pointer text-[#131B2E]"
+                    className="flex gap-3 text-[#131B2E] cursor-pointer"
                     onClick={() => {
                       (setGig((prev) => {
                         if (!prev) return prev;
@@ -383,7 +546,7 @@ function EditGig() {
                   </div>
                   <div className="relative">
                     <div
-                      className="flex gap-3 cursor-pointer text-[#131B2E]"
+                      className="flex gap-3 text-[#131B2E] cursor-pointer"
                       onClick={copyLink}
                     >
                       <img src={shareIcon} className="w-8 h-8" />
@@ -391,11 +554,11 @@ function EditGig() {
                       <img src={nextIcon} className="ml-auto w-8 h-8" />
                     </div>
                     <span
-        className={`${showCopied ? "opacity-100 translate-y-0" : "pointer-events-none opacity-0 -translate-y-2"} font-semibold w-full absolute top-0 left-1/2 -translate-x-1/2 z-50 flex items-center gap-2 rounded-lg bg-[#d1dff9] p-3 text-[#4458f1] transition-all duration-300`}
-      >
-        <img src={checkIcon} className="w-5 h-5" alt="Success" />
-        Link copied to clipboard
-      </span>
+                      className={`${showCopied ? "opacity-100 translate-y-0" : "pointer-events-none opacity-0 -translate-y-2"} font-semibold w-full absolute top-0 left-1/2 -translate-x-1/2 z-50 flex items-center gap-2 rounded-lg bg-[#d1dff9] p-3 text-[#4458f1] transition-all duration-300`}
+                    >
+                      <img src={checkIcon} className="w-5 h-5" alt="Success" />
+                      Link copied to clipboard
+                    </span>
                   </div>
                   <div className="flex gap-3 border-t border-t-[#E2E7FF] text-[#131B2E]">
                     <div
