@@ -35,7 +35,13 @@ export type Gig = {
   premium?: Package;
   reviews?: Review[];
   pending?: boolean;
+  delivered?:
+    | "In Progress"
+    | "Confirmed By Seller"
+    | "Revision"
+    | "Completed"
+    | "Cancelled";
   paused?: boolean;
   updatedAt?: Date;
-  views?: Record<string, Date>
+  views?: Record<string, Date>;
 };
