@@ -579,7 +579,20 @@ class GigController {
     try {
       const gig = await gigsModel.findById(id);
       if (!gig)
-        res.status(404).json({ status: false, message: "No gig was found" });
+        return res
+          .status(404)
+          .json({ status: false, message: "No gig was found" });
+
+      if (
+        gig.reviews.some(
+          (review) => review.username === res.locals.jwt.username,
+        )
+      ) {
+        return res.status(400).json({
+          status: false,
+          message: "You have already reviewed this gig",
+        });
+      }
 
       const reviews = gig?.reviews || [];
       const avgRating =
