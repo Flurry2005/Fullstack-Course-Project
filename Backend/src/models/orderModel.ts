@@ -78,6 +78,10 @@ const orderSchema = new mongoose.Schema(
       required: true,
       default: false,
     },
+    total: {
+      type: Number,
+      required: true,
+    }
   },
   { timestamps: true },
 );

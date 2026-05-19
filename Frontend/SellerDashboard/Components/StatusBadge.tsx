@@ -52,7 +52,7 @@ function StatusBadge({ status }: StatusBadgeProps) {
 
   return (
     <div
-      className={`${status ? statusData.classes : "text-[#3a3838] bg-[#7B9CFF]"} font-semibold flex items-center gap-0.5  shadow-md h-fit w-fit text-[.7rem] rounded-sm px-2 p-1 `}
+      className={`${status ? statusData.classes : "text-[#3a3838] bg-[#7B9CFF]"} font-semibold flex items-center gap-1  shadow-md h-fit w-fit text-[.7rem] rounded-sm px-2 p-1 `}
     >
       {statusData?.icon}
       {status ? statusData.label : "Unknown"}

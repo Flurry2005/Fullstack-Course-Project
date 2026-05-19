@@ -23,6 +23,7 @@ function SellerDashBoard() {
   const [gigs, setGigs] = useState<Gig[]>();
   const [gigsLoaded, setGigsLoaded] = useState(false);
   const timeOfDay = new Date().getHours();
+  const [totalEarnings, setTotalEarnings] = useState(0);
   const [views, setViews] = useState(0);
   const [profilePictures, setProfilePictures] = useState<
     Record<string, string>
@@ -68,13 +69,6 @@ function SellerDashBoard() {
     setGigsLoaded(true);
   };
 
-  useEffect(() => {
-    if (gigs) {
-      gigs?.forEach((gig) =>
-        setViews((prev) => prev + Object.keys(gig.views ?? {}).length),
-      );
-    }
-  }, [gigs]);
   useEffect(() => {
     if (!user?.username) return;
     getGigs();
@@ -125,12 +119,33 @@ function SellerDashBoard() {
         <section className="gap-6 grid grid-cols-1 md:grid-cols-4">
           <div className="flex flex-col bg-white p-6 border-[#ACA8D7]/15 border-2 rounded-2xl w-full">
             <span className="text-[#5A5781]">Total Earnings</span>
-            <span className="font-semibold text-3xl">$12,840</span>
+            <span className="font-semibold text-3xl">
+              $
+              {Array.isArray(orders)
+                ? orders
+                    .filter(
+                      (o) =>
+                        o.sellerUsername === user?.username &&
+                        o.delivered === "Completed",
+                    )
+                    .reduce((sum, o) => sum + Number(o.total ?? 0), 0)
+                : 0}
+            </span>
           </div>
           <div className="flex flex-col bg-white p-6 border-[#ACA8D7]/15 border-2 rounded-2xl w-full">
             <span className="text-[#5A5781]">Pending Clearance</span>
             <span className="font-semibold text-[#0050D4] text-3xl">
-              $1,250
+              $
+              {Array.isArray(orders)
+                ? orders
+                    .filter(
+                      (o) =>
+                        o.sellerUsername === user?.username &&
+                        o.delivered !== "Completed" &&
+                        o.delivered !== "Cancelled",
+                    )
+                    .reduce((sum, o) => sum + Number(o.total ?? 0), 0)
+                : 0}
             </span>
           </div>
           <div className="flex flex-col bg-white p-6 border-[#ACA8D7]/15 border-2 rounded-2xl w-full">
@@ -154,7 +169,10 @@ function SellerDashBoard() {
           <div className="flex flex-col bg-white p-6 border-[#ACA8D7]/15 border-2 rounded-2xl w-full">
             <span className="text-[#5A5781]">Total Views</span>
             <span className="flex items-center gap-1 font-semibold text-3xl">
-              {views}
+              {(gigs ?? []).reduce(
+                (sum, gig) => sum + Object.keys(gig.views ?? {}).length,
+                0,
+              )}
             </span>
           </div>
         </section>
@@ -167,7 +185,9 @@ function SellerDashBoard() {
               <span className="mr-3 ml-auto text-[#0050D4] text-xl cursor-pointer">
                 {/* Show all orders if orders > 2 */}
                 {(orders?.filter(
-                  (order) => order.sellerUsername === user?.username,
+                  (order) =>
+                    order.sellerUsername === user?.username &&
+                    order.delivered !== "Completed" && order.delivered !== "Cancelled",
                 ).length ?? 0) > 2 && (
                   <span
                     onClick={() =>
@@ -175,7 +195,8 @@ function SellerDashBoard() {
                         ? setMaxOrders(
                             orders?.filter(
                               (order) =>
-                                order.sellerUsername === user?.username,
+                                order.sellerUsername === user?.username &&
+                                order.delivered !== "Completed" && order.delivered !== "Cancelled",
                             ).length ?? 0,
                           )
                         : setMaxOrders(2)
@@ -185,7 +206,9 @@ function SellerDashBoard() {
                     {maxOrders === 2
                       ? " (" +
                         orders?.filter(
-                          (order) => order.sellerUsername === user?.username,
+                          (order) =>
+                            order.sellerUsername === user?.username &&
+                            order.delivered !== "Completed" && order.delivered !== "Cancelled",
                         ).length +
                         ")"
                       : ""}
@@ -195,7 +218,11 @@ function SellerDashBoard() {
             </div>
             <div className="gap-6 grid grid-cols-1 md:grid-cols-2">
               {orders
-                ?.filter((order) => order.sellerUsername === user?.username)
+                ?.filter(
+                  (order) =>
+                    order.sellerUsername === user?.username &&
+                    order.delivered !== "Completed",
+                )
                 .slice(0, maxOrders)
                 ?.map((order) => (
                   <OrderCard
@@ -319,7 +346,10 @@ function SellerDashBoard() {
                   title={gig?.title}
                   views={Object.keys(gig?.views ?? {}).length}
                   checkouts={
-                    orders?.filter((e) => e.gigId === gig?._id).length ?? 0
+                    orders?.filter(
+                      (e) =>
+                        e.gigId === gig?._id && e.delivered === "Completed",
+                    ).length ?? 0
                   }
                   price={gig?.basic?.price}
                   rating={gig.rating?.toFixed(1).toString() || "0.0"}

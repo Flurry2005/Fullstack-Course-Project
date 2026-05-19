@@ -36,4 +36,5 @@ export type Gig = {
   paused?: boolean;
   rating?: Number;
   reviews?: Review[];
+  total?: Number;
 };
