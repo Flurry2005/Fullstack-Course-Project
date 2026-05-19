@@ -13,6 +13,7 @@ export type Order = {
   chathistory: Message[];
   createdAt: Date;
   updatedAt: Date;
+  total: number
 };
 
 export type Message = {

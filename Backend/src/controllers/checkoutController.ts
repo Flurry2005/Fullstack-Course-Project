@@ -212,6 +212,9 @@ class CheckoutController {
       const tier: Tier = session.metadata?.tier.toLowerCase() as Tier;
       const gigname = session.metadata?.gigname;
       const deliveryTime = session.metadata?.deliveryTime ?? "1 Day";
+      const gigPrice = Number(session.metadata?.gigPrice ?? 0);
+      console.log(gigPrice);
+      
 
       const match = deliveryTime.match(/(\d+)\s*(Day|Days|Week|Weeks)/i);
       let totalDays = 1;
@@ -239,6 +242,7 @@ class CheckoutController {
         sellerUsername,
         delivered: "In Progress",
         reviewed: false,
+        total: gigPrice
       });
 
       SocketHandler.emitToUser(sellerUsername!, "purchase_received", {
