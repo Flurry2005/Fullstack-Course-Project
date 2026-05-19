@@ -102,7 +102,7 @@ class OrderController {
 
       order.delivered = "Completed";
       await order.save();
-      SocketHandler.emitToUser(order.buyerUsername, "order_update", {
+      SocketHandler.emitToUser(order.sellerUsername, "order_update", {
         _id: orderId,
         delivered: "Completed",
       });
@@ -138,7 +138,7 @@ class OrderController {
 
       order.delivered = "Revision";
       await order.save();
-      SocketHandler.emitToUser(order.buyerUsername, "order_update", {
+      SocketHandler.emitToUser(order.sellerUsername, "order_update", {
         _id: orderId,
         delivered: "Revision",
       });
@@ -177,7 +177,7 @@ class OrderController {
       }
       order.delivered = "Cancelled";
       await order.save();
-      SocketHandler.emitToUser(order.buyerUsername, "order_update", {
+      SocketHandler.emitToUser(order.sellerUsername, "order_update", {
         _id: orderId,
         delivered: "Cancelled",
       });
