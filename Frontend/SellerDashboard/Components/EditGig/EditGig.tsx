@@ -301,7 +301,7 @@ function EditGig() {
                   {/* Image 1*/}
                   <div className="md:flex justify-center gap-6 grid">
                     <div
-                      className={`relative flex flex-col justify-center items-center border-[#C7C4D8] border-2 border-dashed rounded-lg w-48 md:w-full  ${primaryImagePreview ? "" : "cursor-pointer"} `}
+                      className={`relative flex flex-col justify-center items-center border-[#C7C4D8] border-2 border-dashed rounded-lg w-48 h-48 md:w-full  ${primaryImagePreview ? "" : "cursor-pointer"} `}
                       onClick={() => {
                         if (!primaryImagePreview)
                           primaryImageRef.current!.click();
