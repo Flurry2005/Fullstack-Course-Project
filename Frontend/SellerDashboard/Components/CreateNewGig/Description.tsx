@@ -1,11 +1,11 @@
 import defaultImageIcon from "../../../assets/image-regular-icon.svg";
-import me from "../../../assets/me.jpeg";
 import removeImageicon from "../../../assets/x-icon.svg";
 import { useState, useRef } from "react";
 import checkIcon from "../../../assets/circle-check-req-icon.svg";
 import infoIcon from "../../../assets/info-icon.svg";
 import type { Gig as NewGig } from "../../../types/Gig";
 import { useAuth } from "../../../Context/useAuth";
+import { DEFAULT_PROFILE_IMAGE } from "../../../ProfilePage/profileUtils";
 
 type DescriptionProps = {
   setDescription: (description: string) => void;
@@ -280,7 +280,11 @@ function Description({
             <div className="flex flex-col gap-3 p-6 text-[#131B2E]">
               <div className="flex items-center gap-3">
                 <img
-                  src={me}
+                  src={user?.profilePictureUrl || DEFAULT_PROFILE_IMAGE}
+                  onError={(e) => {
+                    e.currentTarget.src = DEFAULT_PROFILE_IMAGE;
+                  }}
+                  alt={user?.username ? `${user.username} profile` : "Profile"}
                   className="border-[#1857f7] border-2 rounded-full w-9 h-9 object-cover"
                 />
                 <div className="flex flex-col">
