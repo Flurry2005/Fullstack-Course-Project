@@ -143,12 +143,13 @@ function PackageBar({
 
         <button
           disabled={name === "Basic"}
-          className={`${name === "Basic" ? "hidden" : ""} ml-auto w-fit cursor-pointer py-3 rounded-lg font-semibold  border border-neutral-500/15 text-white bg-red-400 px-6 flex items-center gap-1`}
+          className={`${name === "Basic" ? "hidden" : ""}mt-12 ml-auto w-fit cursor-pointer py-3 rounded-lg font-semibold  border border-neutral-500/15 text-white bg-red-400 px-6 flex items-center gap-1`}
           onClick={() => {
             (setFeatures([]), setToggle(false));
           }}
         >
           <img src={deleteIcon} className="w-6 h-6" />
+          Remove Plan
         </button>
       </div>
     </div>

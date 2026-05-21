@@ -22,7 +22,7 @@ function Delete({ gig, setDeleteState, getGig }: OverviewProps) {
   };
   return (
     <div
-      className={`z-100 md:w-[50vw] w-full h-fit left-1/2 -translate-x-1/2 absolute  border border-[#ACA8D7]/15 bg-[#f9f5ff]/50 p-6 rounded-2xl`}
+      className={`z-100 md:w-[25vw] w-full h-fit left-1/2 -translate-x-1/2 md:absolute fixed border border-[#ACA8D7]/15 bg-[#f9f5ff]/50 p-6 rounded-2xl`}
     >
       <div className="flex flex-col gap-6">
         <div className="flex flex-col gap-6 bg-red-400 shadow-md p-6 rounded-2xl text-white">
@@ -32,7 +32,7 @@ function Delete({ gig, setDeleteState, getGig }: OverviewProps) {
               <h3 className="font-bold text-xl">Delete Gig</h3>
             </span>
             <p>Warning! This action cannot be undone.</p>
-            <span className="flex md:justify-between justify-center gap-12 flex-wrap mt-6">
+            <span className="flex md:justify-between justify-center gap-10 flex-wrap mt-6">
               <span
                 className=""
                 onClick={() => {

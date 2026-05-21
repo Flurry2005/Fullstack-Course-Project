@@ -26,14 +26,14 @@ function QuoteButton() {
       hover: cursor-pointer hover:bg-[#0050D4]/30"
       >
         <img src={copyLinkIcon} className="w-5 h-5" />
-        Copy link
+        Copy Link
       </button>
 
       <span
         className={`${showCopied ? "opacity-100 translate-y-0" : "pointer-events-none opacity-0 -translate-y-2"} font-semibold w-full absolute top-0 left-1/2 -translate-x-1/2 z-50 flex items-center gap-2 rounded-lg bg-[#d1dff9] p-3 text-[#4458f1] transition-all duration-300`}
       >
         <img src={checkIcon} className="w-5 h-5" alt="Success" />
-        Link copied to clipboard
+        Link Copied to Clipboard
       </span>
     </div>
   );

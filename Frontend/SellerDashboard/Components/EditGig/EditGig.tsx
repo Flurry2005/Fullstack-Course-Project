@@ -126,13 +126,6 @@ function EditGig() {
             <img src={GoBackIcon} className="w-10 h-14 cursor-pointer" />
           </Link>
           <h2 className="p-6 font-semibold text-3xl">Gig Details</h2>
-          <button
-            className={`${confirm ? "opacity-100" : "opacity-25"} ml-auto cursor-pointer py-3 rounded-lg font-semibold text-white bg-linear-to-r from-[#4F46E5] to-[#4e46e5c2] px-6`}
-            disabled={!confirm}
-            onClick={() => setConfirmConfirm(true)}
-          >
-            Save changes
-          </button>
         </div>
       </div>
       <div className="relative">
@@ -210,15 +203,15 @@ function EditGig() {
                 <div className="flex items-center border-b border-b-[#E2E7FF] w-full">
                   <div className="flex flex-wrap items-center gap-6 p-6 w-full">
                     <div className="flex gap-3">
-                    <div className="flex justify-center items-center bg-[#E2E7FF] rounded-2xl w-16 h-16">
-                      <img src={overViewIcon} className="w-8 h-8" />
-                    </div>
-                    <div className="flex flex-col">
-                      <span className="text-[#131B2E] text-xl">Overview</span>
-                      <span className="text-[#464555]">
-                        Title, Category, Search Tags
-                      </span>
-                    </div>
+                      <div className="flex justify-center items-center bg-[#E2E7FF] rounded-2xl w-16 h-16">
+                        <img src={overViewIcon} className="w-8 h-8" />
+                      </div>
+                      <div className="flex flex-col">
+                        <span className="text-[#131B2E] text-xl">Overview</span>
+                        <span className="text-[#464555]">
+                          Title, Category, Search Tags
+                        </span>
+                      </div>
                     </div>
                     <span
                       className="ml-auto"
@@ -227,6 +220,7 @@ function EditGig() {
                           e.preventDefault(),
                           setOverview(true),
                           setEditState(true));
+                        window.scrollTo({ top: 0, behavior: "smooth" });
                       }}
                     >
                       <EditButton />
@@ -237,17 +231,17 @@ function EditGig() {
                 <div className="flex items-center border-b border-b-[#E2E7FF] w-full">
                   <div className="flex flex-wrap items-center gap-6 p-6 w-full">
                     <div className="flex gap-3">
-                    <div className="flex justify-center items-center bg-[#E2E7FF] rounded-2xl w-16 h-16">
-                      <img src={packageIcon} className="w-8 h-8" />
-                    </div>
-                    <div className="flex flex-col">
-                      <span className="text-[#131B2E] text-xl">
-                        Pricing & Packages
-                      </span>
-                      <span className="text-[#464555]">
-                        3-tier pricing strategy defined
-                      </span>
-                    </div>
+                      <div className="flex justify-center items-center bg-[#E2E7FF] rounded-2xl w-16 h-16">
+                        <img src={packageIcon} className="w-8 h-8" />
+                      </div>
+                      <div className="flex flex-col">
+                        <span className="text-[#131B2E] text-xl">
+                          Pricing & Packages
+                        </span>
+                        <span className="text-[#464555]">
+                          3-tier pricing strategy defined
+                        </span>
+                      </div>
                     </div>
                     <span
                       className="ml-auto"
@@ -256,6 +250,7 @@ function EditGig() {
                           e.preventDefault(),
                           setPricing(true),
                           setEditState(true));
+                        window.scrollTo({ top: 0, behavior: "smooth" });
                       }}
                     >
                       <EditButton />
@@ -265,16 +260,16 @@ function EditGig() {
 
                 <div className="flex items-center w-full">
                   <div className="flex flex-wrap items-center gap-6 p-6 w-full">
-                          <div className="flex gap-3">
-                    <div className="flex justify-center items-center bg-[#E2E7FF] rounded-2xl w-16 h-16">
-                      <img src={descIcon} className="w-8 h-8" />
-                    </div>
-                    <div className="flex flex-col">
-                      <span className="text-[#131B2E] text-xl">
-                        Description
-                      </span>
-                      <span className="text-[#464555]">Detailed brief</span>
-                    </div>
+                    <div className="flex gap-3">
+                      <div className="flex justify-center items-center bg-[#E2E7FF] rounded-2xl w-16 h-16">
+                        <img src={descIcon} className="w-8 h-8" />
+                      </div>
+                      <div className="flex flex-col">
+                        <span className="text-[#131B2E] text-xl">
+                          Description
+                        </span>
+                        <span className="text-[#464555]">Detailed brief</span>
+                      </div>
                     </div>
                     <span
                       className="ml-auto"
@@ -283,6 +278,7 @@ function EditGig() {
                           e.preventDefault(),
                           setDesc(true),
                           setEditState(true));
+                        window.scrollTo({ top: 0, behavior: "smooth" });
                       }}
                     >
                       <EditButton />
@@ -299,9 +295,9 @@ function EditGig() {
                     Media gallery
                   </span>
                   {/* Image 1*/}
-                  <div className="md:flex justify-center gap-6 grid">
+                  <div className="grid justify-center gap-6 md:grid-cols-3 grid-cols-1">
                     <div
-                      className={`relative flex flex-col justify-center items-center border-[#C7C4D8] border-2 border-dashed rounded-lg w-48 h-48 md:w-full  ${primaryImagePreview ? "" : "cursor-pointer"} `}
+                      className={`relative flex flex-col justify-center items-center border-[#C7C4D8] border-2 border-dashed rounded-lg  w-full h-52 ${primaryImagePreview ? "" : "cursor-pointer"} `}
                       onClick={() => {
                         if (!primaryImagePreview)
                           primaryImageRef.current!.click();
@@ -341,7 +337,7 @@ function EditGig() {
                               ? primaryImagePreview
                               : galleryIcon
                         }
-                        className={` rounded-lg  object-cover ${primaryImagePreview ? "w-full h-full" : "w-24 h-24"} `}
+                        className={` rounded-lg  object-fill ${primaryImagePreview ? "w-full h-full" : "w-24 h-24"} `}
                       />
                       <span
                         className={`text-[#131B2E] ${primaryImagePreview ? "hidden" : "block"}`}
@@ -357,7 +353,7 @@ function EditGig() {
                     </div>
                     {/* Image 2*/}
                     <div
-                      className={`relative flex flex-col justify-center items-center border-[#C7C4D8] border-2 border-dashed rounded-lg w-48 md:w-full mx-auto h-48 ${secondaryImagePreview ? "" : "cursor-pointer"} `}
+                      className={`relative flex flex-col justify-center items-center border-[#C7C4D8] border-2 border-dashed rounded-lg w-full h-52 mx-auto ${secondaryImagePreview ? "" : "cursor-pointer"} `}
                       onClick={() => {
                         if (!secondaryImagePreview) {
                           secondaryImageRef.current!.click();
@@ -398,7 +394,7 @@ function EditGig() {
                               ? secondaryImagePreview
                               : galleryIcon
                         }
-                        className={`rounded-lg  object-cover ${secondaryImagePreview ? "w-full h-full" : "w-24 h-24"} `}
+                        className={`rounded-lg  object-fill ${secondaryImagePreview ? "w-full h-full" : "w-24 h-24"} `}
                       />
                       <span
                         className={`text-[#131B2E] text-center ${secondaryImagePreview ? "hidden" : "block"}`}
@@ -414,7 +410,7 @@ function EditGig() {
                     </div>
                     {/* Image 3*/}
                     <div
-                      className={`relative flex flex-col justify-center items-center border-[#C7C4D8] border-2 border-dashed rounded-lg w-48 md:w-full h-48 ${ternaryImagePreview ? "" : "cursor-pointer"} `}
+                      className={`relative flex flex-col justify-center items-center border-[#C7C4D8] border-2 border-dashed rounded-lg  w-full h-52 ${ternaryImagePreview ? "" : "cursor-pointer"} `}
                       onClick={() => {
                         if (!ternaryImagePreview)
                           ternaryImageRef.current!.click();
@@ -454,7 +450,7 @@ function EditGig() {
                               ? ternaryImagePreview
                               : galleryIcon
                         }
-                        className={`rounded-lg  object-cover ${ternaryImagePreview ? "w-full h-full" : "w-24 h-24"} `}
+                        className={`object-fill rounded-lg ${ternaryImagePreview ? "w-full h-full" : "w-24 h-24"} `}
                       />
                       <span
                         className={`text-[#131B2E] ${ternaryImagePreview ? "hidden" : "block"}`}
@@ -530,15 +526,13 @@ function EditGig() {
                     Advanced Options
                   </span>
                   <div
-                    className="flex gap-3 text-[#131B2E] cursor-pointer"
+                    className={`${gig?.pending ? "opacity-25" : ""} flex gap-3 text-[#131B2E] cursor-pointer`}
                     onClick={() => {
-                      (setGig((prev) => {
-                        if (!prev) return prev;
-                        return gig?.paused
-                          ? { ...prev, paused: false }
-                          : { ...prev, paused: true };
-                      }),
-                        setConfirm(true));
+                      setGig((prev) => {
+                        if (!prev || prev.pending) return prev;
+                        setConfirm(true);
+                        return { ...prev, paused: !prev.paused };
+                      });
                     }}
                   >
                     <img
@@ -550,12 +544,12 @@ function EditGig() {
                     </span>
                     <img src={nextIcon} className="ml-auto w-8 h-8" />
                   </div>
-                  <div className="relative">
+                  <div className={`${gig?.pending ? "opacity-25" : ""} relative`}>
                     <div
                       className="flex gap-3 text-[#131B2E] cursor-pointer"
-                      onClick={copyLink}
+                      onClick={() => { if (!gig?.pending) copyLink }}
                     >
-                      <img src={shareIcon} className="w-8 h-8" />
+                      <img src={shareIcon} className="w-8 h-8" />Ö
                       <span className="text-xl">Share Link</span>
                       <img src={nextIcon} className="ml-auto w-8 h-8" />
                     </div>
@@ -563,12 +557,15 @@ function EditGig() {
                       className={`${showCopied ? "opacity-100 translate-y-0" : "pointer-events-none opacity-0 -translate-y-2"} font-semibold w-full absolute top-0 left-1/2 -translate-x-1/2 z-50 flex items-center gap-2 rounded-lg bg-[#d1dff9] p-3 text-[#4458f1] transition-all duration-300`}
                     >
                       <img src={checkIcon} className="w-5 h-5" alt="Success" />
-                      Link copied to clipboard
+                      Link Copied to Clipboard
                     </span>
                   </div>
                   <div className="flex gap-3 border-t border-t-[#E2E7FF] text-[#131B2E]">
                     <div
-                      onClick={() => setDeleteState(true)}
+                      onClick={() => {
+                        (setDeleteState(true),
+                          window.scrollTo({ top: 0, behavior: "smooth" }));
+                      }}
                       className="flex gap-3 mt-6 cursor-pointer"
                     >
                       <img src={deleteIcon} className="w-8 h-8" />
@@ -579,6 +576,16 @@ function EditGig() {
               </div>
             </div>
           </div>
+          <button
+            className={`${confirm ? "opacity-100" : "opacity-25"} ml-auto cursor-pointer py-3 rounded-lg font-semibold text-white bg-linear-to-r from-[#4F46E5] to-[#4e46e5c2] px-6`}
+            disabled={!confirm}
+            onClick={() => {
+              (setConfirmConfirm(true),
+                window.scrollTo({ top: 0, behavior: "smooth" }));
+            }}
+          >
+            Save changes
+          </button>
         </main>
         <Footer />
       </div>

@@ -5,7 +5,7 @@ function Footer() {
   return (
     <footer className="z-50 flex justify-between items-center mx-auto px-6 w-full h-28 container">
       <p className="text-gray-600 max-sm:text-xs">© 2026 ProjetName.</p>
-      <div className="flex gap-8 text-2xl cursor-pointer">
+      <div className="flex md:gap-8 gap-3 text-2xl cursor-pointer">
         <p
           onClick={() => {
             navigate("/about");
