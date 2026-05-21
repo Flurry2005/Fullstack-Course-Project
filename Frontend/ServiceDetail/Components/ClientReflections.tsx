@@ -74,7 +74,7 @@ function ClientReflections({
               </div>
             </div>
             <p
-              className={`break-words text-[#5A5781] ${isExpanded
+              className={`wrap-anywhere text-[#5A5781] ${isExpanded
                   ? ""
                   : "overflow-hidden"
                 }`}

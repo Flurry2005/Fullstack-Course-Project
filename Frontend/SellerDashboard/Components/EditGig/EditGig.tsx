@@ -549,7 +549,7 @@ function EditGig() {
                       className="flex gap-3 text-[#131B2E] cursor-pointer"
                       onClick={() => { if (!gig?.pending) copyLink }}
                     >
-                      <img src={shareIcon} className="w-8 h-8" />
+                      <img src={shareIcon} className="w-8 h-8" />Ö
                       <span className="text-xl">Share Link</span>
                       <img src={nextIcon} className="ml-auto w-8 h-8" />
                     </div>

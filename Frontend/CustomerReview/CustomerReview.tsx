@@ -91,8 +91,11 @@ function CustomerReview() {
         </Link>
         <h2 className="p-6 font-semibold text-3xl">Review </h2>
       </div>
-      <div className="bg-[#FAF8FF]">
-        <div className="flex flex-col gap-3 px-3 py-12 text-center">
+
+      
+      <div className="bg-[#FAF8FF] flex flex-col gap-3 py-6">
+       
+        <div className="flex flex-col gap-3 text-center">
           <h2 className="text-4xl">
             {success ? "Thank You" : "Review Your Experience"}
           </h2>
@@ -102,7 +105,8 @@ function CustomerReview() {
               : "A quick review helps both buyers and sellers grow."}
           </p>
         </div>
-        <div className="mx-auto ld:w-1/3 md:w-1/2 h-screen">
+
+        <div className="mx-auto md:w-1/2">
           <div className="flex flex-col gap-6 p-6 w-full">
             <div className="flex flex-col bg-white shadow-md/5 px-12 border border-[#E2E8F0] rounded-2xl w-full">
               <div className="flex flex-wrap items-center gap-6 py-6 w-full">
@@ -150,8 +154,10 @@ and if the seller met your expectations..."
             </button>
           </div>
         </div>
+        </div>
+      
         <Footer />
-      </div>
+      
     </>
   );
 }
