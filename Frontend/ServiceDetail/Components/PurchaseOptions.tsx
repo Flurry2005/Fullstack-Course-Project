@@ -96,7 +96,7 @@ function PurchaseOptions({ options = {}, gigId }: PurchaseOptionsProps) {
 
       <div className="flex flex-col gap-3 bg-[#0050D4]/5 p-6 rounded-2xl">
         <span className="place-self-center text-[#0050D4]">
-          Share this gig?
+          Share This Gig
         </span>
         <QuoteButton />
       </div>
