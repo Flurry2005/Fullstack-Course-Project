@@ -380,7 +380,7 @@ function SellerDashBoard() {
       </div>
       {toggleStatViews && (
         <div
-          className={`z-100 md:w-[50vw] w-full h-fit left-1/2 -translate-x-1/2 absolute border top-[20vh] border-[#ACA8D7]/15 p-6 bg-[#f9f5ff]/50  rounded-2xl`}
+          className={`z-100 md:w-[50vw] w-full h-fit left-1/2 -translate-x-1/2 fixed border top-[20vh] border-[#ACA8D7]/15 p-6 bg-[#f9f5ff]/50  rounded-2xl`}
         >
           <div className="flex mb-3">
                <span onClick={() => setToggleStatViews(false)} className="bg-linear-to-r from-[#4F46E5] to-[#4e46e5c2] rounded-lg px-3 py-1 ml-auto flex cursor-pointer text-white font-semibold">Close</span>

@@ -203,15 +203,15 @@ function EditGig() {
                 <div className="flex items-center border-b border-b-[#E2E7FF] w-full">
                   <div className="flex flex-wrap items-center gap-6 p-6 w-full">
                     <div className="flex gap-3">
-                    <div className="flex justify-center items-center bg-[#E2E7FF] rounded-2xl w-16 h-16">
-                      <img src={overViewIcon} className="w-8 h-8" />
-                    </div>
-                    <div className="flex flex-col">
-                      <span className="text-[#131B2E] text-xl">Overview</span>
-                      <span className="text-[#464555]">
-                        Title, Category, Search Tags
-                      </span>
-                    </div>
+                      <div className="flex justify-center items-center bg-[#E2E7FF] rounded-2xl w-16 h-16">
+                        <img src={overViewIcon} className="w-8 h-8" />
+                      </div>
+                      <div className="flex flex-col">
+                        <span className="text-[#131B2E] text-xl">Overview</span>
+                        <span className="text-[#464555]">
+                          Title, Category, Search Tags
+                        </span>
+                      </div>
                     </div>
                     <span
                       className="ml-auto"
@@ -220,7 +220,7 @@ function EditGig() {
                           e.preventDefault(),
                           setOverview(true),
                           setEditState(true));
-                          window.scrollTo({top: 0, behavior:"smooth"})
+                        window.scrollTo({ top: 0, behavior: "smooth" });
                       }}
                     >
                       <EditButton />
@@ -231,17 +231,17 @@ function EditGig() {
                 <div className="flex items-center border-b border-b-[#E2E7FF] w-full">
                   <div className="flex flex-wrap items-center gap-6 p-6 w-full">
                     <div className="flex gap-3">
-                    <div className="flex justify-center items-center bg-[#E2E7FF] rounded-2xl w-16 h-16">
-                      <img src={packageIcon} className="w-8 h-8" />
-                    </div>
-                    <div className="flex flex-col">
-                      <span className="text-[#131B2E] text-xl">
-                        Pricing & Packages
-                      </span>
-                      <span className="text-[#464555]">
-                        3-tier pricing strategy defined
-                      </span>
-                    </div>
+                      <div className="flex justify-center items-center bg-[#E2E7FF] rounded-2xl w-16 h-16">
+                        <img src={packageIcon} className="w-8 h-8" />
+                      </div>
+                      <div className="flex flex-col">
+                        <span className="text-[#131B2E] text-xl">
+                          Pricing & Packages
+                        </span>
+                        <span className="text-[#464555]">
+                          3-tier pricing strategy defined
+                        </span>
+                      </div>
                     </div>
                     <span
                       className="ml-auto"
@@ -250,7 +250,7 @@ function EditGig() {
                           e.preventDefault(),
                           setPricing(true),
                           setEditState(true));
-                              window.scrollTo({top: 0, behavior:"smooth"})
+                        window.scrollTo({ top: 0, behavior: "smooth" });
                       }}
                     >
                       <EditButton />
@@ -260,16 +260,16 @@ function EditGig() {
 
                 <div className="flex items-center w-full">
                   <div className="flex flex-wrap items-center gap-6 p-6 w-full">
-                          <div className="flex gap-3">
-                    <div className="flex justify-center items-center bg-[#E2E7FF] rounded-2xl w-16 h-16">
-                      <img src={descIcon} className="w-8 h-8" />
-                    </div>
-                    <div className="flex flex-col">
-                      <span className="text-[#131B2E] text-xl">
-                        Description
-                      </span>
-                      <span className="text-[#464555]">Detailed brief</span>
-                    </div>
+                    <div className="flex gap-3">
+                      <div className="flex justify-center items-center bg-[#E2E7FF] rounded-2xl w-16 h-16">
+                        <img src={descIcon} className="w-8 h-8" />
+                      </div>
+                      <div className="flex flex-col">
+                        <span className="text-[#131B2E] text-xl">
+                          Description
+                        </span>
+                        <span className="text-[#464555]">Detailed brief</span>
+                      </div>
                     </div>
                     <span
                       className="ml-auto"
@@ -278,7 +278,7 @@ function EditGig() {
                           e.preventDefault(),
                           setDesc(true),
                           setEditState(true));
-                              window.scrollTo({top: 0, behavior:"smooth"})
+                        window.scrollTo({ top: 0, behavior: "smooth" });
                       }}
                     >
                       <EditButton />
@@ -442,7 +442,6 @@ function EditGig() {
                       />
 
                       <img
-                      
                         src={
                           ternaryImagePreview &&
                           typeof ternaryImagePreview === "object"
@@ -527,15 +526,13 @@ function EditGig() {
                     Advanced Options
                   </span>
                   <div
-                    className="flex gap-3 text-[#131B2E] cursor-pointer"
+                    className={`${gig?.pending ? "opacity-25" : ""} flex gap-3 text-[#131B2E] cursor-pointer`}
                     onClick={() => {
-                      (setGig((prev) => {
-                        if (!prev) return prev;
-                        return gig?.paused
-                          ? { ...prev, paused: false }
-                          : { ...prev, paused: true };
-                      }),
-                        setConfirm(true));
+                      setGig((prev) => {
+                        if (!prev || prev.pending) return prev;
+                        setConfirm(true);
+                        return { ...prev, paused: !prev.paused };
+                      });
                     }}
                   >
                     <img
@@ -547,10 +544,10 @@ function EditGig() {
                     </span>
                     <img src={nextIcon} className="ml-auto w-8 h-8" />
                   </div>
-                  <div className="relative">
+                  <div className={`${gig?.pending ? "opacity-25" : ""} relative`}>
                     <div
                       className="flex gap-3 text-[#131B2E] cursor-pointer"
-                      onClick={copyLink}
+                      onClick={() => { if (!gig?.pending) copyLink }}
                     >
                       <img src={shareIcon} className="w-8 h-8" />
                       <span className="text-xl">Share Link</span>
@@ -565,7 +562,10 @@ function EditGig() {
                   </div>
                   <div className="flex gap-3 border-t border-t-[#E2E7FF] text-[#131B2E]">
                     <div
-                      onClick={() => setDeleteState(true)}
+                      onClick={() => {
+                        (setDeleteState(true),
+                          window.scrollTo({ top: 0, behavior: "smooth" }));
+                      }}
                       className="flex gap-3 mt-6 cursor-pointer"
                     >
                       <img src={deleteIcon} className="w-8 h-8" />
@@ -576,10 +576,13 @@ function EditGig() {
               </div>
             </div>
           </div>
-               <button
+          <button
             className={`${confirm ? "opacity-100" : "opacity-25"} ml-auto cursor-pointer py-3 rounded-lg font-semibold text-white bg-linear-to-r from-[#4F46E5] to-[#4e46e5c2] px-6`}
             disabled={!confirm}
-            onClick={() => setConfirmConfirm(true)}
+            onClick={() => {
+              (setConfirmConfirm(true),
+                window.scrollTo({ top: 0, behavior: "smooth" }));
+            }}
           >
             Save changes
           </button>
