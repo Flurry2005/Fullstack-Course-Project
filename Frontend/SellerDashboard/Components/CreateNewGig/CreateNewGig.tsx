@@ -149,7 +149,7 @@ function CreateNewGig() {
       </div>
 
       <main className="flex flex-col gap-10 bg-[#f9f5ff] p-6 w-full">
-        {!success && <ProgressBar currentStep={currentStep} />}
+        {!success && <ProgressBar setCurrentStep={setCurrentStep} currentStep={currentStep} stepOneComplete={stepOneComplete} stepTwoComplete={stepTwoComplete} stepThreeComplete={stepThreeComplete} />}
         <section>
           {currentStep === 0 && (
             <Overview

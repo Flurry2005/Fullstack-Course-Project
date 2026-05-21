@@ -235,7 +235,7 @@ function Description({
         </div>
 
         <div className="flex flex-col gap-6 md:w-[20vw]">
-          <div className="flex flex-col gap-6 bg-white shadow-md p-6 border border-[#ACA8D7]/15 rounded-2xl text-[#DAD7FF]">
+          <div className="flex flex-col gap-3 bg-white shadow-md p-6 border border-[#ACA8D7]/15 rounded-2xl text-[#DAD7FF]">
             <span className="font-semibold text-[#131B2E]">
               Quality Checklist
             </span>
@@ -273,7 +273,7 @@ function Description({
                 }
                 className={`h-50 rounded-t-2xl w-full`}
               />
-              <h3 className="bottom-0 z-10 absolute bg-neutral-300/80 px-6 py-1 w-full text-[#ffffff] text-xl">
+              <h3 className="bottom-0 z-10 absolute bg-black/50 px-6 py-1 w-full text-[#ffffff]">
                 Preview
               </h3>
             </div>

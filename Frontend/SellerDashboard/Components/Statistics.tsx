@@ -98,7 +98,7 @@ function Statistics({ gigs }: StatisticsProps) {
             <LineChart data={data}>
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis dataKey="name" />
-              <YAxis />
+              <YAxis allowDecimals={false} />
               <Tooltip />
               <Line
                 type="monotone"

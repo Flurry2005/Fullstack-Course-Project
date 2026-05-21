@@ -2,6 +2,7 @@ import type { Gig as NewGig } from "../../../types/Gig";
 import fish from "../../../assets/fish.jpg";
 import checkIcon from "../../../assets/circle-check-req-icon.svg";
 import { useState } from "react";
+import defaultImageIcon from "../../../assets/image-regular-icon.svg";
 
 type ReviewProps = {
   newGig: NewGig;
@@ -86,7 +87,7 @@ function Review({
                 style={{ borderRadius: 0 }}
               />
               <div className="flex flex-col gap-1 px-6 py-6">
-                <div className="flex items-center gap-2 font-semibold text-[#3525CD]">
+                <div className="flex items-center gap-1 font-semibold text-[#3525CD]">
                   <span>{newGig.category?.main}</span>
                   <span>{">"}</span>
                   <span>{newGig.category?.sub}</span>
@@ -110,6 +111,47 @@ function Review({
                 <h3 className="font-semibold text-[#131B2E] text-xl">
                   Gallery
                 </h3>
+                <div className="grid gap-3 md:grid-cols-3 grid-cols-1">
+                  <div className="relative h-52">
+                    <img
+                      className="object-fill w-full h-full opacity-25"
+                      src={
+                        primaryImagePreview
+                          ? URL.createObjectURL(primaryImagePreview)
+                          : defaultImageIcon
+                      }
+                    />
+                       <span className="absolute top-6 text-9xl text-center w-full opacity-25">
+                      1
+                    </span>
+                  </div>
+                  <div
+                    className={`relative h-52 items-center justify-center w-full ${!secondaryImagePreview ? "hidden border-[#C7C4D8] border-2 rounded-lg border-dashed" : ""}`}
+                  >
+                    {secondaryImagePreview && (
+                      <img
+                        className="object-fill w-full h-full opacity-25"
+                        src={URL.createObjectURL(secondaryImagePreview)}
+                      />
+                    )}
+                    <span className="absolute top-6 text-9xl text-center w-full opacity-25">
+                      2
+                    </span>
+                  </div>
+                  <div
+                    className={`relative h-52 items-center justify-center w-full ${!ternaryImagePreview ? "hidden border-[#C7C4D8] border-2 rounded-lg border-dashed" : ""}`}
+                  >
+                    {ternaryImagePreview && (
+                      <img
+                        className="object-fill w-full h-full opacity-25 "
+                        src={URL.createObjectURL(ternaryImagePreview)}
+                      />
+                    )}
+                    <span className="absolute top-6 text-9xl text-center w-full opacity-25">
+                      3
+                    </span>
+                  </div>
+                </div>
               </div>
             </div>
 

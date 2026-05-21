@@ -299,9 +299,9 @@ function EditGig() {
                     Media gallery
                   </span>
                   {/* Image 1*/}
-                  <div className="md:flex justify-center gap-6 grid">
+                  <div className="grid justify-center gap-6 md:grid-cols-3 grid-cols-1">
                     <div
-                      className={`relative flex flex-col justify-center items-center border-[#C7C4D8] border-2 border-dashed rounded-lg w-48 h-48 md:w-full  ${primaryImagePreview ? "" : "cursor-pointer"} `}
+                      className={`relative flex flex-col justify-center items-center border-[#C7C4D8] border-2 border-dashed rounded-lg  w-full h-52 ${primaryImagePreview ? "" : "cursor-pointer"} `}
                       onClick={() => {
                         if (!primaryImagePreview)
                           primaryImageRef.current!.click();
@@ -341,7 +341,7 @@ function EditGig() {
                               ? primaryImagePreview
                               : galleryIcon
                         }
-                        className={` rounded-lg  object-cover ${primaryImagePreview ? "w-full h-full" : "w-24 h-24"} `}
+                        className={` rounded-lg  object-fill ${primaryImagePreview ? "w-full h-full" : "w-24 h-24"} `}
                       />
                       <span
                         className={`text-[#131B2E] ${primaryImagePreview ? "hidden" : "block"}`}
@@ -357,7 +357,7 @@ function EditGig() {
                     </div>
                     {/* Image 2*/}
                     <div
-                      className={`relative flex flex-col justify-center items-center border-[#C7C4D8] border-2 border-dashed rounded-lg w-48 md:w-full mx-auto h-48 ${secondaryImagePreview ? "" : "cursor-pointer"} `}
+                      className={`relative flex flex-col justify-center items-center border-[#C7C4D8] border-2 border-dashed rounded-lg w-full h-52 mx-auto ${secondaryImagePreview ? "" : "cursor-pointer"} `}
                       onClick={() => {
                         if (!secondaryImagePreview) {
                           secondaryImageRef.current!.click();
@@ -398,7 +398,7 @@ function EditGig() {
                               ? secondaryImagePreview
                               : galleryIcon
                         }
-                        className={`rounded-lg  object-cover ${secondaryImagePreview ? "w-full h-full" : "w-24 h-24"} `}
+                        className={`rounded-lg  object-fill ${secondaryImagePreview ? "w-full h-full" : "w-24 h-24"} `}
                       />
                       <span
                         className={`text-[#131B2E] text-center ${secondaryImagePreview ? "hidden" : "block"}`}
@@ -414,7 +414,7 @@ function EditGig() {
                     </div>
                     {/* Image 3*/}
                     <div
-                      className={`relative flex flex-col justify-center items-center border-[#C7C4D8] border-2 border-dashed rounded-lg w-48 md:w-full h-48 ${ternaryImagePreview ? "" : "cursor-pointer"} `}
+                      className={`relative flex flex-col justify-center items-center border-[#C7C4D8] border-2 border-dashed rounded-lg  w-full h-52 ${ternaryImagePreview ? "" : "cursor-pointer"} `}
                       onClick={() => {
                         if (!ternaryImagePreview)
                           ternaryImageRef.current!.click();
@@ -446,6 +446,7 @@ function EditGig() {
                       />
 
                       <img
+                      
                         src={
                           ternaryImagePreview &&
                           typeof ternaryImagePreview === "object"
@@ -454,7 +455,7 @@ function EditGig() {
                               ? ternaryImagePreview
                               : galleryIcon
                         }
-                        className={`rounded-lg  object-cover ${ternaryImagePreview ? "w-full h-full" : "w-24 h-24"} `}
+                        className={`object-fill rounded-lg ${ternaryImagePreview ? "w-full h-full" : "w-24 h-24"} `}
                       />
                       <span
                         className={`text-[#131B2E] ${ternaryImagePreview ? "hidden" : "block"}`}
