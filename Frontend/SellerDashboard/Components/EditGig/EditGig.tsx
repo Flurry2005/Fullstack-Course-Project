@@ -126,13 +126,6 @@ function EditGig() {
             <img src={GoBackIcon} className="w-10 h-14 cursor-pointer" />
           </Link>
           <h2 className="p-6 font-semibold text-3xl">Gig Details</h2>
-          <button
-            className={`${confirm ? "opacity-100" : "opacity-25"} ml-auto cursor-pointer py-3 rounded-lg font-semibold text-white bg-linear-to-r from-[#4F46E5] to-[#4e46e5c2] px-6`}
-            disabled={!confirm}
-            onClick={() => setConfirmConfirm(true)}
-          >
-            Save changes
-          </button>
         </div>
       </div>
       <div className="relative">
@@ -227,6 +220,7 @@ function EditGig() {
                           e.preventDefault(),
                           setOverview(true),
                           setEditState(true));
+                          window.scrollTo({top: 0, behavior:"smooth"})
                       }}
                     >
                       <EditButton />
@@ -256,6 +250,7 @@ function EditGig() {
                           e.preventDefault(),
                           setPricing(true),
                           setEditState(true));
+                              window.scrollTo({top: 0, behavior:"smooth"})
                       }}
                     >
                       <EditButton />
@@ -283,6 +278,7 @@ function EditGig() {
                           e.preventDefault(),
                           setDesc(true),
                           setEditState(true));
+                              window.scrollTo({top: 0, behavior:"smooth"})
                       }}
                     >
                       <EditButton />
@@ -564,7 +560,7 @@ function EditGig() {
                       className={`${showCopied ? "opacity-100 translate-y-0" : "pointer-events-none opacity-0 -translate-y-2"} font-semibold w-full absolute top-0 left-1/2 -translate-x-1/2 z-50 flex items-center gap-2 rounded-lg bg-[#d1dff9] p-3 text-[#4458f1] transition-all duration-300`}
                     >
                       <img src={checkIcon} className="w-5 h-5" alt="Success" />
-                      Link copied to clipboard
+                      Link Copied to Clipboard
                     </span>
                   </div>
                   <div className="flex gap-3 border-t border-t-[#E2E7FF] text-[#131B2E]">
@@ -580,6 +576,13 @@ function EditGig() {
               </div>
             </div>
           </div>
+               <button
+            className={`${confirm ? "opacity-100" : "opacity-25"} ml-auto cursor-pointer py-3 rounded-lg font-semibold text-white bg-linear-to-r from-[#4F46E5] to-[#4e46e5c2] px-6`}
+            disabled={!confirm}
+            onClick={() => setConfirmConfirm(true)}
+          >
+            Save changes
+          </button>
         </main>
         <Footer />
       </div>
